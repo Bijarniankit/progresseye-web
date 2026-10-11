@@ -1,0 +1,14 @@
+{
+  "brand": {
+    "name": "ProgressEye",
+    "tagline": "Calm, trustworthy school management"
+  },
+  "nav": {
+    "features": "Features",
+    "about": "About",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "login": "Sign In",
+    "getStarted": "Get Started"
+  }
+}

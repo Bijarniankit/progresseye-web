@@ -1,0 +1,47 @@
+:root {
+  /* Type Scale */
+  --text-tiny: 0.75rem; /* 12px */
+  --text-small: 0.875rem; /* 14px */
+  --text-body: 1rem; /* 16px */
+  --text-h6: 0.9375rem; /* 15px */
+  --text-h5: 1rem; /* 16px */
+  --text-h4: 1.125rem; /* 18px */
+  --text-h3: 1.5rem; /* 24px */
+  --text-h2: 1.5rem; /* 24px */
+  --text-h1: 2.25rem; /* 36px */
+
+  /* Hero Display Tier (fluid clamp) */
+  --text-hero-page: clamp(1.75rem, 4vw + 1rem, 4rem); /* 28px - 64px */
+  --text-hero-main: clamp(2.5rem, 5vw + 1rem, 4.5rem); /* 40px - 72px */
+
+  /* Line Heights */
+  --leading-display: 1.0;
+  --leading-headings: 1.25;
+  --leading-body: 1.6;
+  --leading-small: 1.5;
+
+  /* Tracking */
+  --tracking-display: -0.02em;
+  --tracking-eyebrow: 0.12em;
+}
+
+body {
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+  color: var(--color-text);
+  line-height: var(--leading-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display, var(--font-sans, system-ui, sans-serif));
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+  max-width: 75ch;
+}
