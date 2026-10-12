@@ -15,12 +15,35 @@ This document records architectural, visual, and copy decisions modifying or com
 - **Backup Frequency**: Automated multi-region backups every 6 hours with point-in-time recovery.
 - **Pricing**: Dynamic currency and tier rates managed via central configuration (`src/config/pricing.ts`).
 
-## 3. Implementation Modernization Rules
-- **Typography**: Loaded via `next/font/google` (`Poppins` + `Inter`), CSS variables `--font-display` and `--font-sans`. Zero `@import`. Explicit display tier (clamp 40px–72px).
-- **Icons**: Exclusively `lucide-react`. No mixing with other font or icon libraries.
-- **Animation**: `motion/react` with mandatory `prefers-reduced-motion` fallbacks, pause on offscreen/blur, and accessible carousel controls.
-- **Styling**: Tailwind CSS 4 CSS-first variables in `tokens.css`. No invalid classes (e.g. `rounded-10` replaced with standardized radius tokens).
-- **Accessibility**: Watermark characters and background clouds marked `aria-hidden="true"`.
-- **Rendering Architecture**: React Server Components by default; interactive client islands dynamically loaded below the fold.
-- **SVG Isolation**: Gradient IDs prefixed per component (e.g., `sch-sky`, `feat-hero`) to eliminate DOM collisions.
-- **Compliance & Legal**: All legal pages labeled `DRAFT-NEEDS-LEGAL-REVIEW`; strict cookie consent gating for non-essential scripts.
+## 4. Phase 3 Architecture & Design Token Decisions
+
+### D-001: Pinned OpenAPI Specification & Contract Drift Detection
+- **Decision**: Rather than fetching OpenAPI from live dev server at build time, the OpenAPI spec is pinned in `openapi/openapi.json` with clear provenance metadata in `openapi/README.md` (originating from `progresseye-api` git tag `phase-02-approved`, commit `5bdf148`). Orval reads this pinned file.
+- **Verification**: `pnpm test:contract-drift` runs in CI to verify that generated Orval client files match the committed contract.
+
+### D-002: Dual-Font System (`next/font/google`)
+- **Decision**: Load Google Fonts using Next.js optimized font loader:
+  - `Poppins` (weights 500, 600, 700, 800 with both normal and italic styles) mapped to `--font-display`.
+  - `Inter` (variable font) mapped to `--font-sans`.
+- **Performance**: Zero external network render-blocking calls; fonts are self-hosted automatically at build time.
+
+### D-003: Two-Layer Token Architecture (Layer 1 vs Layer 2)
+- **Decision**:
+  - Layer 1 (`src/styles/tokens.css` `:root`) defines raw palette scales (`--palette-brand-*`, `--palette-slate-*`, peach/mint washes).
+  - Layer 2 binds semantic intent (`--color-surface`, `--color-text`, `--color-border`, `--color-brand`, etc.) for both light and dark mode (`.dark`).
+  - Components exclusively consume Layer 2 semantic CSS variables or their Tailwind utility mappings. Components are never permitted to reference Layer 1 directly.
+
+### D-004: No-Hex Rule Enforcement & Vector Illustration Exception
+- **Decision**: Raw hex colors (`#...`) are strictly prohibited in all UI components (`src/components/ui/`, `src/components/marketing/`, `src/app/`).
+- **Enforcement**: `scripts/no-hex-check.mjs` scans all JSX/TSX files.
+- **Whitelist Exception**: Complex multi-stop vector illustrations located in `src/components/illustrations/**` require exact gradient stops, tints, and shadows from the design spec; these files are whitelisted in `scripts/no-hex-check.mjs`.
+- **Anchor Handling**: The linter excludes HTML ID fragments and anchors (e.g., `#main-content`, `href="#..."`) to prevent false positives.
+
+### D-005: Internal-Only Dev Route (`/dev/tokens`)
+- **Decision**: The interactive design tokens showcase at `/dev/tokens` is exclusively available during development. In production (`process.env.NODE_ENV === "production"`), the route triggers Next.js `notFound()`, rendering a standard 404 page.
+- **Testing**: A dedicated unit test in `tests/unit/dev-tokens.test.tsx` confirms that `notFound()` is invoked when `NODE_ENV === "production"`.
+
+### D-006: Server-Only Proxy Destination via `API_INTERNAL_URL`
+- **Decision**: In `next.config.ts`, the API rewrite proxy destination reads from the server-only environment variable `process.env.API_INTERNAL_URL || process.env.API_BASE_URL || "http://localhost:4000"`.
+- **Rationale**: Keeps internal VPC/Kubernetes network addresses confidential from the client browser bundle.
+

@@ -4,6 +4,13 @@
   background-size: 24px 24px;
 }
 
+/* Paper graph grid texture (24px) */
+.bg-paper-grid {
+  background-image: linear-gradient(to right, var(--color-border-muted) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-border-muted) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
 /* 3.5% Noise overlay */
 .bg-noise-overlay {
   position: relative;
@@ -19,16 +26,22 @@
   z-index: var(--z-base);
 }
 
+/* Focus Ring */
+.focus-ring {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
 /* Elevations */
-.shadow-e1 {
+.elevation-e1 {
   box-shadow: var(--shadow-e1);
 }
-.shadow-e2 {
+.elevation-e2 {
   box-shadow: var(--shadow-e2);
 }
-.shadow-e3 {
+.elevation-e3 {
   box-shadow: var(--shadow-e3);
 }
-.shadow-e4 {
+.elevation-e4 {
   box-shadow: var(--shadow-e4);
 }

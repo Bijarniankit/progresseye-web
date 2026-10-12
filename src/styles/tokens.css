@@ -1,40 +1,159 @@
 @import "tailwindcss";
 
-@theme {
-  --color-surface-hero: #faf6ec;
-  --color-surface-footer: #fbf6eb;
+/* =========================================================================
+   LAYER 1: RAW COLOR & VALUE PALETTE
+   Global palette variables - NEVER use these directly in UI components.
+   ========================================================================= */
+:root {
+  /* Warm Creams (Editorial Paper Surfaces) */
+  --palette-cream-50: #faf6ec; /* Landing hero warm cream */
+  --palette-cream-100: #fbf6eb; /* Footer & secondary paper */
+  --palette-cream-200: #f4ede0; /* Raised warm surface */
+  --palette-cream-300: #eadecc; /* Muted paper border */
+
+  /* Deep Brand Indigo Scale */
+  --palette-indigo-50: #eef2ff;
+  --palette-indigo-100: #e0e7ff;
+  --palette-indigo-200: #c7d2fe;
+  --palette-indigo-300: #a5b4fc;
+  --palette-indigo-400: #818cf8;
+  --palette-indigo-500: #6366f1;
+  --palette-indigo-600: #4338ca;
+  --palette-indigo-700: #3730a3;
+  --palette-indigo-800: #312e81;
+  --palette-indigo-900: #1e1b4b;
+  --palette-indigo-950: #0f172a;
+
+  /* Brand Scale (Brand 50 to 950) */
+  --palette-brand-50: #eff6ff;
+  --palette-brand-100: #dbeafe;
+  --palette-brand-200: #bfdbfe;
+  --palette-brand-300: #93c5fd;
+  --palette-brand-400: #60a5fa;
+  --palette-brand-500: #3b82f6;
+  --palette-brand-600: #2563eb;
+  --palette-brand-700: #1d4ed8;
+  --palette-brand-800: #1e40af;
+  --palette-brand-900: #1e3a8a;
+  --palette-brand-950: #172554;
+
+  /* Interactive Blues */
+  --palette-blue-50: #eff6ff;
+  --palette-blue-100: #dbeafe;
+  --palette-blue-200: #bfdbfe;
+  --palette-blue-500: #3b82f6;
+  --palette-blue-600: #2563eb;
+  --palette-blue-700: #1d4ed8;
+
+  /* Accents */
+  --palette-amber-400: #fbbf24;
+  --palette-amber-500: #f59e0b;
+  --palette-terracotta-500: #ea580c;
+  --palette-terracotta-600: #c2410c;
+
+  /* Pastel Washes */
+  --palette-wash-peach: #fdeee9;
+  --palette-wash-mint: #e6f4ea;
+
+  /* Feedback */
+  --palette-green-600: #16a34a;
+  --palette-amber-600: #d97706;
+  --palette-red-600: #dc2626;
+
+  /* Neutrals */
+  --palette-white: #ffffff;
+  --palette-slate-50: #f8fafc;
+  --palette-slate-100: #f1f5f9;
+  --palette-slate-200: #e2e8f0;
+  --palette-slate-300: #cbd5e1;
+  --palette-slate-400: #94a3b8;
+  --palette-slate-500: #64748b;
+  --palette-slate-600: #475569;
+  --palette-slate-700: #334155;
+  --palette-slate-800: #1e293b;
+  --palette-slate-900: #0f172a;
+  --palette-slate-950: #020617;
+}
+
+/* =========================================================================
+   LAYER 2: SEMANTIC TOKENS
+   Components must strictly consume ONLY these semantic tokens.
+   ========================================================================= */
+:root {
+  /* Surfaces */
+  --color-surface-hero: var(--palette-cream-50);
+  --color-surface-footer: var(--palette-cream-100);
   --color-surface: #ffffff;
+  --color-surface-subtle: #f1f5f9;
+  --color-surface-card: #ffffff;
+  --color-surface-popover: #ffffff;
   --color-surface-raised: #f8fafc;
-  --color-border: #e2e8f0;
+  --color-surface-muted: #f1f5f9;
+  --color-surface-contrast: #0f172a;
 
+  /* Typography */
   --color-text: #0f172a;
-  --color-text-muted: #64748b;
+  --color-text-muted: #475569;
+  --color-text-inverse: #ffffff;
 
-  --color-indigo-950: #1e1b4b;
-  --color-indigo-700: #3730a3;
-  --color-indigo-600: #4338ca;
+  /* Borders */
+  --color-border: #e2e8f0;
+  --color-border-muted: #f1f5f9;
+  --color-border-focus: #2563eb;
 
-  --color-blue-600: #2563eb;
-  --color-blue-700: #1d4ed8;
+  /* Brand & Actions */
+  --color-brand: #2563eb;
+  --color-brand-hover: #1d4ed8;
+  --color-brand-foreground: #ffffff;
+  --color-interactive: #2563eb;
+  --color-interactive-hover: #1d4ed8;
 
+  /* Washes */
+  --color-wash-peach: #fdeee9;
+  --color-wash-mint: #e6f4ea;
+  --color-peach-wash: #fdeee9;
+  --color-mint-wash: #e6f4ea;
+
+  /* States */
   --color-accent: #f59e0b;
   --color-terracotta: #c2410c;
-
   --color-success: #16a34a;
   --color-warning: #d97706;
   --color-danger: #dc2626;
+  --color-status-success: #16a34a;
+  --color-status-warning: #d97706;
+  --color-status-danger: #dc2626;
+  --color-status-danger-foreground: #ffffff;
+  --color-status-info: #2563eb;
 
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
+  /* Focus Ring */
+  --focus-ring: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-brand);
+
+  /* Geometry */
+  --radius-sm: 0.25rem; /* 4px */
+  --radius-md: 0.5rem; /* 8px */
+  --radius-lg: 0.75rem; /* 12px */
+  --radius-xl: 1rem; /* 16px */
   --radius-full: 9999px;
 
+  /* Elevation Shadows */
   --shadow-e1: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
   --shadow-e2: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
   --shadow-e3: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
   --shadow-e4: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
 
+  /* Motion: Durations */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+
+  /* Motion: Easings */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-entrance: cubic-bezier(0, 0, 0.2, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Z-Indices */
   --z-base: 0;
   --z-raised: 10;
   --z-nav: 40;
@@ -43,7 +162,74 @@
   --z-toast: 70;
 }
 
-:root {
-  background-color: var(--color-surface-hero);
-  color: var(--color-text);
+/* Dark Theme Overrides */
+.dark {
+  --color-surface-hero: #0f172a;
+  --color-surface-footer: #020617;
+  --color-surface: #0f172a;
+  --color-surface-subtle: #1e293b;
+  --color-surface-card: #1e293b;
+  --color-surface-popover: #1e293b;
+  --color-surface-raised: #1e293b;
+  --color-surface-muted: #1e293b;
+  --color-surface-contrast: #f8fafc;
+
+  --color-text: #f8fafc;
+  --color-text-muted: #94a3b8;
+  --color-text-inverse: #0f172a;
+
+  --color-border: #334155;
+  --color-border-muted: #1e293b;
+  --color-border-focus: #60a5fa;
+
+  --color-brand: #2563eb;
+  --color-brand-hover: #1d4ed8;
+  --color-brand-foreground: #ffffff;
+  --color-interactive: #60a5fa;
+  --color-interactive-hover: #3b82f6;
+
+  --color-wash-peach: rgba(253, 238, 233, 0.12);
+  --color-wash-mint: rgba(230, 244, 234, 0.12);
+  --color-peach-wash: rgba(253, 238, 233, 0.12);
+  --color-mint-wash: rgba(230, 244, 234, 0.12);
+
+  --color-accent: #f59e0b;
+  --color-terracotta: #ea580c;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #dc2626;
+  --color-status-success: #22c55e;
+  --color-status-warning: #f59e0b;
+  --color-status-danger: #dc2626;
+  --color-status-danger-foreground: #ffffff;
+  --color-status-info: #60a5fa;
+
+  --focus-ring: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-brand);
+
+  --shadow-e1: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-e2: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-e3: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-e4: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+}
+
+@theme {
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-full: var(--radius-full);
+
+  --shadow-e1: var(--shadow-e1);
+  --shadow-e2: var(--shadow-e2);
+  --shadow-e3: var(--shadow-e3);
+  --shadow-e4: var(--shadow-e4);
+
+  --transition-duration-fast: var(--duration-fast);
+  --transition-duration-normal: var(--duration-normal);
+  --transition-duration-slow: var(--duration-slow);
+
+  --transition-timing-function-standard: var(--ease-standard);
+  --transition-timing-function-entrance: var(--ease-entrance);
+  --transition-timing-function-exit: var(--ease-exit);
+  --transition-timing-function-spring: var(--ease-spring);
 }

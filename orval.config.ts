@@ -3,7 +3,7 @@ import { defineConfig } from "orval";
 export default defineConfig({
   progresseye: {
     input: {
-      target: "../progresseye-api/docs/openapi.json",
+      target: "./openapi/openapi.json",
       validation: false,
     },
     output: {
