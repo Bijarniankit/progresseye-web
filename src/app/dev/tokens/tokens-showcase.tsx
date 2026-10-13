@@ -53,7 +53,14 @@ export function TokensShowcase() {
 
   React.useEffect(() => {
     setMounted(true);
-  }, []);
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const urlTheme = params.get("theme");
+      if (urlTheme === "dark" || urlTheme === "light") {
+        setTheme(urlTheme);
+      }
+    }
+  }, [setTheme]);
 
   const triggerAnimation = () => {
     setIsAnimating(false);
@@ -286,11 +293,19 @@ export function TokensShowcase() {
 
           <div className="rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface-card)] divide-y divide-[var(--color-border)]">
             <div className="p-4 flex flex-col md:flex-row md:items-baseline justify-between gap-2">
-              <span className="font-mono text-xs text-[var(--color-text-muted)] w-36">
-                Display (Clamp)
+              <span className="font-mono text-xs text-[var(--color-text-muted)] w-44">
+                Hero Display (40–72px)
               </span>
-              <span className="text-[var(--text-display)] font-extrabold text-[var(--color-text)]">
+              <span className="text-display-hero font-extrabold text-[var(--color-text)]">
                 School OS 2.0
+              </span>
+            </div>
+            <div className="p-4 flex flex-col md:flex-row md:items-baseline justify-between gap-2">
+              <span className="font-mono text-xs text-[var(--color-text-muted)] w-44">
+                Page-Hero Display (28–64px)
+              </span>
+              <span className="text-display-page font-extrabold text-[var(--color-text)]">
+                Operational Intelligence
               </span>
             </div>
             <div className="p-4 flex flex-col md:flex-row md:items-baseline justify-between gap-2">

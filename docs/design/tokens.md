@@ -74,13 +74,14 @@ ProgressEye uses two fonts via `next/font/google`:
 
 | Role | Token | Font Family | Size / Clamp | Weight | Line Height |
 |---|---|---|---|---|---|
-| **Display Tier** | `--text-display` | Poppins | `clamp(2.5rem, 6vw, 4.5rem)` | 800 | 1.05 |
-| **H1 (Hero)** | `--text-h1` | Poppins | `clamp(2rem, 4.5vw, 3.25rem)` | 700 | 1.15 |
-| **H2 (Section)** | `--text-h2` | Poppins | `clamp(1.75rem, 3.5vw, 2.5rem)` | 600 | 1.2 |
-| **H3 (Sub-section)** | `--text-h3` | Poppins | `clamp(1.35rem, 2.5vw, 1.75rem)` | 600 | 1.3 |
-| **H4 (Card Title)**| `--text-h4` | Poppins | `1.25rem` (20px) | 600 | 1.35 |
-| **H5 (Widget Title)**| `--text-h5` | Poppins | `1.125rem` (18px) | 500 | 1.4 |
-| **H6 (Sub-title)** | `--text-h6` | Poppins | `1rem` (16px) | 500 | 1.4 |
+| **Hero Display Tier** | `--text-display-hero` | Poppins | `clamp(2.5rem, 5vw + 1rem, 4.5rem)` (40px–72px) | 800 | 0.96 |
+| **Page-Hero Display Tier** | `--text-display-page` | Poppins | `clamp(1.75rem, 3.5vw + 0.5rem, 4rem)` (28px–64px) | 800 | 0.96 |
+| **H1 (Hero Heading)** | `--text-h1` | Poppins | `2.25rem` (36px) | 700 | 1.15 |
+| **H2 (Section Heading)** | `--text-h2` | Poppins | `1.5rem` (24px) | 600 | 1.2 |
+| **H3 (Sub-section)** | `--text-h3` | Poppins | `1.5rem` (24px) | 600 | 1.3 |
+| **H4 (Card Title)**| `--text-h4` | Poppins | `1.125rem` (18px) | 600 | 1.35 |
+| **H5 (Widget Title)**| `--text-h5` | Poppins | `1rem` (16px) | 500 | 1.4 |
+| **H6 (Sub-title)** | `--text-h6` | Poppins | `0.9375rem` (15px) | 500 | 1.4 |
 | **Body Large** | `--text-body-lg` | Inter | `1.125rem` (18px) | 400 | 1.6 |
 | **Body (Default)** | `--text-body` | Inter | `1rem` (16px) | 400 | 1.5 |
 | **Small / Helper** | `--text-small` | Inter | `0.875rem` (14px) | 400 | 1.45 |

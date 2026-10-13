@@ -34,3 +34,5 @@ coverage/
 playwright-report/
 test-results/
 *.tsbuildinfo
+lighthouse-*.json
+

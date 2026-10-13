@@ -7,7 +7,16 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["node_modules", ".next", "out", "build", "dist", "coverage", "src/lib/api/generated"]
+    "ignore": [
+      "node_modules",
+      ".next",
+      "out",
+      "build",
+      "dist",
+      "coverage",
+      "src/lib/api/generated",
+      "lighthouse-*.json"
+    ]
   },
   "formatter": {
     "enabled": true,

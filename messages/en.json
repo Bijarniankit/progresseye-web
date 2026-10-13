@@ -1,0 +1,30 @@
+{
+  "common": {
+    "appName": "ProgressEye",
+    "tagline": "Calm, Trustworthy School Management",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close"
+  },
+  "nav": {
+    "features": "Features",
+    "about": "About",
+    "pricing": "Pricing",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "login": "Sign In",
+    "getStarted": "Get Started"
+  },
+  "home": {
+    "heroEyebrow": "Phase 3 Design Tokens & Web Foundation",
+    "heroTitle": "The school workspace that runs itself.",
+    "heroSubtitle": "An advanced, end-to-end multi-tenant school operating system for modern education institutions."
+  },
+  "devTokens": {
+    "title": "ProgressEye 2.0 Design Tokens",
+    "badge": "Internal Only",
+    "routeNote": "/dev/tokens (404 in production)"
+  }
+}
