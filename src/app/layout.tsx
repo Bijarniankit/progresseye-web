@@ -1,4 +1,5 @@
 import { RootProvider } from "@/components/providers/root-provider";
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
@@ -18,6 +19,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
   title: "ProgressEye — Calm, Trustworthy School Management",
   description: "Next-generation multi-tenant school operating system.",
 };

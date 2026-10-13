@@ -45,3 +45,10 @@
 .elevation-e4 {
   box-shadow: var(--shadow-e4);
 }
+
+/* Footer dot pattern (28px grid at 0.06 opacity) */
+.bg-footer-dots {
+  background-image: radial-gradient(circle at 1px 1px, var(--color-text) 1px, transparent 0);
+  background-size: 28px 28px;
+  opacity: 0.06;
+}

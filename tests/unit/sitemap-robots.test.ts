@@ -1,0 +1,61 @@
+import robots from "@/app/robots";
+import sitemap from "@/app/sitemap";
+import { siteConfig } from "@/config/site";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+describe("Sitemap & Robots Verification", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  describe("Sitemap", () => {
+    it("indexes exactly the 12 public marketing routes", () => {
+      const items = sitemap();
+      const urls = items.map((i) => i.url);
+
+      expect(urls).toContain(`${siteConfig.url}`);
+      expect(urls).toContain(`${siteConfig.url}/features`);
+      expect(urls).toContain(`${siteConfig.url}/get-started`);
+      expect(urls).toContain(`${siteConfig.url}/faq`);
+      expect(urls).toContain(`${siteConfig.url}/demo`);
+      expect(urls).toContain(`${siteConfig.url}/about`);
+      expect(urls).toContain(`${siteConfig.url}/careers`);
+      expect(urls).toContain(`${siteConfig.url}/contact`);
+      expect(urls).toContain(`${siteConfig.url}/privacy`);
+      expect(urls).toContain(`${siteConfig.url}/terms`);
+      expect(urls).toContain(`${siteConfig.url}/cookies`);
+      expect(urls).toContain(`${siteConfig.url}/gdpr`);
+      expect(items.length).toBe(12);
+    });
+
+    it("excludes /pricing (redirect) and /login (auth deferral)", () => {
+      const items = sitemap();
+      const urls = items.map((i) => i.url);
+
+      expect(urls).not.toContain(`${siteConfig.url}/pricing`);
+      expect(urls).not.toContain(`${siteConfig.url}/login`);
+    });
+  });
+
+  describe("Robots Policy", () => {
+    it("disallows all crawler traffic on preview/staging environments", () => {
+      vi.stubEnv("VERCEL_ENV", "preview");
+      const config = robots();
+      expect(config.rules).toEqual({
+        userAgent: "*",
+        disallow: "/",
+      });
+    });
+
+    it("allows indexing of public routes while blocking internal /dev/ and /api/ in production", () => {
+      vi.stubEnv("VERCEL_ENV", "");
+      vi.stubEnv("NEXT_PUBLIC_APP_ENV", "production");
+      const config = robots();
+      expect(config.rules).toEqual({
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/dev/", "/api/"],
+      });
+    });
+  });
+});

@@ -34,7 +34,7 @@ export function RootProvider({
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
       <QueryClientProvider client={queryClient}>
-        <NextIntlClientProvider locale={locale} messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages} timeZone="Asia/Kolkata">
           {children}
           <Toaster />
         </NextIntlClientProvider>

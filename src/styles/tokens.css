@@ -48,6 +48,7 @@
   /* Accents */
   --palette-amber-400: #fbbf24;
   --palette-amber-500: #f59e0b;
+  --palette-terracotta-400: #fb923c;
   --palette-terracotta-500: #ea580c;
   --palette-terracotta-600: #c2410c;
 
@@ -182,9 +183,9 @@
   --color-border-muted: #1e293b;
   --color-border-focus: #60a5fa;
 
-  --color-brand: #2563eb;
-  --color-brand-hover: #1d4ed8;
-  --color-brand-foreground: #ffffff;
+  --color-brand: #60a5fa;
+  --color-brand-hover: #93c5fd;
+  --color-brand-foreground: #0f172a;
   --color-interactive: #60a5fa;
   --color-interactive-hover: #3b82f6;
 
@@ -194,7 +195,7 @@
   --color-mint-wash: rgba(230, 244, 234, 0.12);
 
   --color-accent: #f59e0b;
-  --color-terracotta: #ea580c;
+  --color-terracotta: #fb923c;
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-danger: #dc2626;
