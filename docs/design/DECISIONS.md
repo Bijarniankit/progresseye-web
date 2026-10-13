@@ -151,3 +151,13 @@ This document records architectural, visual, and copy decisions modifying or com
 ### D-016: Zero-Invented-Data & Placeholders Architecture
 - **Decision**: All company names, domains, support emails, and social handles are centralized in `src/config/site.ts` reading environment variables (`NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_COMPANY_NAME`, `NEXT_PUBLIC_SUPPORT_EMAIL`).
 - **Markers**: All unconfirmed default values are explicitly tagged `TODO-REAL-DATA`. Real domain and legal company entity will be supplied directly by the project owner.
+
+### D-017: Open Graph Image Constants & Satori Rendering Exemption
+- **Decision**: Satori (`@vercel/og`) compiles social cards in an isolated environment without access to DOM stylesheets or CSS custom properties (`var(--...)`). All brand colors used in OG image generation are centralized in `src/config/og-theme.ts`.
+- **Linter Exemption**: `src/config/og-theme.ts` is explicitly exempted in `scripts/no-hex-check.mjs`.
+- **Brand Typography**: `opengraph-image.tsx` loads self-hosted brand fonts (`Poppins` Bold and `Inter` Regular) from `src/assets/fonts/` into the `ImageResponse` fonts configuration, guaranteeing brand consistency and zero remote network dependencies.
+
+### D-018: Next-Intl 4.x SWC Native Binding Workaround on Windows
+- **Decision**: On Windows root drive paths, Next.js 16 with `@swc/core@1.16+` fails DACL ancestor path security checks when `createNextIntlPlugin` attempts to register native SWC compilation bindings.
+- **Resolution**: Bypassed `createNextIntlPlugin()` wrapper in `next.config.ts` and directly mapped `'next-intl/config'` to `'./src/i18n/request.ts'` via Turbopack `resolveAlias` and Webpack `config.resolve.alias`. This preserves full NextIntl Server and Client functionality with clean sub-second build times and zero SWC native binary panics.
+

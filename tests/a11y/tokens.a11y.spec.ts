@@ -10,11 +10,15 @@ test.describe("Design Tokens Showcase Accessibility", () => {
       }
     });
 
-    await page.goto("/dev/tokens");
+    const response = await page.goto("/dev/tokens");
+    if (response?.status() === 404) {
+      test.skip(true, "/dev/tokens returns 404 in production builds");
+      return;
+    }
     await page.waitForLoadState("networkidle");
 
     const accessibilityScanResults = await new AxeBuilder({ page })
-      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
       .analyze();
 
     const seriousOrCritical = accessibilityScanResults.violations.filter(
@@ -33,7 +37,11 @@ test.describe("Design Tokens Showcase Accessibility", () => {
       }
     });
 
-    await page.goto("/dev/tokens");
+    const response = await page.goto("/dev/tokens");
+    if (response?.status() === 404) {
+      test.skip(true, "/dev/tokens returns 404 in production builds");
+      return;
+    }
     await page.waitForLoadState("networkidle");
 
     // Toggle theme to dark mode
@@ -42,7 +50,7 @@ test.describe("Design Tokens Showcase Accessibility", () => {
     await page.waitForTimeout(300);
 
     const accessibilityScanResults = await new AxeBuilder({ page })
-      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
       .analyze();
 
     const seriousOrCritical = accessibilityScanResults.violations.filter(

@@ -36,7 +36,7 @@ test.describe("Marketing Shell — Accessibility (Light Mode)", () => {
       await page.waitForTimeout(200);
 
       const accessibilityScanResults = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
         .analyze();
 
       const seriousOrCritical = accessibilityScanResults.violations.filter(
@@ -70,7 +70,7 @@ test.describe("Marketing Shell — Accessibility (Dark Mode)", () => {
       await page.waitForTimeout(200);
 
       const accessibilityScanResults = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
         .analyze();
 
       const seriousOrCritical = accessibilityScanResults.violations.filter(
@@ -111,7 +111,7 @@ test.describe("Marketing Shell — Mobile Drawer Accessibility", () => {
     await expect(sheetDialog).toBeVisible();
 
     const accessibilityScanResults = await new AxeBuilder({ page })
-      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
       .analyze();
 
     const seriousOrCritical = accessibilityScanResults.violations.filter(
@@ -145,7 +145,7 @@ test.describe("Marketing Shell — Mobile Drawer Accessibility", () => {
     await expect(sheetDialog).toBeVisible();
 
     const accessibilityScanResults = await new AxeBuilder({ page })
-      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
       .analyze();
 
     const seriousOrCritical = accessibilityScanResults.violations.filter(

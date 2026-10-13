@@ -11,10 +11,14 @@ const projectRoot = path.resolve(__dirname, "..");
 const targetDirs = [
   path.join(projectRoot, "src", "components"),
   path.join(projectRoot, "src", "app"),
+  path.join(projectRoot, "src", "config"),
 ];
 
-// Whitelisted paths (e.g. multi-stop raw vector SVG illustrations)
-const whitelistedPatterns = [path.normalize("src/components/illustrations/")];
+// Whitelisted paths (e.g. multi-stop raw vector SVG illustrations, and Satori OG image constants)
+const whitelistedPatterns = [
+  path.normalize("src/components/illustrations/"),
+  path.normalize("src/config/og-theme.ts"),
+];
 
 // Regular expression to match 3, 4, 6, or 8-digit hex colors
 // Preceded and followed by non-word characters

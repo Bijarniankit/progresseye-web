@@ -1,6 +1,8 @@
+import fs from "node:fs/promises";
+import path from "node:path";
+import { ogTheme } from "@/config/og-theme";
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
 export const alt = "ProgressEye — Modern Multi-Tenant School Operating System";
 export const size = {
   width: 1200,
@@ -9,6 +11,11 @@ export const size = {
 export const contentType = "image/png";
 
 export default async function Image() {
+  const [poppinsBoldData, interRegularData] = await Promise.all([
+    fs.readFile(path.join(process.cwd(), "src/assets/fonts/poppins-bold.woff")),
+    fs.readFile(path.join(process.cwd(), "src/assets/fonts/inter-regular.woff")),
+  ]);
+
   return new ImageResponse(
     <div
       style={{
@@ -18,9 +25,9 @@ export default async function Image() {
         flexDirection: "column",
         alignItems: "flex-start",
         justifyContent: "space-between",
-        backgroundColor: "rgb(250, 246, 236)",
+        backgroundColor: ogTheme.background,
         padding: "80px",
-        fontFamily: "sans-serif",
+        fontFamily: "Inter",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
@@ -29,18 +36,26 @@ export default async function Image() {
             width: "56px",
             height: "56px",
             borderRadius: "14px",
-            backgroundColor: "rgb(15, 23, 42)",
+            backgroundColor: ogTheme.slateDark,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "rgb(255, 255, 255)",
+            color: ogTheme.white,
             fontSize: "32px",
-            fontWeight: 800,
+            fontWeight: 700,
+            fontFamily: "Poppins",
           }}
         >
           P
         </div>
-        <span style={{ fontSize: "36px", fontWeight: 700, color: "rgb(15, 23, 42)" }}>
+        <span
+          style={{
+            fontSize: "36px",
+            fontWeight: 700,
+            color: ogTheme.slateDark,
+            fontFamily: "Poppins",
+          }}
+        >
           ProgressEye
         </span>
       </div>
@@ -49,10 +64,11 @@ export default async function Image() {
         <div
           style={{
             fontSize: "64px",
-            fontWeight: 800,
-            color: "rgb(30, 27, 75)",
+            fontWeight: 700,
+            color: ogTheme.headline,
             lineHeight: 1.1,
             maxWidth: "960px",
+            fontFamily: "Poppins",
           }}
         >
           The school workspace that runs itself.
@@ -60,9 +76,10 @@ export default async function Image() {
         <div
           style={{
             fontSize: "26px",
-            color: "rgb(71, 85, 105)",
+            color: ogTheme.bodyText,
             maxWidth: "840px",
             lineHeight: 1.4,
+            fontFamily: "Inter",
           }}
         >
           Calm, trustworthy school operating platform for attendance, academics, fees, and
@@ -75,8 +92,9 @@ export default async function Image() {
           display: "flex",
           alignItems: "center",
           gap: "12px",
-          color: "rgb(100, 116, 139)",
+          color: ogTheme.mutedText,
           fontSize: "20px",
+          fontFamily: "Inter",
         }}
       >
         <span>progresseye.com</span>
@@ -84,6 +102,20 @@ export default async function Image() {
     </div>,
     {
       ...size,
+      fonts: [
+        {
+          name: "Poppins",
+          data: poppinsBoldData,
+          style: "normal",
+          weight: 700,
+        },
+        {
+          name: "Inter",
+          data: interRegularData,
+          style: "normal",
+          weight: 400,
+        },
+      ],
     },
   );
 }
