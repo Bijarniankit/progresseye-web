@@ -37,7 +37,7 @@ test.describe("Design Tokens Showcase Accessibility", () => {
     await page.waitForLoadState("networkidle");
 
     // Toggle theme to dark mode
-    const toggleButton = page.getByRole("button", { name: /toggle theme/i });
+    const toggleButton = page.getByRole("button", { name: /mode/i });
     await toggleButton.click();
     await page.waitForTimeout(300);
 

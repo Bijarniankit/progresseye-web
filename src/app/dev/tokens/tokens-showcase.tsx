@@ -151,7 +151,7 @@ export function TokensShowcase() {
 
   return (
     <TooltipProvider>
-      <div className="min-h-screen bg-[var(--color-surface)] text-[var(--color-text)] px-4 py-8 md:px-12 md:py-12 max-w-7xl mx-auto space-y-16">
+      <main className="min-h-screen bg-[var(--color-surface)] text-[var(--color-text)] px-4 py-8 md:px-12 md:py-12 max-w-7xl mx-auto space-y-16">
         {/* Header */}
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[var(--color-border)]">
           <div>
@@ -178,7 +178,9 @@ export function TokensShowcase() {
               size="sm"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="gap-2"
-              aria-label="Toggle theme"
+              aria-label={
+                mounted && theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"
+              }
             >
               {mounted && theme === "dark" ? (
                 <>
@@ -707,7 +709,7 @@ export function TokensShowcase() {
             </div>
           </div>
         </section>
-      </div>
+      </main>
     </TooltipProvider>
   );
 }
