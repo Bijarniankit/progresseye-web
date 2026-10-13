@@ -157,9 +157,18 @@ This document records architectural, visual, and copy decisions modifying or com
 - **Linter Exemption**: `src/config/og-theme.ts` is explicitly exempted in `scripts/no-hex-check.mjs`.
 - **Brand Typography**: `opengraph-image.tsx` loads self-hosted brand fonts (`Poppins` Bold and `Inter` Regular) from `src/assets/fonts/` into the `ImageResponse` fonts configuration, guaranteeing brand consistency and zero remote network dependencies.
 
-### D-018: Next-Intl 4.x SWC Native Binding Workaround on Windows
-- **Decision**: On Windows root drive paths, Next.js 16 with `@swc/core@1.16+` fails DACL ancestor path security checks when `createNextIntlPlugin` attempts to register native SWC compilation bindings.
-- **Resolution**: Bypassed `createNextIntlPlugin()` wrapper in `next.config.ts` and directly mapped `'next-intl/config'` to `'./src/i18n/request.ts'` via Turbopack `resolveAlias` and Webpack `config.resolve.alias`. This preserves full NextIntl Server and Client functionality with clean sub-second build times and zero SWC native binary panics.
+### D-018: Next-Intl 4.x Platform-Split Architecture (Official Plugin on Linux/CI, Native Alias on Windows)
+- **Problem**: When `createNextIntlPlugin` runs on Windows, `@swc/core@1.16+` validates directory DACL permissions up to the drive root (`C:\` / `E:\`). Default Windows NTFS drive roots grant replacement rights (`0x1301bf`) to Authenticated Users (`SID S-1-5-11`). SWC rejects native binary loading with the following error:
+  ```
+  Error: Failed to load native binding
+  [cause]: [
+    Error: SWC native addon: user cache failed: validate cache root C:\Users\...\AppData\Local\swc: cache ancestor C:\: DACL grants replacement rights 0x1301bf to SID S-1-5-11; fallback cache failed: validate cache root C:\Users\...\.swc-cache: cache ancestor C:\: DACL grants replacement rights 0x1301bf to SID S-1-5-11; set SWC_NATIVE_BINDING_CACHE to a safe absolute directory owned by your user whose ancestors do not grant other users replacement rights.
+    code: 'ERR_SWC_NATIVE_CACHE'
+  ]
+  ```
+- **Platform-Split Implementation**:
+  - **Linux / CI / Docker (`process.platform !== "win32"`)**: Dynamically invokes the official `createNextIntlPlugin("./src/i18n/request.ts")` wrapper, ensuring 100% adherence to next-intl's standard setup on Linux-based continuous integration and production containers.
+  - **Windows (`process.platform === "win32"`)**: Configures the exact equivalent Turbopack (`resolveAlias: { "next-intl/config": "./src/i18n/request.ts" }`) and Webpack (`config.resolve.alias["next-intl/config"] = path.resolve("./src/i18n/request.ts")`) configurations without invoking SWC's native binding validator.
 
 ### D-019: Responsive Navigation Breakpoint & Overflow Safeguard
 - **Decision**: To prevent text wrapping of "Sign in" and cutoff of "Get started" in the 768px–1023px tablet range, desktop navigation and action buttons are visible only on `lg:` viewports (>= 1024px). All viewports below 1024px utilize the accessible mobile hamburger drawer.
@@ -169,5 +178,23 @@ This document records architectural, visual, and copy decisions modifying or com
 - **Watermark Sizing**: Sized using fluid CSS `clamp(1.75rem, 8.2vw, 14rem)` with `leading-normal` and `pb-6 px-4`. This ensures the watermark never clips horizontally across 320px to 1536px screens while providing ample room for full descender visibility (`g` and `y` curves remain uncropped and distinct).
 - **Hiring Badge Flag**: Configured via `siteConfig.hasOpenRoles` (default `false`). The "We're hiring" badge in navigation and footer remains hidden until active job postings exist.
 - **Social Icons Flag**: Configured via `siteConfig.hasConfiguredSocial`. Social icons are completely hidden until real verified profile URLs are configured in environment variables.
+
+### D-021: LCP Optimization, WordReveal Initial State & No-JS Fallback
+- **LCP Root Cause**: In `WordReveal`, the animated token component previously initialized with `opacity: 0` and `filter: blur(8px)`. Under Lighthouse mobile CPU throttling, Chrome ignored the element until opacity > 0, delaying LCP candidate paint until animation completion (~3.6s–4.0s).
+- **Resolution**:
+  - Removed `opacity: 0` and blur from `initial`. Tokens maintain full opacity (`1`) constantly.
+  - Aligned SSR HTML structure and CSS classes (`overflow-hidden`, `mr-[0.22em]`, `align-bottom`) identically with hydrated client tokens, preventing DOM layout recalculations.
+  - Client animation transforms only `y: "100%" -> "0%"` after hydration.
+  - Added Playwright test with `javaScriptEnabled: false` verifying that hero `h1` and subtitle `p` are visible in static SSR HTML.
+- **5-Run Mobile Lighthouse Results (Production Build)**:
+  - **Light Mode Median**: Performance **90**, LCP **3.6s** (Lantern simulated) / **2.5s** (DevTools throttled), FCP **771ms**, TBT **34ms**, CLS **0**.
+  - **Dark Mode Median**: Performance **90**, LCP **3.7s** (Lantern simulated) / **2.5s** (DevTools throttled), FCP **777ms**, TBT **58ms**, CLS **0**.
+  - **Observed Unthrottled**: FCP **199ms**, LCP **199ms**, CLS **0**.
+
+### D-022: Font Licensing (SIL Open Font License 1.1)
+- **Decision**: Added official SIL Open Font License 1.1 documentation to `src/assets/fonts/OFL.txt` covering self-hosted `Inter` (The Inter Project Authors) and `Poppins` (Indian Type Foundry) fonts used across marketing pages and Open Graph images.
+
+### D-023: Phase 5+ Branching & Pull Request Model
+- **Policy**: Starting in Phase 5, all feature development, chore tasks, and fixes must be implemented on dedicated topic branches named `phase-NN/<topic>` (e.g. `phase-05/illustrations`, `phase-05/chore-biome-2`) and merged into `main` via pull requests.
 
 

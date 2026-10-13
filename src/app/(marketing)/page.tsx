@@ -34,7 +34,7 @@ export default function HomePage() {
               size="lg"
               className="rounded-full bg-[var(--color-brand)] text-[var(--color-brand-foreground)] hover:bg-[var(--color-brand-hover)] px-8 font-semibold shadow-[var(--shadow-e2)] gap-2 min-h-[48px]"
             >
-              <Link href="/get-started">
+              <Link href="/get-started" prefetch={false}>
                 <span>Get Started</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
@@ -47,7 +47,9 @@ export default function HomePage() {
             size="lg"
             className="rounded-full px-8 font-semibold min-h-[48px]"
           >
-            <Link href="/demo">Book a Product Demo</Link>
+            <Link href="/demo" prefetch={false}>
+              Book a Product Demo
+            </Link>
           </Button>
         </div>
       </div>

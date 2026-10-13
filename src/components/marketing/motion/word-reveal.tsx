@@ -42,7 +42,7 @@ export function WordReveal({
         <span aria-hidden="true">
           {tokens.map(({ id, word }, i) => (
             <React.Fragment key={id}>
-              <span className="inline-block mr-[0.22em] align-bottom">
+              <span className="inline-block overflow-hidden align-bottom mr-[0.22em]">
                 <span className={`inline-block ${highlight ? "text-[var(--color-brand)]" : ""}`}>
                   {word}
                 </span>
@@ -63,11 +63,11 @@ export function WordReveal({
           <React.Fragment key={id}>
             <span className="inline-block overflow-hidden align-bottom mr-[0.22em]">
               <motion.span
-                initial={{ y: "110%", opacity: 0, filter: "blur(8px)" }}
-                animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
+                initial={{ y: "100%" }}
+                animate={{ y: "0%" }}
                 transition={{
-                  duration: 0.75,
-                  delay: delay + i * 0.07,
+                  duration: 0.5,
+                  delay: delay + i * 0.04,
                   ease: [0.22, 1, 0.36, 1],
                 }}
                 className={`inline-block ${highlight ? "text-[var(--color-brand)]" : ""}`}

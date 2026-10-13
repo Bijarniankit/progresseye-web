@@ -42,6 +42,27 @@ test.describe("Marketing Shell — Core Route Loading & Landmarks", () => {
   });
 });
 
+test.describe("Marketing Shell — No-JS Fallback & SSR Hero Visibility", () => {
+  test.use({ javaScriptEnabled: false });
+
+  test("confirms hero headline and subtitle are visible when JavaScript is disabled", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    // Verify hero h1 heading is visible and contains expected text
+    const heading = page.locator("h1");
+    await expect(heading).toBeVisible();
+    await expect(heading).toContainText("The school workspace that runs itself.");
+
+    // Verify hero subtitle paragraph is visible
+    const subtitle = page
+      .locator("p")
+      .filter({ hasText: "A calm, unified operating environment for school workflows" });
+    await expect(subtitle).toBeVisible();
+  });
+});
+
 test.describe("Marketing Shell — Navbar Scroll & CLS", () => {
   test("toggles scrolled styling without causing layout shift", async ({ page }) => {
     await page.goto("/");
