@@ -172,7 +172,7 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
                     >
                       {tFooter(item.labelKey)}
                     </Link>
-                    {item.badgeKey && (
+                    {item.badgeKey && siteConfig.hasOpenRoles && (
                       <span className="px-1.5 py-0.5 text-[10px] font-semibold rounded-full bg-[var(--color-brand)]/10 text-[var(--color-brand)]">
                         {tFooter(item.badgeKey)}
                       </span>
@@ -204,45 +204,51 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
         </div>
 
         {/* Bottom Strip: Copyright & Accessible Social Links */}
-        <div className="pt-8 border-t border-[var(--color-border)] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--color-text-muted)]">
+        <div
+          className={`pt-8 border-t border-[var(--color-border)] flex flex-col sm:flex-row items-center ${
+            siteConfig.hasConfiguredSocial ? "justify-between" : "justify-center text-center"
+          } gap-4 text-xs text-[var(--color-text-muted)]`}
+        >
           <div>{tFooter("copyright", { year: currentYear })}</div>
 
-          <div className="flex items-center gap-4">
-            <a
-              href={siteConfig.social.twitter}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Follow ProgressEye on X (formerly Twitter)"
-              className="p-1 rounded-[var(--radius-sm)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
-            >
-              <XIcon className="h-4 w-4" />
-            </a>
-            <a
-              href={siteConfig.social.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Connect with ProgressEye on LinkedIn"
-              className="p-1 rounded-[var(--radius-sm)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
-            >
-              <LinkedInIcon className="h-4 w-4" />
-            </a>
-            <a
-              href={siteConfig.social.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="View ProgressEye on GitHub"
-              className="p-1 rounded-[var(--radius-sm)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
-            >
-              <GitHubIcon className="h-4 w-4" />
-            </a>
-          </div>
+          {siteConfig.hasConfiguredSocial && (
+            <div className="flex items-center gap-4">
+              <a
+                href={siteConfig.social.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Follow ProgressEye on X (formerly Twitter)"
+                className="p-1 rounded-[var(--radius-sm)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
+              >
+                <XIcon className="h-4 w-4" />
+              </a>
+              <a
+                href={siteConfig.social.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Connect with ProgressEye on LinkedIn"
+                className="p-1 rounded-[var(--radius-sm)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
+              >
+                <LinkedInIcon className="h-4 w-4" />
+              </a>
+              <a
+                href={siteConfig.social.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="View ProgressEye on GitHub"
+                className="p-1 rounded-[var(--radius-sm)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
+              >
+                <GitHubIcon className="h-4 w-4" />
+              </a>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Oversized Non-Colliding Watermark (Title Case "ProgressEye", aria-hidden) */}
+      {/* Oversized Non-Colliding Watermark (Title Case "ProgressEye", aria-hidden, full descenders) */}
       <div
         aria-hidden="true"
-        className="pointer-events-none select-none text-center font-display font-extrabold leading-[0.8] text-[clamp(4rem,14vw,17rem)] opacity-[0.06] text-[var(--color-text)] tracking-tight whitespace-nowrap pt-8 -mb-4 overflow-hidden"
+        className="pointer-events-none select-none text-center font-display font-extrabold leading-normal text-[clamp(1.75rem,8.2vw,14rem)] opacity-[0.06] text-[var(--color-text)] tracking-tight whitespace-nowrap pt-8 pb-6 px-4"
       >
         ProgressEye
       </div>

@@ -57,10 +57,10 @@ test.describe("Marketing Shell — Visual QA Screenshots", () => {
     });
   }
 
-  test("captures open Mobile Drawer at 360px and 767px in Light and Dark mode", async ({
+  test("captures open Mobile Drawer at 360px and 768px in Light and Dark mode", async ({
     page,
   }) => {
-    for (const width of [360, 767]) {
+    for (const width of [360, 768]) {
       await page.setViewportSize({ width, height: 800 });
 
       // Light mode drawer
@@ -86,6 +86,38 @@ test.describe("Marketing Shell — Visual QA Screenshots", () => {
 
       const drawerDarkPath = path.join(artifactDir, `drawer-${width}-dark.png`);
       await page.screenshot({ path: drawerDarkPath });
+    }
+  });
+
+  test("captures mobile footer watermark at 320px, 360px, and 390px in Light and Dark mode", async ({
+    page,
+  }) => {
+    for (const width of [320, 360, 390]) {
+      await page.setViewportSize({ width, height: 750 });
+
+      // Light mode
+      await page.goto("/");
+      await page.waitForLoadState("networkidle");
+      await page.evaluate(() => {
+        document.documentElement.classList.remove("dark");
+        document.documentElement.classList.add("light");
+      });
+      const footerLocator = page.locator("footer");
+      await footerLocator.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(300);
+      await footerLocator.screenshot({
+        path: path.join(artifactDir, `watermark-${width}-light.png`),
+      });
+
+      // Dark mode
+      await page.evaluate(() => {
+        document.documentElement.classList.remove("light");
+        document.documentElement.classList.add("dark");
+      });
+      await page.waitForTimeout(300);
+      await footerLocator.screenshot({
+        path: path.join(artifactDir, `watermark-${width}-dark.png`),
+      });
     }
   });
 });

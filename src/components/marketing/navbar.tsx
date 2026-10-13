@@ -38,7 +38,7 @@ export function PublicNavbar() {
   return (
     <>
       <header
-        className={`fixed top-0 inset-x-0 z-[var(--z-nav)] h-16 md:h-20 transition-colors duration-[var(--duration-normal)] ease-[var(--ease-standard)] ${
+        className={`fixed top-0 inset-x-0 z-[var(--z-nav)] h-16 lg:h-20 transition-colors duration-[var(--duration-normal)] ease-[var(--ease-standard)] ${
           scrolled
             ? "bg-[var(--color-surface)]/80 backdrop-blur-xl border-b border-[var(--color-border)] shadow-[var(--shadow-e1)]"
             : "bg-transparent border-b border-transparent"
@@ -61,8 +61,8 @@ export function PublicNavbar() {
             </span>
           </Link>
 
-          {/* Desktop Navigation Links (6 links) */}
-          <nav className="hidden md:flex items-center gap-1 lg:gap-2" aria-label="Main Navigation">
+          {/* Desktop Navigation Links (6 links) — shown only on lg screens (>= 1024px) */}
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-2" aria-label="Main Navigation">
             {siteConfig.navLinks.map((link) => {
               const label = tNav(link.labelKey);
               const isActive =
@@ -99,7 +99,7 @@ export function PublicNavbar() {
           </nav>
 
           {/* Desktop Right Actions: Theme Toggle, Sign In, Get Started */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3">
             <Button
               variant="ghost"
               size="sm"
@@ -129,8 +129,8 @@ export function PublicNavbar() {
             </Link>
           </div>
 
-          {/* Mobile Hamburger Button */}
-          <div className="flex md:hidden items-center gap-2">
+          {/* Mobile & Tablet Hamburger Button (screens < 1024px) */}
+          <div className="flex lg:hidden items-center gap-2">
             <Button
               variant="ghost"
               size="sm"

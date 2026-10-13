@@ -161,3 +161,13 @@ This document records architectural, visual, and copy decisions modifying or com
 - **Decision**: On Windows root drive paths, Next.js 16 with `@swc/core@1.16+` fails DACL ancestor path security checks when `createNextIntlPlugin` attempts to register native SWC compilation bindings.
 - **Resolution**: Bypassed `createNextIntlPlugin()` wrapper in `next.config.ts` and directly mapped `'next-intl/config'` to `'./src/i18n/request.ts'` via Turbopack `resolveAlias` and Webpack `config.resolve.alias`. This preserves full NextIntl Server and Client functionality with clean sub-second build times and zero SWC native binary panics.
 
+### D-019: Responsive Navigation Breakpoint & Overflow Safeguard
+- **Decision**: To prevent text wrapping of "Sign in" and cutoff of "Get started" in the 768px–1023px tablet range, desktop navigation and action buttons are visible only on `lg:` viewports (>= 1024px). All viewports below 1024px utilize the accessible mobile hamburger drawer.
+- **Verification**: Dedicated e2e tests verify `document.documentElement.scrollWidth <= window.innerWidth` across all 13 routes at 360, 768, 1024, 1280, and 1536px viewports.
+
+### D-020: Watermark Responsiveness, Descender Preservation & Footer Data Flags
+- **Watermark Sizing**: Sized using fluid CSS `clamp(1.75rem, 8.2vw, 14rem)` with `leading-normal` and `pb-6 px-4`. This ensures the watermark never clips horizontally across 320px to 1536px screens while providing ample room for full descender visibility (`g` and `y` curves remain uncropped and distinct).
+- **Hiring Badge Flag**: Configured via `siteConfig.hasOpenRoles` (default `false`). The "We're hiring" badge in navigation and footer remains hidden until active job postings exist.
+- **Social Icons Flag**: Configured via `siteConfig.hasConfiguredSocial`. Social icons are completely hidden until real verified profile URLs are configured in environment variables.
+
+

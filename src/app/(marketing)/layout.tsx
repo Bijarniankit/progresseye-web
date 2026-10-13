@@ -55,7 +55,7 @@ export default function MarketingLayout({
       <main
         id="main-content"
         tabIndex={-1}
-        className="flex-1 pt-16 md:pt-20 scroll-pt-16 md:scroll-pt-20 outline-none"
+        className="flex-1 pt-16 lg:pt-20 scroll-pt-16 lg:scroll-pt-20 outline-none"
       >
         {children}
       </main>

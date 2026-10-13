@@ -168,3 +168,58 @@ test.describe("Marketing Shell — Reduced Motion Mode", () => {
     await expect(activeSpan).toBeAttached();
   });
 });
+
+test.describe("Marketing Shell — Zero Horizontal Overflow (document.scrollWidth <= window.innerWidth)", () => {
+  const testViewports = [
+    { width: 360, height: 740, label: "360px" },
+    { width: 768, height: 1024, label: "768px" },
+    { width: 1024, height: 768, label: "1024px" },
+    { width: 1280, height: 800, label: "1280px" },
+    { width: 1536, height: 900, label: "1536px" },
+  ];
+
+  for (const vp of testViewports) {
+    for (const route of marketingRoutes) {
+      test(`verifies document.scrollWidth <= window.innerWidth on ${route} at ${vp.label}`, async ({
+        page,
+      }) => {
+        await page.setViewportSize({ width: vp.width, height: vp.height });
+        await page.goto(route);
+        await page.waitForLoadState("networkidle");
+
+        const overflow = await page.evaluate(() => ({
+          scrollWidth: document.documentElement.scrollWidth,
+          innerWidth: window.innerWidth,
+          hasOverflow: document.documentElement.scrollWidth > window.innerWidth,
+        }));
+
+        expect(overflow.hasOverflow).toBe(false);
+        expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.innerWidth);
+      });
+    }
+  }
+});
+
+test.describe("Marketing Shell — Watermark Viewport Scaling (320px, 360px, 390px)", () => {
+  const mobileWidths = [320, 360, 390];
+  for (const width of mobileWidths) {
+    test(`renders footer watermark without clipping or horizontal overflow at ${width}px`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 700 });
+      await page.goto("/");
+      await page.waitForLoadState("networkidle");
+
+      const watermark = page.locator("footer div[aria-hidden='true']").last();
+      await expect(watermark).toBeVisible();
+
+      const watermarkMetrics = await watermark.evaluate((el) => ({
+        scrollWidth: el.scrollWidth,
+        clientWidth: el.clientWidth,
+        windowWidth: window.innerWidth,
+      }));
+
+      expect(watermarkMetrics.scrollWidth).toBeLessThanOrEqual(watermarkMetrics.windowWidth);
+    });
+  }
+});

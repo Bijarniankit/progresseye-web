@@ -2,7 +2,7 @@ import { MagneticButton } from "@/components/marketing/motion/magnetic-button";
 import { TiltCard } from "@/components/marketing/motion/tilt-card";
 import { WordReveal } from "@/components/marketing/motion/word-reveal";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
@@ -18,18 +18,13 @@ export default function HomePage() {
     <div className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-16">
       {/* Hero Header */}
       <div className="space-y-6 text-center max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[var(--color-surface-subtle)] text-[var(--color-brand)] border border-[var(--color-border)]">
-          <Sparkles className="h-3.5 w-3.5" />
-          <span>Phase 4 Marketing Shell Complete</span>
-        </div>
-
         <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--color-text)] leading-[1.1]">
           <WordReveal text="The school workspace that runs itself." />
         </h1>
 
         <p className="text-base sm:text-lg text-[var(--color-text-muted)] leading-relaxed max-w-2xl mx-auto">
-          Centralize attendance, academics, fees, and parent communication in one calm, reliable
-          platform engineered for modern school leaders and educators.
+          A calm, unified operating environment for school workflows, administrative records, and
+          community communication.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
@@ -40,7 +35,7 @@ export default function HomePage() {
               className="rounded-full bg-[var(--color-brand)] text-[var(--color-brand-foreground)] hover:bg-[var(--color-brand-hover)] px-8 font-semibold shadow-[var(--shadow-e2)] gap-2 min-h-[48px]"
             >
               <Link href="/get-started">
-                <span>Get Started Free</span>
+                <span>Get Started</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
@@ -63,10 +58,10 @@ export default function HomePage() {
           <div className="w-10 h-10 rounded-[var(--radius-lg)] bg-[var(--color-surface-contrast)] text-[var(--color-surface)] flex items-center justify-center font-bold">
             01
           </div>
-          <h2 className="text-lg font-bold text-[var(--color-text)]">Attendance in Seconds</h2>
+          <h2 className="text-lg font-bold text-[var(--color-text)]">Calm Administrative Flow</h2>
           <p className="text-sm text-[var(--color-text-muted)] leading-relaxed">
-            Multi-tier classroom verification, instant SMS triggers to guardians, and automated
-            daily summary audits.
+            Structured records and unified dashboards designed to reduce cognitive overhead across
+            daily school management.
           </p>
         </TiltCard>
 
@@ -74,10 +69,10 @@ export default function HomePage() {
           <div className="w-10 h-10 rounded-[var(--radius-lg)] bg-[var(--color-surface-contrast)] text-[var(--color-surface)] flex items-center justify-center font-bold">
             02
           </div>
-          <h2 className="text-lg font-bold text-[var(--color-text)]">Double-Entry Fee Ledger</h2>
+          <h2 className="text-lg font-bold text-[var(--color-text)]">Multi-Tenant Foundation</h2>
           <p className="text-sm text-[var(--color-text-muted)] leading-relaxed">
-            Immutable integer paise ledger with automated UPI reconciliations, discount brackets,
-            and instant receipts.
+            Architected for strict institutional data isolation, role-based access control, and
+            reliable multi-tenant operations.
           </p>
         </TiltCard>
 
@@ -85,10 +80,10 @@ export default function HomePage() {
           <div className="w-10 h-10 rounded-[var(--radius-lg)] bg-[var(--color-surface-contrast)] text-[var(--color-surface)] flex items-center justify-center font-bold">
             03
           </div>
-          <h2 className="text-lg font-bold text-[var(--color-text)]">DPDP & Safety Architecture</h2>
+          <h2 className="text-lg font-bold text-[var(--color-text)]">Connected Community</h2>
           <p className="text-sm text-[var(--color-text-muted)] leading-relaxed">
-            Multi-tenant Row-Level Security, audit trails for minor records, and explicit parental
-            consent tracking.
+            Clear communication channels built to keep administrators, educators, and families
+            informed and coordinated.
           </p>
         </TiltCard>
       </div>

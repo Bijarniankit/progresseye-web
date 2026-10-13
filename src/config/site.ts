@@ -7,12 +7,19 @@ export const siteConfig = {
     "An advanced, end-to-end multi-tenant school operating system built for Indian schools — attendance, fees, exams, communication, all in one calm screen.",
   supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "support@progresseye.com", // TODO-REAL-DATA: Confirm support email
 
-  // Social profile placeholders - marked TODO-REAL-DATA
-  // Note: Omitted from Schema.org sameAs until real verified profiles are provided
+  // Feature & Data Flags
+  hasOpenRoles: false, // Show "We're hiring" badge only when open positions exist (default: false)
+  hasConfiguredSocial: Boolean(
+    process.env.NEXT_PUBLIC_TWITTER_URL ||
+      process.env.NEXT_PUBLIC_LINKEDIN_URL ||
+      process.env.NEXT_PUBLIC_GITHUB_URL,
+  ), // Hide social icons until real handles are configured
+
+  // Social profile links - configured via env vars; omitted from UI until configured
   social: {
-    twitter: "https://x.com/ProgressEyeApp", // TODO-REAL-DATA
-    linkedin: "https://linkedin.com/company/progresseye", // TODO-REAL-DATA
-    github: "https://github.com/progresseye", // TODO-REAL-DATA
+    twitter: process.env.NEXT_PUBLIC_TWITTER_URL || "",
+    linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL || "",
+    github: process.env.NEXT_PUBLIC_GITHUB_URL || "",
   },
 
   navLinks: [
