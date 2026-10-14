@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.5.15",
     "@playwright/test": "^1.64.0",
     "@tailwindcss/postcss": "^4.0.0",
     "@testing-library/jest-dom": "^7.0.1",
@@ -59,8 +59,5 @@
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0",
     "vitest": "^3.0.0"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": ["@biomejs/biome", "esbuild"]
   }
 }

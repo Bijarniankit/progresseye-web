@@ -1,6 +1,6 @@
 allowBuilds:
-  '@biomejs/biome': true
-  '@scarf/scarf': true
+  "@biomejs/biome": true
+  "@parcel/watcher": false
+  "@scarf/scarf": false
+  "@swc/core": true
   esbuild: true
-  '@parcel/watcher': true
-  '@swc/core': true
