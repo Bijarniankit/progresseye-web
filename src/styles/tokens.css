@@ -84,6 +84,16 @@
   /* Surfaces */
   --color-surface-hero: var(--palette-cream-50);
   --color-surface-footer: var(--palette-cream-100);
+  --color-hero-heading: var(--palette-indigo-900);
+  --color-hero-tagline: var(--palette-indigo-700);
+  --color-hero-play-disc: var(--palette-indigo-700);
+  --color-hero-plate-border: rgba(99, 102, 241, 0.4);
+  --color-hero-plate-bg: linear-gradient(135deg, #e0e7ff 0%, #faf6ec 45%, #fef3c7 100%);
+  --color-hero-carousel-dot: var(--palette-indigo-700);
+  --color-hero-carousel-dot-inactive: rgba(99, 102, 241, 0.25);
+  --color-hero-carousel-control-bg: rgba(255, 255, 255, 0.85);
+  --color-hero-carousel-control-border: rgba(99, 102, 241, 0.2);
+  --color-hero-carousel-control-text: var(--palette-indigo-900);
   --color-surface: #ffffff;
   --color-surface-subtle: #f1f5f9;
   --color-surface-card: #ffffff;
@@ -161,13 +171,97 @@
   --z-overlay: 50;
   --z-modal: 60;
   --z-toast: 70;
+
+  /* Vector Scene Tokens (Light Mode) */
+  --scene-school-sky-top: #e0e7ff;
+  --scene-school-sky-bottom: #faf6ec;
+  --scene-school-facade-top: #ffffff;
+  --scene-school-facade-bottom: #e0e7ff;
+  --scene-school-structure: #1e1b4b;
+  --scene-school-structure-border: #1e1b4b;
+  --scene-school-pillar: #1e1b4b;
+  --scene-school-pillar-opacity: 0.85;
+  --scene-school-sun: #4338ca;
+  --scene-school-sun-halo1: rgba(67, 56, 202, 0.15);
+  --scene-school-sun-halo2: rgba(67, 56, 202, 0.06);
+  --scene-school-tree-trunk: #1e1b4b;
+  --scene-school-tree1: #6366f1;
+  --scene-school-tree2: #818cf8;
+  --scene-school-tree3: #a5b4fc;
+  --scene-school-ground: #1e1b4b;
+  --scene-school-door-frame: #1e1b4b;
+  --scene-school-door-inner: #4338ca;
+  --scene-school-clock-face: #ffffff;
+  --scene-school-clock-hand: #4338ca;
+  --scene-school-book1: #4338ca;
+  --scene-school-book2: #818cf8;
+  --scene-school-book3: #3730a3;
+  --scene-school-exam-bg: #ffffff;
+  --scene-school-exam-border: #1e1b4b;
+  --scene-school-exam-line: #a5b4fc;
+  --scene-school-cloud-1: #c7d2fe;
+  --scene-school-cloud-2: #e0e7ff;
+
+  --scene-card-bg: #ffffff;
+  --scene-card-border: #1e1b4b;
+  --scene-card-shadow: rgba(30, 27, 75, 0.08);
+  --scene-card-text: #1e1b4b;
+  --scene-card-muted: #64748b;
+  --scene-card-tag-bg: #f1f5f9;
+  --scene-card-tag-text: #64748b;
+
+  --scene-feat-connector: #c7d2fe;
+  --scene-feat-orbit: #a5b4fc;
+  --scene-feat-halo-start: rgba(67, 56, 202, 0.32);
+  --scene-feat-halo-end: rgba(67, 56, 202, 0);
+  --scene-feat-core-1: #3730a3;
+  --scene-feat-core-2: #1e1b4b;
+  --scene-feat-header-fill: #1e1b4b;
+  --scene-feat-header-text: #ffffff;
+  --scene-feat-dot-present: #c7d2fe;
+  --scene-feat-dot-absent: #fde68a;
+  --scene-feat-coin-bg: #f59e0b;
+  --scene-feat-coin-stroke: #1e1b4b;
+  --scene-feat-coin-text: #1e1b4b;
+  --scene-feat-chat-bg: #4338ca;
+  --scene-feat-chat-stroke: #1e1b4b;
+  --scene-feat-pill-aplus-bg: #1e1b4b;
+  --scene-feat-pill-aplus-text: #ffffff;
+  --scene-feat-pill-a-bg: #c7d2fe;
+  --scene-feat-pill-a-text: #1e1b4b;
+  --scene-feat-pill-c-bg: #fde68a;
+  --scene-feat-pill-c-text: #1e1b4b;
+
+  --scene-detail-donut-track: #e2e8f0;
+  --scene-detail-donut-fill: #4338ca;
+  --scene-detail-progress-track: #e2e8f0;
+  --scene-detail-progress-fill: #4338ca;
+  --scene-detail-att-present: #1e1b4b;
+  --scene-detail-att-absent: #f59e0b;
+  --scene-detail-badge-bg: #1e1b4b;
+  --scene-detail-badge-text: #f59e0b;
+  --scene-detail-bar-aplus: #1e1b4b;
+  --scene-detail-bar-a: #3730a3;
+  --scene-detail-bar-b: #6366f1;
+  --scene-detail-bar-c: #a5b4fc;
+  --scene-detail-bar-d: #fcd34d;
 }
 
 /* Dark Theme Overrides */
 .dark {
-  --color-surface-hero: #0f172a;
+  --color-surface-hero: #020617;
   --color-surface-footer: #020617;
-  --color-surface: #0f172a;
+  --color-hero-heading: #f8fafc;
+  --color-hero-tagline: var(--palette-indigo-300);
+  --color-hero-play-disc: var(--palette-indigo-600);
+  --color-hero-plate-border: rgba(99, 102, 241, 0.35);
+  --color-hero-plate-bg: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  --color-hero-carousel-dot: #818cf8;
+  --color-hero-carousel-dot-inactive: rgba(129, 140, 248, 0.25);
+  --color-hero-carousel-control-bg: rgba(30, 41, 59, 0.85);
+  --color-hero-carousel-control-border: rgba(99, 102, 241, 0.35);
+  --color-hero-carousel-control-text: #f8fafc;
+  --color-surface: #020617;
   --color-surface-subtle: #1e293b;
   --color-surface-card: #1e293b;
   --color-surface-popover: #1e293b;
@@ -211,6 +305,81 @@
   --shadow-e2: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
   --shadow-e3: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
   --shadow-e4: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+
+  /* Vector Scene Tokens (Dark Mode Option B) */
+  --scene-school-sky-top: #1e1b4b;
+  --scene-school-sky-bottom: #0f172a;
+  --scene-school-facade-top: #1e293b;
+  --scene-school-facade-bottom: #0f172a;
+  --scene-school-structure: #818cf8;
+  --scene-school-structure-border: #a5b4fc;
+  --scene-school-pillar: #a5b4fc;
+  --scene-school-pillar-opacity: 0.9;
+  --scene-school-sun: #f59e0b;
+  --scene-school-sun-halo1: rgba(245, 158, 11, 0.25);
+  --scene-school-sun-halo2: rgba(245, 158, 11, 0.08);
+  --scene-school-tree-trunk: #a5b4fc;
+  --scene-school-tree1: #4f46e5;
+  --scene-school-tree2: #6366f1;
+  --scene-school-tree3: #818cf8;
+  --scene-school-ground: #6366f1;
+  --scene-school-door-frame: #1e1b4b;
+  --scene-school-door-inner: #6366f1;
+  --scene-school-clock-face: #0f172a;
+  --scene-school-clock-hand: #a5b4fc;
+  --scene-school-book1: #4f46e5;
+  --scene-school-book2: #818cf8;
+  --scene-school-book3: #3730a3;
+  --scene-school-exam-bg: #1e293b;
+  --scene-school-exam-border: #818cf8;
+  --scene-school-exam-line: #818cf8;
+  --scene-school-cloud-1: #312e81;
+  --scene-school-cloud-2: #3730a3;
+
+  /* Consistent Dark Palette for All Scene Cards */
+  --scene-card-bg: #1e293b;
+  --scene-card-border: #334155;
+  --scene-card-shadow: rgba(0, 0, 0, 0.4);
+  --scene-card-text: #f8fafc;
+  --scene-card-muted: #94a3b8;
+  --scene-card-tag-bg: rgba(99, 102, 241, 0.2);
+  --scene-card-tag-text: #a5b4fc;
+
+  --scene-feat-connector: #818cf8;
+  --scene-feat-orbit: #818cf8;
+  --scene-feat-halo-start: rgba(129, 140, 248, 0.35);
+  --scene-feat-halo-end: rgba(30, 27, 75, 0);
+  --scene-feat-core-1: #4f46e5;
+  --scene-feat-core-2: #1e1b4b;
+  --scene-feat-header-fill: #312e81;
+  --scene-feat-header-text: #f8fafc;
+  --scene-feat-dot-present: #818cf8;
+  --scene-feat-dot-absent: #fbbf24;
+  --scene-feat-coin-bg: #f59e0b;
+  --scene-feat-coin-stroke: #818cf8;
+  --scene-feat-coin-text: #1e1b4b;
+  --scene-feat-chat-bg: #4f46e5;
+  --scene-feat-chat-stroke: #818cf8;
+  --scene-feat-pill-aplus-bg: #4338ca;
+  --scene-feat-pill-aplus-text: #ffffff;
+  --scene-feat-pill-a-bg: #312e81;
+  --scene-feat-pill-a-text: #e0e7ff;
+  --scene-feat-pill-c-bg: #b45309;
+  --scene-feat-pill-c-text: #fef3c7;
+
+  --scene-detail-donut-track: #334155;
+  --scene-detail-donut-fill: #6366f1;
+  --scene-detail-progress-track: #334155;
+  --scene-detail-progress-fill: #6366f1;
+  --scene-detail-att-present: #6366f1;
+  --scene-detail-att-absent: #fbbf24;
+  --scene-detail-badge-bg: #312e81;
+  --scene-detail-badge-text: #fbbf24;
+  --scene-detail-bar-aplus: #818cf8;
+  --scene-detail-bar-a: #6366f1;
+  --scene-detail-bar-b: #4f46e5;
+  --scene-detail-bar-c: #a5b4fc;
+  --scene-detail-bar-d: #fcd34d;
 }
 
 @theme {
@@ -233,4 +402,12 @@
   --transition-timing-function-entrance: var(--ease-entrance);
   --transition-timing-function-exit: var(--ease-exit);
   --transition-timing-function-spring: var(--ease-spring);
+}
+
+/* Touch Targets: 44x44px minimum on coarse pointer devices (Apple HIG / WCAG 2.5.5) */
+@media (pointer: coarse) {
+  .touch-target-coarse {
+    min-width: 44px;
+    min-height: 44px;
+  }
 }

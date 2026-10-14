@@ -1,6 +1,13 @@
 import { execSync } from "node:child_process";
 import fs from "node:fs";
 
+function median(arr) {
+  if (arr.length === 0) return 0;
+  const sorted = [...arr].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
 async function main() {
   console.log("Warming up production server on http://localhost:3000/ ...");
   for (let i = 0; i < 3; i++) {
@@ -71,35 +78,57 @@ async function main() {
     console.log(
       `  -> Run ${i}: Score ${runData.score} | LCP ${runData.lcpDisplay} (${runData.lcp}ms) | FCP ${runData.fcpDisplay} | TBT ${runData.tbt}ms | ObsLCP ${runData.obsLcp}ms`,
     );
+
+    // Clean up individual run json
+    try {
+      fs.unlinkSync(outputPath);
+    } catch {}
   }
 
-  // Calculate medians
-  const sortedByLcp = [...runs].sort((a, b) => a.lcp - b.lcp);
-  const _sortedByScore = [...runs].sort((a, b) => a.score - b.score);
-  const medianRun = sortedByLcp[2]; // 3rd of 5
+  // True statistical medians calculated per-column
+  const trueMedians = {
+    score: Math.round(median(runs.map((r) => r.score))),
+    lcp: Math.round(median(runs.map((r) => r.lcp))),
+    obsLcp: Math.round(median(runs.map((r) => r.obsLcp))),
+    fcp: Math.round(median(runs.map((r) => r.fcp))),
+    obsFcp: Math.round(median(runs.map((r) => r.obsFcp))),
+    speedIndex: Math.round(median(runs.map((r) => r.speedIndex))),
+    tbt: Math.round(median(runs.map((r) => r.tbt))),
+    cls: Number(median(runs.map((r) => r.cls)).toFixed(3)),
+    ttfb: Math.round(median(runs.map((r) => r.ttfb))),
+    renderDelay: Math.round(median(runs.map((r) => r.renderDelay))),
+    lcpElement: runs[0].elementSnippet,
+  };
 
   console.log("\n========================================================");
-  console.log("       LIGHTHOUSE MOBILE 5-RUN SUMMARY");
+  console.log("       LIGHTHOUSE MOBILE 5-RUN SUMMARY (TRUE MEDIANS)");
   console.log("========================================================");
-  console.log(`Median Run: #${medianRun.run}`);
-  console.log(`Performance Score: ${medianRun.score} / 100`);
-  console.log(`LCP (Simulated):    ${medianRun.lcp} ms (${medianRun.lcpDisplay})`);
-  console.log(`LCP (Observed):     ${medianRun.obsLcp} ms`);
-  console.log(`FCP (Simulated):    ${medianRun.fcp} ms (${medianRun.fcpDisplay})`);
-  console.log(`FCP (Observed):     ${medianRun.obsFcp} ms`);
-  console.log(`Speed Index:        ${medianRun.speedIndex} ms`);
-  console.log(`Total Blocking:     ${medianRun.tbt} ms`);
-  console.log(`CLS:                ${medianRun.cls}`);
-  console.log(`TTFB:               ${medianRun.ttfb} ms`);
-  console.log(`Element Render Del: ${medianRun.renderDelay} ms`);
-  console.log(`LCP Element:        ${medianRun.elementSnippet}`);
+  console.log(`Performance Score: ${trueMedians.score} / 100`);
+  console.log(
+    `LCP (Simulated):    ${trueMedians.lcp} ms (${(trueMedians.lcp / 1000).toFixed(2)} s)`,
+  );
+  console.log(
+    `LCP (Observed):     ${trueMedians.obsLcp} ms (${(trueMedians.obsLcp / 1000).toFixed(2)} s)`,
+  );
+  console.log(
+    `FCP (Simulated):    ${trueMedians.fcp} ms (${(trueMedians.fcp / 1000).toFixed(2)} s)`,
+  );
+  console.log(
+    `FCP (Observed):     ${trueMedians.obsFcp} ms (${(trueMedians.obsFcp / 1000).toFixed(2)} s)`,
+  );
+  console.log(`Speed Index:        ${trueMedians.speedIndex} ms`);
+  console.log(`Total Blocking:     ${trueMedians.tbt} ms`);
+  console.log(`CLS:                ${trueMedians.cls}`);
+  console.log(`TTFB:               ${trueMedians.ttfb} ms`);
+  console.log(`Element Render Del: ${trueMedians.renderDelay} ms`);
+  console.log(`LCP Element:        ${trueMedians.lcpElement}`);
   console.log("--------------------------------------------------------");
   console.log("All Runs Table:");
   console.table(runs);
 
   fs.writeFileSync(
     "lighthouse-5runs-summary.json",
-    JSON.stringify({ runs, median: medianRun }, null, 2),
+    JSON.stringify({ runs, medians: trueMedians }, null, 2),
   );
 }
 

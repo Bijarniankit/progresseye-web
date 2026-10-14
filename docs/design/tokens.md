@@ -46,6 +46,18 @@ ProgressEye follows a strict **Two-Layer Token Architecture**:
 | Semantic Token | Light Mode Target | Dark Mode Target | Semantic Role / Intent |
 |---|---|---|---|
 | `--color-surface` | `#FAFAFA` (Slate 50) | `#020617` (Slate 950) | Primary canvas background |
+| `--color-surface-hero` | `#FAF6EC` (Cream 50) | `#020617` (Slate 950) | Landing hero canvas surface |
+| `--color-surface-footer` | `#FBF6EB` (Cream 100) | `#020617` (Slate 950) | Marketing footer background |
+| `--color-hero-heading` | `#1E1B4B` (Indigo 900) | `#F8FAFC` (Slate 50) | Hero editorial headline h1 text |
+| `--color-hero-tagline` | `#3730A3` (Indigo 700) | `#A5B4FC` (Indigo 300) | Hero italic tagline text accent |
+| `--color-hero-play-disc`| `#4338CA` (Indigo 700) | `#4F46E5` (Indigo 600) | Product tour secondary CTA play disc |
+| `--color-hero-plate-border`| `rgba(99,102,241,0.4)` | `rgba(99,102,241,0.35)` | Hero circular carousel plate dashed border |
+| `--color-hero-plate-bg`| `linear-gradient(...)` | `linear-gradient(...)` | Hero circular carousel plate backdrop |
+| `--color-hero-carousel-dot`| `#3730A3` (Indigo 700) | `#818CF8` (Indigo 400) | Hero carousel active indicator pill/dot |
+| `--color-hero-carousel-dot-inactive`| `rgba(99,102,241,0.25)` | `rgba(129,140,248,0.25)` | Hero carousel inactive indicator dot |
+| `--color-hero-carousel-control-bg`| `rgba(255,255,255,0.85)` | `rgba(30,41,59,0.85)` | Hero carousel floating control background |
+| `--color-hero-carousel-control-border`| `rgba(99,102,241,0.2)` | `rgba(99,102,241,0.35)` | Hero carousel floating control border |
+| `--color-hero-carousel-control-text`| `#1E1B4B` (Indigo 900) | `#F8FAFC` (Slate 50) | Hero carousel control icon text |
 | `--color-surface-subtle` | `#F1F5F9` (Slate 100) | `#0F172A` (Slate 900) | Muted badges, secondary sections |
 | `--color-surface-card` | `#FFFFFF` | `#1E293B` (Slate 800) | Card backgrounds, elevated panels |
 | `--color-surface-contrast`| `#0F172A` (Slate 900) | `#F8FAFC` (Slate 50) | Tooltips, high-contrast banners |

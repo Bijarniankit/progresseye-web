@@ -194,7 +194,79 @@ This document records architectural, visual, and copy decisions modifying or com
 ### D-022: Font Licensing (SIL Open Font License 1.1)
 - **Decision**: Added official SIL Open Font License 1.1 documentation to `src/assets/fonts/OFL.txt` covering self-hosted `Inter` (The Inter Project Authors) and `Poppins` (Indian Type Foundry) fonts used across marketing pages and Open Graph images.
 
-### D-023: Phase 5+ Branching & Pull Request Model
-- **Policy**: Starting in Phase 5, all feature development, chore tasks, and fixes must be implemented on dedicated topic branches named `phase-NN/<topic>` (e.g. `phase-05/illustrations`, `phase-05/chore-biome-2`) and merged into `main` via pull requests.
+### D-024: Unified Dark Surface (#020617)
+- **Decision**: Unify hero section, body canvas, and footer dark backgrounds to a single cohesive dark surface token: `--color-surface-hero: #020617` (matching `--color-surface: #020617` and `--color-surface-footer: #020617`).
+- **Rationale**: Eliminates noticeable slate-navy (#0F172A) vs slate-950 (#020617) boundary seams between the fixed navbar, hero, page body, and footer, creating an immersive, unified dark aesthetic across all marketing routes. Elevated cards continue to use `#0F172A` / `#1E293B` for visual hierarchy.
 
+### D-025: Above-The-Fold Display Font Preload Optimization
+- **Decision**: In `src/app/layout.tsx`, split `next/font/google` font preloading so only the critical above-the-fold display weights are preloaded in `<head>`:
+  - `Inter` (body font, variable, `preload: true`)
+  - `Poppins` 800 normal (primary headline display tier, `preload: true`)
+  - `Poppins` 500 italic (editorial tagline accent, `preload: true`)
+- **Deferred Display Weights**:
+  - `Poppins` 600, 700 normal (`preload: false`, mapped to `--font-display-deferred`). Loaded asynchronously for below-the-fold cards and badges.
+- **Performance Impact**: Reduces critical preloaded font count from 5 to 3 files (saving ~38% preload weight), minimizing network contention during initial FCP/LCP rendering.
+- **Superseded By**: D-026.
+
+### D-026: Reversal of D-025 & Preloading All Above-The-Fold Brand Display Fonts
+- **Context**: In Phase 5 review, visual inspection revealed that the fixed navigation wordmark directly renders in `font-bold` (Poppins 700), and the hero primary/secondary CTA action buttons render in `font-semibold` (Poppins 600).
+- **Problem**: Deferring weights 600 and 700 caused visible font flash (FOUT) on the navbar brand text and CTA buttons upon initial viewport render.
+- **Resolution**: Reversed D-025 to preload all required above-the-fold display font weights in `src/app/layout.tsx`:
+  - `Poppins` 800 normal (`font-extrabold` in hero h1)
+  - `Poppins` 700 normal (`font-bold` in navbar wordmark)
+  - `Poppins` 600 normal (`font-semibold` in CTA buttons)
+  - `Poppins` 500 italic (`font-medium italic` in tagline)
+  - `Inter` (body copy)
+- **Outcome**: Completely eliminates font flash and visual layout shift (CLS = 0.000) while maintaining fast LCP (2.0s throttled / 0.30s observed).
+
+### D-027: Removal of Procedural feTurbulence Filter Overlay & Replacement with GPU Radial Washes
+- **Context**: `public-pages-spec.md` originally specified an atmospheric noise overlay using an inline SVG `<filter>` with `<feTurbulence>` and CSS `mix-blend-mode: overlay`.
+- **Problem**: In performance benchmarks under mobile CPU throttling, live `<feTurbulence>` procedural noise calculations coupled with 64px Gaussian blurs forced CPU-bound rasterization passes on every paint. This caused an LCP regression (observed LCP increased to 1.62s and TBT rose to 157ms).
+- **Resolution**: Removed the CPU-intensive `feTurbulence` procedural filter overlay and heavy `blur-3xl` passes from `HeroSection`. Replaced with lightweight, GPU-composited CSS `radial-gradient` ambient washes (`var(--color-peach-wash)` and `var(--color-mint-wash)`).
+- **Outcome**: TBT dropped from 157ms to 35–52ms; observed LCP dropped to 0.30s–0.33s; DevTools throttled LCP achieved 2.0s, passing the $\le$ 2.5s exit gate.
+### D-028: Hero Plate Breakpoint Sizing, Reserved Controls Slot & Overlapping Crossfade Architecture
+- **Plate Sizing Across Breakpoints**:
+  - `360px` (Mobile Portrait): `328px` diameter (100% of container: 360px viewport minus 32px padding).
+  - `768px` (Tablet Portrait): `460px` diameter (`max-w-[460px]` spec maximum).
+  - `1024px` (Laptop / Tablet Landscape): `381px` diameter (constrained by 12-column grid 5-column slot at 1024px breakpoint: 960px container minus 352px grid gaps, 5 columns = 381.33px).
+  - `1280px` (Desktop Spec Baseline): `460px` diameter (`max-w-[460px]` spec maximum fully restored).
+  - `1536px` (Ultra-Wide Desktop): `460px` diameter (`max-w-[460px]` spec maximum).
+- **Reserved 44px Controls Container**:
+  - The carousel navigation toolbar (`<nav aria-label="Carousel controls">`) renders inside a reserved `<div className="mt-6 h-[44px] flex items-center justify-center">` container.
+  - In pure SSR HTML before client hydration (or when JavaScript is disabled), this container maintains its exact 44px reserved vertical height.
+  - Sizing is 100.0% identical between JavaScript-enabled and JavaScript-disabled states across all breakpoints, resulting in zero cumulative layout shift across client hydration (CLS = 0.0000).
+- **Overlapping Crossfade Animation Architecture**:
+  - Replaced sequential `mode="wait"` exit transitions with concurrent absolute overlapping crossfades (`AnimatePresence initial={false}` with `<m.div className="absolute inset-0 ...">`).
+  - The outgoing scene fades out while the incoming scene simultaneously fades and scales in, ensuring the circular illustrative plate is never blank or empty during transitions.
+  - Transition CLS measured via `PerformanceObserver` across all 3 slides is 0.0000.
+
+### D-029: Removal of Carousel Controls, WCAG 2.2.2 Deviation Acceptance & Expanded Plate Dimensions
+- **Removal of Carousel Controls**:
+  - The carousel navigation toolbar, previous/next buttons, slide indicator dots, and explicit play/pause button were removed entirely per product direction.
+  - Scenes auto-rotate on a 5.2s interval with a 320ms overlapping crossfade.
+- **Plate Becomes Purely Decorative**:
+  - Marked `aria-hidden="true"` and `data-testid="hero-plate-container"`.
+  - Removed all ARIA carousel semantics (`aria-roledescription="carousel"`, `role="group"`, `aria-roledescription="slide"`, `aria-live`, and slide title wiring).
+  - Screen readers perceive the hero as a clean editorial column (headline, subtitle, CTAs) with zero decorative distraction.
+- **User-Accepted Deviation from WCAG 2.2.2 (Level A - Pause, Stop, Hide)**:
+  - WCAG 2.2.2 requires an explicit user mechanism to pause, stop, or hide moving/auto-updating content lasting > 5 seconds.
+  - The project owner explicitly approved omitting a visible pause button in favor of a minimalist aesthetic.
+  - Motion safeguards retained:
+    1. **Pointer Hover**: Rotation, orbit border spin, and cloud drift pause on `pointerenter` over the plate and resume on `pointerleave`.
+    2. **Tab Visibility**: Rotation pauses when the browser tab is hidden (`document.hidden` via `visibilitychange`).
+    3. **Intersection Observer**: Rotation pauses when the plate is scrolled off-screen.
+    4. **Prefers-Reduced-Motion**: Under `prefers-reduced-motion: reduce`, rotation is permanently disabled; Scene 1 renders statically with zero rotation, drift, or transitions.
+- **Removal of 44px Controls Slot & Vertical Centering**:
+  - The 44px reserved controls container below the plate was removed.
+  - The circular plate is vertically centered directly against the left headline column via CSS grid `items-center`.
+- **Expanded Responsive Plate Dimensions**:
+  - `360px` (Mobile Portrait): `328px` diameter (100% of container width minus 32px gutters).
+  - `768px` (Tablet Portrait): `500px` diameter (`md:max-w-[500px]`, up from 460px).
+  - `1024px` (Laptop / Landscape): `430px` diameter (`lg:max-w-[430px]`, accommodated by adjusting the grid column split to `lg:col-span-6 / lg:col-span-6`, providing 464px column width).
+  - `1280px` (Desktop Baseline): `520px` diameter (`xl:max-w-[520px]`, up from 460px).
+  - `1536px` (Ultra-Wide Desktop): `520px` diameter (`xl:max-w-[520px]`).
+  - Sizing remains 100.0% identical between JavaScript-enabled and JavaScript-disabled states across all breakpoints.
+- **8% Artwork Scaling in Scenes 1 & 2**:
+  - Vector artwork inside Scene 1 (`SchoolScene`) and Scene 2 (`FeaturesScene`) is scaled up by 8% (`transform="translate(-16 -16) scale(1.08)"`) to eliminate empty margin while preserving padding and zero clipping.
+  - Scene 3 (`FeatureDetailScene`) remains unscaled to prevent card clipping.
 

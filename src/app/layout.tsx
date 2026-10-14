@@ -10,12 +10,23 @@ const inter = Inter({
   display: "swap",
 });
 
+// Display fonts (Poppins 600, 700, 800 normal + 500 italic)
 const poppins = Poppins({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
-  weight: ["700", "800"],
+  weight: ["600", "700", "800"],
   style: ["normal"],
+  preload: true,
+});
+
+const poppinsItalic = Poppins({
+  subsets: ["latin"],
+  variable: "--font-display-italic",
+  display: "swap",
+  weight: ["500"],
+  style: ["italic"],
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -30,7 +41,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${inter.variable} ${poppins.variable} ${poppinsItalic.variable}`}
+      suppressHydrationWarning
+    >
       <body className="min-h-dvh antialiased bg-surface text-text">
         <RootProvider>{children}</RootProvider>
       </body>

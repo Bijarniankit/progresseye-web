@@ -53,3 +53,58 @@
   background-size: 28px 28px;
   opacity: 0.06;
 }
+
+/* CSS-only Word Reveal for Hero headline */
+@keyframes word-reveal {
+  from {
+    transform: translateY(110%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes tagline-reveal {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes cloud-drift {
+  0%,
+  100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(6px);
+  }
+}
+
+.animate-word-reveal {
+  animation: word-reveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-tagline-reveal {
+  animation: tagline-reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.22s both;
+}
+
+.animate-cloud-drift {
+  animation: cloud-drift 12s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-word-reveal,
+  .animate-tagline-reveal,
+  .animate-cloud-drift {
+    animation: none;
+    transform: none;
+    opacity: 1;
+  }
+}

@@ -58,7 +58,7 @@ test.describe("Marketing Shell — No-JS Fallback & SSR Hero Visibility", () => 
     // Verify hero subtitle paragraph is visible
     const subtitle = page
       .locator("p")
-      .filter({ hasText: "A calm, unified operating environment for school workflows" });
+      .filter({ hasText: "An advanced, end-to-end school management platform" });
     await expect(subtitle).toBeVisible();
   });
 });

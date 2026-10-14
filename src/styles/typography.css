@@ -32,14 +32,20 @@
   font-size: var(--text-display-hero);
   line-height: var(--leading-display);
   letter-spacing: var(--tracking-display);
-  font-family: var(--font-display, var(--font-sans, system-ui, sans-serif));
+  font-family: var(
+    --font-display,
+    var(--font-display-deferred, var(--font-sans, system-ui, sans-serif))
+  );
 }
 
 .text-display-page {
   font-size: var(--text-display-page);
   line-height: var(--leading-display);
   letter-spacing: var(--tracking-display);
-  font-family: var(--font-display, var(--font-sans, system-ui, sans-serif));
+  font-family: var(
+    --font-display,
+    var(--font-display-deferred, var(--font-sans, system-ui, sans-serif))
+  );
 }
 
 body {
@@ -49,7 +55,21 @@ body {
 }
 
 .font-display {
-  font-family: var(--font-display, var(--font-sans, system-ui, sans-serif));
+  font-family: var(
+    --font-display,
+    var(--font-display-deferred, var(--font-sans, system-ui, sans-serif))
+  );
+}
+
+.font-display.italic,
+.font-display .italic,
+.italic.font-display,
+.font-display em,
+.font-display i {
+  font-family: var(
+    --font-display-italic,
+    var(--font-display, var(--font-display-deferred, var(--font-sans, system-ui, sans-serif)))
+  );
 }
 
 .font-sans {
@@ -62,7 +82,10 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-display, var(--font-sans, system-ui, sans-serif));
+  font-family: var(
+    --font-display,
+    var(--font-display-deferred, var(--font-sans, system-ui, sans-serif))
+  );
   text-wrap: balance;
 }
 

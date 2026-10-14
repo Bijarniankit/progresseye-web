@@ -48,7 +48,7 @@ export function PublicNavbar() {
           {/* Logo Mark & Wordmark */}
           <Link
             href="/"
-            className="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] rounded-[var(--radius-md)] p-1"
+            className="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] rounded-[var(--radius-md)] -ml-1 pl-1 py-1 pr-2"
           >
             <div className="w-9 h-9 rounded-[var(--radius-md)] bg-[var(--color-surface-contrast)] relative flex items-center justify-center transition-transform group-hover:scale-105">
               <span className="font-display font-extrabold text-[var(--color-surface)] text-lg leading-none">
