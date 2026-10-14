@@ -1,7 +1,7 @@
-import { RootProvider } from "@/components/providers/root-provider";
-import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
+import { RootProvider } from "@/components/providers/root-provider";
+import { siteConfig } from "@/config/site";
 import "./globals.css";
 
 const inter = Inter({

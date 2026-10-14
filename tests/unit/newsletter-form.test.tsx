@@ -1,9 +1,8 @@
-import { Footer } from "@/components/marketing/footer";
 import messages from "@messages/en.json";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
-import React from "react";
 import { describe, expect, it, vi } from "vitest";
+import { Footer } from "@/components/marketing/footer";
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/",

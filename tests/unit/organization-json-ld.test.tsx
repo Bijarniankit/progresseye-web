@@ -1,7 +1,7 @@
-import { OrganizationJsonLd } from "@/components/marketing/organization-json-ld";
-import { siteConfig } from "@/config/site";
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { OrganizationJsonLd } from "@/components/marketing/organization-json-ld";
+import { siteConfig } from "@/config/site";
 
 describe("OrganizationJsonLd Unit Tests", () => {
   it("renders valid Schema.org Organization structured data", () => {

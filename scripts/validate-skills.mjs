@@ -54,7 +54,7 @@ for (const folder of skillFolders) {
     continue;
   }
 
-  if (!descMatch || !descMatch[1].trim()) {
+  if (!descMatch?.[1].trim()) {
     console.error(`FAIL [${folderName}]: Missing or empty 'description' in frontmatter`);
     errors++;
     continue;

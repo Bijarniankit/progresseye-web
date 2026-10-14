@@ -1,8 +1,7 @@
-import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar, ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import React from "react";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "School Operations & Parent Portal",

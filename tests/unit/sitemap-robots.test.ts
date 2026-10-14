@@ -1,7 +1,7 @@
+import { afterEach, describe, expect, it, vi } from "vitest";
 import robots from "@/app/robots";
 import sitemap from "@/app/sitemap";
 import { siteConfig } from "@/config/site";
-import { afterEach, describe, expect, it, vi } from "vitest";
 
 describe("Sitemap & Robots Verification", () => {
   afterEach(() => {

@@ -1,13 +1,13 @@
 "use client";
 
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { siteConfig } from "@/config/site";
-import { ArrowRight } from "lucide-react";
-import { useTranslations } from "next-intl";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import * as React from "react";
 
 export interface FooterProps {
   hideNewsletter?: boolean;
@@ -32,7 +32,7 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !email.includes("@")) {
+    if (!email?.includes("@")) {
       setError("Please enter a valid email address.");
       return;
     }

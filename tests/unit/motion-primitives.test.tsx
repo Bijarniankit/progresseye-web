@@ -1,10 +1,10 @@
+import { fireEvent, render, renderHook, screen } from "@testing-library/react";
+import type React from "react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { MagneticButton } from "@/components/marketing/motion/magnetic-button";
 import { TiltCard } from "@/components/marketing/motion/tilt-card";
 import { useSpotlight } from "@/components/marketing/motion/use-spotlight";
 import { WordReveal } from "@/components/marketing/motion/word-reveal";
-import { fireEvent, render, renderHook, screen } from "@testing-library/react";
-import type React from "react";
-import { afterEach, describe, expect, it, vi } from "vitest";
 
 describe("Motion Primitives Unit Tests", () => {
   afterEach(() => {

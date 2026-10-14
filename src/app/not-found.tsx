@@ -1,8 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { siteConfig } from "@/config/site";
-import { ArrowLeft, Home, LifeBuoy } from "lucide-react";
+import { Home, LifeBuoy } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import { Button } from "@/components/ui/button";
 
 export const metadata = {
   title: "404 — Page Not Found",

@@ -1,6 +1,5 @@
-import { StubPage } from "@/components/marketing/stub-page";
 import type { Metadata } from "next";
-import React from "react";
+import { StubPage } from "@/components/marketing/stub-page";
 
 export const metadata: Metadata = {
   title: "Book a Demo — Live Product Tour",

@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { ogTheme } from "@/config/og-theme";
 import { ImageResponse } from "next/og";
+import { ogTheme } from "@/config/og-theme";
 
 export const alt = "ProgressEye — Modern Multi-Tenant School Operating System";
 export const size = {

@@ -1,6 +1,6 @@
-import DevTokensPage from "@/app/dev/tokens/page";
 import * as navigation from "next/navigation";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import DevTokensPage from "@/app/dev/tokens/page";
 
 vi.mock("next/navigation", () => ({
   notFound: vi.fn(),

@@ -1,5 +1,9 @@
 "use client";
 
+import { Moon, Play, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import * as React from "react";
+import { toast } from "sonner";
 import {
   Accordion,
   AccordionContent,
@@ -39,12 +43,7 @@ import {
 } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Moon, Play, RefreshCw, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
-import * as React from "react";
-import { toast } from "sonner";
 
 export function TokensShowcase() {
   const { theme, setTheme } = useTheme();

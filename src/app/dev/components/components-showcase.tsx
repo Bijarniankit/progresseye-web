@@ -1,14 +1,14 @@
 "use client";
 
+import { Moon, RefreshCw, Sparkles, Sun } from "lucide-react";
+import Link from "next/link";
+import { useTheme } from "next-themes";
+import * as React from "react";
 import { MagneticButton } from "@/components/marketing/motion/magnetic-button";
 import { TiltCard } from "@/components/marketing/motion/tilt-card";
 import { useSpotlight } from "@/components/marketing/motion/use-spotlight";
 import { WordReveal } from "@/components/marketing/motion/word-reveal";
 import { Button } from "@/components/ui/button";
-import { Moon, RefreshCw, Sparkles, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
-import Link from "next/link";
-import * as React from "react";
 
 export function ComponentsShowcase() {
   const { theme, setTheme } = useTheme();
@@ -198,8 +198,9 @@ export function ComponentsShowcase() {
           </p>
         </div>
 
-        <div
+        <section
           ref={spotlightRef}
+          aria-label="Interactive spotlight showcase"
           onMouseMove={onSpotlightMove}
           className="relative overflow-hidden p-8 rounded-[var(--radius-xl)] border border-[var(--color-border)] bg-[var(--color-surface-card)] shadow-[var(--shadow-e2)]"
           style={{
@@ -221,7 +222,7 @@ export function ComponentsShowcase() {
               performance.
             </p>
           </div>
-        </div>
+        </section>
       </section>
 
       {/* Section 5: Shell Status & Links */}

@@ -6,7 +6,8 @@
 
 /* Paper graph grid texture (24px) */
 .bg-paper-grid {
-  background-image: linear-gradient(to right, var(--color-border-muted) 1px, transparent 1px),
+  background-image:
+    linear-gradient(to right, var(--color-border-muted) 1px, transparent 1px),
     linear-gradient(to bottom, var(--color-border-muted) 1px, transparent 1px);
   background-size: 24px 24px;
 }

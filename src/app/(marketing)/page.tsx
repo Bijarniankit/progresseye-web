@@ -1,11 +1,10 @@
+import { ArrowRight } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
 import { MagneticButton } from "@/components/marketing/motion/magnetic-button";
 import { TiltCard } from "@/components/marketing/motion/tilt-card";
 import { WordReveal } from "@/components/marketing/motion/word-reveal";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
-import React from "react";
 
 export const metadata: Metadata = {
   title: "The school workspace that runs itself",

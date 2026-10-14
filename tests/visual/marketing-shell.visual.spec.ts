@@ -1,5 +1,5 @@
 import path from "node:path";
-import { expect, test } from "@playwright/test";
+import { test } from "@playwright/test";
 
 const artifactDir = "C:/Users/ankit/.gemini/antigravity/brain/372d7063-5f3e-4649-9080-0274d00a3078";
 

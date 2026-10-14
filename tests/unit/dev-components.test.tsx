@@ -1,7 +1,6 @@
-import DevComponentsPage from "@/app/dev/components/page";
 import { notFound } from "next/navigation";
-import React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import DevComponentsPage from "@/app/dev/components/page";
 
 vi.mock("next/navigation", () => ({
   notFound: vi.fn(),

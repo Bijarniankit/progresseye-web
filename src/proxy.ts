@@ -4,7 +4,7 @@ import { type NextRequest, NextResponse } from "next/server";
  * ProgressEye Web Proxy (Next.js 16)
  * Handles API proxying and request passing
  */
-export default function proxy(request: NextRequest) {
+export default function proxy(_request: NextRequest) {
   return NextResponse.next();
 }
 

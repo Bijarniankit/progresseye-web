@@ -1,11 +1,11 @@
 "use client";
 
-import { Toaster } from "@/components/ui/sonner";
 import defaultMessages from "@messages/en.json";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "next-themes";
 import * as React from "react";
+import { Toaster } from "@/components/ui/sonner";
 
 interface RootProviderProps {
   children: React.ReactNode;

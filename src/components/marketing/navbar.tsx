@@ -1,15 +1,15 @@
 "use client";
 
+import { Menu, Moon, Sun } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
+import * as React from "react";
 import { MobileDrawer } from "@/components/marketing/mobile-drawer";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
-import { Menu, Moon, Sun } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
-import { useTranslations } from "next-intl";
-import { useTheme } from "next-themes";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import * as React from "react";
 
 export function PublicNavbar() {
   const tNav = useTranslations("nav");
