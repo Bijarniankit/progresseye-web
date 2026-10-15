@@ -5,7 +5,7 @@ const artifactDir =
   "C:\\Users\\ankit\\.gemini\\antigravity\\brain\\372d7063-5f3e-4649-9080-0274d00a3078";
 
 const standardViewports = [
-  { name: "360", width: 360, height: 860 },
+  { name: "360", width: 360, height: 960 },
   { name: "768", width: 768, height: 980 },
   { name: "1280", width: 1280, height: 800 },
   { name: "1536", width: 1536, height: 850 },
@@ -83,6 +83,14 @@ async function captureAll() {
           const plateLocator = page.locator('[data-testid="hero-plate"]');
           await plateLocator.screenshot({ path: cropPath });
           console.log(`Saved clean detail crop (no controls): cp3-scene3-attendance-4rows-crop.png`);
+        }
+
+        // If this is Scene 1 at 360px, capture the plate + note crop
+        if (vp.name === "360" && sc.num === 1) {
+          const noteCropPath = path.join(artifactDir, `hero-360-note-crop-${th}.png`);
+          const plateAndNoteContainer = page.locator("div.grid > div.flex.flex-col.items-center");
+          await plateAndNoteContainer.screenshot({ path: noteCropPath });
+          console.log(`Saved 360px note crop: hero-360-note-crop-${th}.png`);
         }
 
         await context.close();

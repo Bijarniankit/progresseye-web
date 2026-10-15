@@ -251,11 +251,13 @@ This document records architectural, visual, and copy decisions modifying or com
 - **User-Accepted Deviation from WCAG 2.2.2 (Level A - Pause, Stop, Hide)**:
   - WCAG 2.2.2 requires an explicit user mechanism to pause, stop, or hide moving/auto-updating content lasting > 5 seconds.
   - The project owner explicitly approved omitting a visible pause button in favor of a minimalist aesthetic.
-  - Motion safeguards retained:
+  - Motion safeguards retained (6 distinct safeguards):
     1. **Pointer Hover**: Rotation, orbit border spin, and cloud drift pause on `pointerenter` over the plate and resume on `pointerleave`.
-    2. **Tab Visibility**: Rotation pauses when the browser tab is hidden (`document.hidden` via `visibilitychange`).
-    3. **Intersection Observer**: Rotation pauses when the plate is scrolled off-screen.
-    4. **Prefers-Reduced-Motion**: Under `prefers-reduced-motion: reduce`, rotation is permanently disabled; Scene 1 renders statically with zero rotation, drift, or transitions.
+    2. **Pointer-Down Hold (Touch & Hold)**: Rotation and animations pause immediately on `pointerdown` and resume on `pointerup` or `pointercancel`.
+    3. **Tap Toggle (Mobile Tap)**: Tapping the plate toggles pause state; resumes on second tap or automatically after a 15-second safety timeout.
+    4. **Tab Visibility**: Rotation pauses when the browser tab is hidden (`document.hidden` via `visibilitychange`) and resumes upon return.
+    5. **Intersection Observer**: Rotation pauses when the hero plate is scrolled out of viewport view and resumes when re-entering view.
+    6. **Prefers-Reduced-Motion**: Under `prefers-reduced-motion: reduce`, rotation and all motion are permanently disabled; Scene 1 renders statically with zero rotation, drift, or transitions.
 - **Removal of 44px Controls Slot & Vertical Centering**:
   - The 44px reserved controls container below the plate was removed.
   - The circular plate is vertically centered directly against the left headline column via CSS grid `items-center`.

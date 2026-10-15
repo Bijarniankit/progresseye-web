@@ -40,7 +40,7 @@ export function HeroSection({ carouselSlot, sceneIndex = 0 }: HeroSectionProps) 
           <div className="flex flex-col items-center justify-center lg:col-span-6 w-full">
             {carouselSlot ?? <HeroCarousel initialScene={sceneIndex} />}
             <p className="mt-3 text-[11px] sm:text-xs text-[var(--color-text-muted)] text-center tracking-wide select-none">
-              Dashboard cards and metrics display simulated sample data.
+              Illustrations and interface cards display simulated sample data.
             </p>
           </div>
         </div>

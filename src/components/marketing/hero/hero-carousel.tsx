@@ -27,10 +27,28 @@ export function HeroCarousel({ initialScene = 0, autoRotateIntervalMs = 5200 }: 
   const [isMounted, setIsMounted] = React.useState(false);
 
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const tapTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const shouldReduceMotion = useReducedMotion();
 
   React.useEffect(() => {
     setIsMounted(true);
+    return () => {
+      if (tapTimeoutRef.current) clearTimeout(tapTimeoutRef.current);
+    };
+  }, []);
+
+  const handleTap = React.useCallback(() => {
+    setIsTapped((prev) => {
+      const next = !prev;
+      if (tapTimeoutRef.current) clearTimeout(tapTimeoutRef.current);
+      if (next) {
+        // Auto-resume after 15 seconds of inactivity
+        tapTimeoutRef.current = setTimeout(() => {
+          setIsTapped(false);
+        }, 15000);
+      }
+      return next;
+    });
   }, []);
 
   // Preload Scenes 2 and 3 during idle periods after hydration
@@ -131,7 +149,7 @@ export function HeroCarousel({ initialScene = 0, autoRotateIntervalMs = 5200 }: 
         onPointerDown={() => setIsPointerHeld(true)}
         onPointerUp={() => setIsPointerHeld(false)}
         onPointerCancel={() => setIsPointerHeld(false)}
-        onClick={() => setIsTapped((prev) => !prev)}
+        onClick={handleTap}
         className="relative flex items-center justify-center w-full select-none cursor-pointer"
       >
         {/* Main circular illustrative plate with responsive diameter (328/500/430/520px) */}
