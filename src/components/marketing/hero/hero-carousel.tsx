@@ -20,6 +20,8 @@ export interface HeroCarouselProps {
 export function HeroCarousel({ initialScene = 0, autoRotateIntervalMs = 5200 }: HeroCarouselProps) {
   const [currentSlide, setCurrentSlide] = React.useState<0 | 1 | 2>(initialScene);
   const [isHovered, setIsHovered] = React.useState(false);
+  const [isPointerHeld, setIsPointerHeld] = React.useState(false);
+  const [isTapped, setIsTapped] = React.useState(false);
   const [isInView, setIsInView] = React.useState(true);
   const [isTabVisible, setIsTabVisible] = React.useState(true);
   const [isMounted, setIsMounted] = React.useState(false);
@@ -85,8 +87,15 @@ export function HeroCarousel({ initialScene = 0, autoRotateIntervalMs = 5200 }: 
     return () => observer.disconnect();
   }, []);
 
-  // Determine whether auto-rotation and decorative animations are paused
-  const isPaused = Boolean(shouldReduceMotion) || isHovered || !isInView || !isTabVisible;
+  // Determine whether auto-rotation and decorative animations are paused:
+  // Pauses on hover, on tap-and-hold (pointer down), on tap toggle, off-screen, tab hidden, or reduced motion
+  const isPaused =
+    Boolean(shouldReduceMotion) ||
+    isHovered ||
+    isPointerHeld ||
+    isTapped ||
+    !isInView ||
+    !isTabVisible;
 
   // Auto-rotation timer (5.2s crossfade between scenes 1, 2, 3)
   React.useEffect(() => {
@@ -106,7 +115,8 @@ export function HeroCarousel({ initialScene = 0, autoRotateIntervalMs = 5200 }: 
       {/*
         The plate is decorative artwork per user directive (aria-hidden="true").
         No carousel controls, no ARIA carousel roles, no keyboard focus trapping.
-        Rotation and orbit/cloud animations pause on hover, when off-screen, or when tab is hidden.
+        Rotation and orbit/cloud animations pause on hover, tap-and-hold, tap toggle,
+        when off-screen, or when tab is hidden.
         Under prefers-reduced-motion, Scene 1 is shown statically with no animation.
       */}
       <div
@@ -114,8 +124,15 @@ export function HeroCarousel({ initialScene = 0, autoRotateIntervalMs = 5200 }: 
         aria-hidden="true"
         data-testid="hero-plate-container"
         onPointerEnter={() => setIsHovered(true)}
-        onPointerLeave={() => setIsHovered(false)}
-        className="relative flex items-center justify-center w-full"
+        onPointerLeave={() => {
+          setIsHovered(false);
+          setIsPointerHeld(false);
+        }}
+        onPointerDown={() => setIsPointerHeld(true)}
+        onPointerUp={() => setIsPointerHeld(false)}
+        onPointerCancel={() => setIsPointerHeld(false)}
+        onClick={() => setIsTapped((prev) => !prev)}
+        className="relative flex items-center justify-center w-full select-none cursor-pointer"
       >
         {/* Main circular illustrative plate with responsive diameter (328/500/430/520px) */}
         <div

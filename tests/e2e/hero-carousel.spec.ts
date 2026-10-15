@@ -28,6 +28,12 @@ test.describe("Hero Visual — Decorative Plate Semantics & Accessibility", () =
     await expect(page.getByRole("button", { name: /previous slide/i })).toHaveCount(0);
     await expect(page.getByRole("button", { name: /next slide/i })).toHaveCount(0);
     await expect(page.getByRole("button", { name: /pause/i })).toHaveCount(0);
+
+    // Hero plate contains strictly ZERO buttons, links, or interactive roles
+    const interactiveElements = plateContainer.locator(
+      'button, a, [role="button"], [role="link"], [tabindex]',
+    );
+    await expect(interactiveElements).toHaveCount(0);
   });
 
   test("h1 accessible name remains unchanged as 'The school workspace that runs itself.'", async ({
@@ -92,7 +98,7 @@ test.describe("Hero Visual — Safeguards (Reduced Motion, Hover Pause, No Overf
     await context.close();
   });
 
-  test("pauses animations and rotation on pointer hover over plate", async ({ page }) => {
+  test("pauses animations and rotation on pointer hover and tap over plate", async ({ page }) => {
     await page.goto("http://localhost:3000/");
     await page.waitForLoadState("networkidle");
 
@@ -100,18 +106,36 @@ test.describe("Hero Visual — Safeguards (Reduced Motion, Hover Pause, No Overf
     const plate = page.locator('[data-testid="hero-plate"]');
     await expect(plate).toBeVisible();
 
-    // Hover over plate
+    // 1. Hover over plate -> paused
     await plateContainer.hover();
     await page.waitForTimeout(100);
-
-    // Animation play state must be paused
     await expect(plate).toHaveCSS("animation-play-state", "paused");
 
-    // Move pointer away
+    // Move pointer away -> resumes
     await page.mouse.move(0, 0);
     await page.waitForTimeout(100);
+    await expect(plate).toHaveCSS("animation-play-state", "running");
 
-    // Animation play state must resume running
+    // 2. Pointer down (tap-and-hold) -> paused
+    await plateContainer.dispatchEvent("pointerdown");
+    await page.waitForTimeout(100);
+    await expect(plate).toHaveCSS("animation-play-state", "paused");
+
+    // Pointer up -> resumes
+    await plateContainer.dispatchEvent("pointerup");
+    await page.waitForTimeout(100);
+    await expect(plate).toHaveCSS("animation-play-state", "running");
+
+    // 3. Tap toggle: click and move pointer away to isolate tap toggle from hover
+    await plateContainer.click();
+    await page.mouse.move(0, 0);
+    await page.waitForTimeout(100);
+    await expect(plate).toHaveCSS("animation-play-state", "paused");
+
+    // Second Tap toggle -> resumes
+    await plateContainer.click();
+    await page.mouse.move(0, 0);
+    await page.waitForTimeout(100);
     await expect(plate).toHaveCSS("animation-play-state", "running");
   });
 
