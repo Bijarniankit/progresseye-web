@@ -451,13 +451,13 @@ async function generateCompleteReport() {
   <h2>4. Bundle Analyzer &amp; Accessibility Verification</h2>
   <ul>
     <li><strong>Bundle Savings</strong>: Scoping <code>LazyMotion</code> with <code>domAnimation</code> saved <strong>~76 kB uncompressed / ~23.5 kB gzip</strong>.</li>
-    <li><strong>Controls Removal Savings</strong>: Source code in <code>hero-carousel.tsx</code> reduced from 12,639 characters (289 lines) to 7,709 characters (185 lines) — removing <strong>4,930 characters (4.81 kB)</strong> of source code and unneeded Lucide icon imports (<code>ChevronLeft</code>, <code>ChevronRight</code>, <code>Pause</code>). In the Next.js production build, the minified client chunk for the hero component decreased from ~33.8 kB raw / ~9.2 kB gzip down to <strong>28.56 kB raw / 7.75 kB gzip</strong> (an exact reduction of <strong>5.24 kB raw / 1.45 kB gzip</strong>). Shared first-load JS: 104.2 kB gzip; landing route-specific JS: 16.8 kB gzip.</li>
+    <li><strong>Controls Removal Savings</strong>: Source code in <code>hero-carousel.tsx</code> reduced from 12,639 characters (289 lines) to 7,709 characters (185 lines) — removing <strong>4,930 characters (4.81 kB)</strong> of source code and unneeded Lucide icon imports (<code>ChevronLeft</code>, <code>ChevronRight</code>, <code>Pause</code>). In the Next.js production build, the minified client chunk for the hero component decreased from ~33.8 kB raw / ~9.2 kB gzip down to <strong>28.56 kB raw / 7.75 kB gzip</strong> (an estimated reduction of ~5.2 kB raw; the actual on-the-wire saving is <strong>~1.45 kB gzip</strong>). Shared first-load JS: 104.2 kB gzip; landing route-specific JS: 16.8 kB gzip.</li>
     <li><strong>Motion Architectural Evaluation</strong>: Evaluated replacing <code>motion/react</code> with pure CSS overlapping crossfades and a 6-line <code>prefers-reduced-motion</code> React hook. This would eliminate another ~18 kB uncompressed / ~5.5 kB gzip from the critical landing payload with zero behavioral loss. Preserved intact for now pending Phase 6 approval.</li>
     <li><strong>Axe-Core Audit</strong>: Scanned <code>/</code> in Light and Dark mode across WCAG 2.0, 2.1, 2.2 AA rules. <strong>0 violations found</strong>.</li>
     <li><strong>Comprehensive Test Suite Execution</strong>:
       <ul>
         <li><strong>Unit Tests</strong>: <strong>27 / 27 passed</strong> across 8 test files via Vitest.</li>
-        <li><strong>Accessibility Tests</strong>: <strong>28 / 28 passed</strong> via Axe-core Playwright audit across all routes.</li>
+        <li><strong>Accessibility Tests</strong>: <strong>30 / 30 passed</strong> across 2 test files via Axe-core Playwright audit (28 in marketing-shell, 2 in tokens).</li>
         <li><strong>E2E Tests</strong>: <strong>100 / 100 passed</strong> (88 in marketing-shell, 3 in hero-editorial, 9 in hero-carousel including 15s tap auto-resume test). Total Playwright suite: <strong>136 / 136 tests passed</strong> (30 accessibility audits, 100 e2e tests, 6 visual captures).</li>
       </ul>
     </li>
