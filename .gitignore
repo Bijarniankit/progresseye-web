@@ -35,7 +35,6 @@ playwright-report/
 test-results/
 reports/
 docs/reports/
-*.pdf
 *.tsbuildinfo
 lighthouse-*.json
 benchmark-*.json
