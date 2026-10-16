@@ -99,7 +99,9 @@ test.describe("Hero Visual — Safeguards (Reduced Motion, Hover Pause, No Overf
     await context.close();
   });
 
-  test("pauses animations and rotation on pointer hover and tap over plate", async ({ page }) => {
+  test("pauses animations and rotation on pointer hover and resumes on pointer leave", async ({
+    page,
+  }) => {
     await page.goto("http://localhost:3000/");
     await page.waitForLoadState("networkidle");
 
@@ -107,7 +109,7 @@ test.describe("Hero Visual — Safeguards (Reduced Motion, Hover Pause, No Overf
     const plate = page.locator('[data-testid="hero-plate"]');
     await expect(plate).toBeVisible();
 
-    // 1. Hover over plate -> paused
+    // Hover over plate -> paused
     await plateContainer.hover();
     await page.waitForTimeout(100);
     await expect(plate).toHaveCSS("animation-play-state", "paused");
@@ -116,8 +118,19 @@ test.describe("Hero Visual — Safeguards (Reduced Motion, Hover Pause, No Overf
     await page.mouse.move(0, 0);
     await page.waitForTimeout(100);
     await expect(plate).toHaveCSS("animation-play-state", "running");
+  });
 
-    // 2. Pointer down (tap-and-hold) -> paused
+  test("pauses animations and rotation on pointer-down hold and resumes on pointer release", async ({
+    page,
+  }) => {
+    await page.goto("http://localhost:3000/");
+    await page.waitForLoadState("networkidle");
+
+    const plateContainer = page.locator('[data-testid="hero-plate-container"]');
+    const plate = page.locator('[data-testid="hero-plate"]');
+    await expect(plate).toBeVisible();
+
+    // Pointer down (tap-and-hold) -> paused
     await plateContainer.dispatchEvent("pointerdown");
     await page.waitForTimeout(100);
     await expect(plate).toHaveCSS("animation-play-state", "paused");
@@ -126,20 +139,39 @@ test.describe("Hero Visual — Safeguards (Reduced Motion, Hover Pause, No Overf
     await plateContainer.dispatchEvent("pointerup");
     await page.waitForTimeout(100);
     await expect(plate).toHaveCSS("animation-play-state", "running");
+  });
 
-    // 3. Tap toggle: click and move pointer away to isolate tap toggle from hover
+  test("toggles pause state on successive taps or clicks", async ({ page }) => {
+    await page.goto("http://localhost:3000/");
+    await page.waitForLoadState("networkidle");
+
+    const plateContainer = page.locator('[data-testid="hero-plate-container"]');
+    const plate = page.locator('[data-testid="hero-plate"]');
+    await expect(plate).toBeVisible();
+
+    // First tap -> paused
     await plateContainer.click();
     await page.mouse.move(0, 0);
     await page.waitForTimeout(100);
     await expect(plate).toHaveCSS("animation-play-state", "paused");
 
-    // Second Tap toggle -> resumes
+    // Second tap -> resumes
     await plateContainer.click();
     await page.mouse.move(0, 0);
     await page.waitForTimeout(100);
     await expect(plate).toHaveCSS("animation-play-state", "running");
+  });
 
-    // 4. Tab visibility change -> pauses when document is hidden
+  test("pauses rotation and animations when browser tab is hidden and resumes when visible", async ({
+    page,
+  }) => {
+    await page.goto("http://localhost:3000/");
+    await page.waitForLoadState("networkidle");
+
+    const plate = page.locator('[data-testid="hero-plate"]');
+    await expect(plate).toBeVisible();
+
+    // Tab visibility change -> pauses when document is hidden
     await page.evaluate(() => {
       Object.defineProperty(document, "hidden", { value: true, configurable: true });
       document.dispatchEvent(new Event("visibilitychange"));
@@ -154,8 +186,18 @@ test.describe("Hero Visual — Safeguards (Reduced Motion, Hover Pause, No Overf
     });
     await page.waitForTimeout(100);
     await expect(plate).toHaveCSS("animation-play-state", "running");
+  });
 
-    // 5. Off-screen pause via IntersectionObserver
+  test("pauses rotation and animations when plate is scrolled out of viewport (IntersectionObserver)", async ({
+    page,
+  }) => {
+    await page.goto("http://localhost:3000/");
+    await page.waitForLoadState("networkidle");
+
+    const plate = page.locator('[data-testid="hero-plate"]');
+    await expect(plate).toBeVisible();
+
+    // Scroll off-screen -> paused via IntersectionObserver
     await page.evaluate(() => {
       window.scrollTo(0, document.body.scrollHeight);
     });
