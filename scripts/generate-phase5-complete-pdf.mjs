@@ -249,17 +249,17 @@ async function generateCompleteReport() {
         <p class="subtitle">Hero Section, Editorial Layout, Vector Illustration Scenes &amp; Decorative Plate Architecture</p>
         <div class="header-meta">
           <strong>Date:</strong> October 16, 2026 &nbsp;|&nbsp;
-          <strong>Branch:</strong> <code>phase-05/hero-carousel</code> &nbsp;|&nbsp;
-          <strong>Main Local Squash:</strong> <code>6286b95</code> &nbsp;|&nbsp;
-          <strong>Pending Branch Commits:</strong> <code>e152f8a</code>, <code>6e28257</code><br>
-          <strong>Environment / CI:</strong> Linux CI not yet run &nbsp;|&nbsp; Baselines not yet on Linux (Generated on Windows 11)
+          <strong>PR Branch:</strong> <code>phase-05/review-fixes</code> &nbsp;|&nbsp;
+          <strong>Base Commit:</strong> <code>main</code> (<code>6286b95</code>)<br>
+          <strong>Review Commits:</strong> 6 commits ready for PR &nbsp;|&nbsp;
+          <strong>CI Status:</strong> Ready for remote push &amp; Linux CI run
         </div>
       </div>
       <div class="text-right">
         <div class="meta-badges">
-          <span class="badge badge-success">Exit Gate Met (Throttled LCP 1.99s)</span>
-          <span class="badge badge-blue">Stage 5 Complete (Pending Push)</span>
-          <span class="badge badge-dark">Linux CI Not Yet Run</span>
+          <span class="badge badge-success">Content Approved</span>
+          <span class="badge badge-blue">PR Branch Ready</span>
+          <span class="badge badge-dark">CI Run Pending</span>
         </div>
       </div>
     </div>
@@ -291,7 +291,7 @@ async function generateCompleteReport() {
   <h2>1. Executive Summary &amp; Scope Completed</h2>
   <p>
     Phase 5 delivers the production hero section for ProgressEye 2.0. Checkpoints 1, 2, and 3 have been completed and verified locally.
-    <strong>Git Status:</strong> Initial squash commit <code>6286b95</code> is on local <code>main</code> with local tag <code>phase-05-approved</code>. Review fixes (commits <code>e152f8a</code>, <code>6e28257</code>, and subsequent pause state machine / 15s tap auto-resume tests) are staged on branch <code>phase-05/hero-carousel</code>. Both repositories currently have zero Git remotes configured (<code>git remote -v</code> is empty); all previous PR merges were local operations. Linux CI has not yet run on GitHub Actions, and visual baselines have not yet been generated on Linux.
+    <strong>Git Status:</strong> Base commit <code>6286b95</code> is on local <code>main</code>. The review fixes (safeguards, fresh benchmarks, sample note, discrete test cases, and pause state machine) are isolated on branch <code>phase-05/review-fixes</code> ready to open as a dedicated pull request into <code>main</code>. Working trees in both repositories are clean. Linux CI on GitHub Actions will run upon the first push.
   </p>
   <ul>
     <li><strong>Checkpoint 1 (CP1) — Typography &amp; Editorial Column</strong>: Responsive display typography (Poppins 800/700/600/500 italic + Inter), CSS-only word reveal animation, warm cream hero background (<code>--color-surface-hero</code>), unified dark slate surface (<code>#020617</code>), and primary/secondary CTA buttons.</li>
