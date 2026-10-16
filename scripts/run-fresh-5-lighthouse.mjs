@@ -167,8 +167,12 @@ async function runLighthouseBenchmark() {
   console.log("   TRUE STATISTICAL MEDIANS (FRESH 5 RUNS)");
   console.log("==================================================");
   console.log(`DevTools Throttled Score: ${medians.throttledScore} / 100`);
-  console.log(`DevTools Throttled LCP:   ${(medians.throttledLcp / 1000).toFixed(2)}s (${medians.throttledLcp} ms)`);
-  console.log(`DevTools Throttled FCP:   ${(medians.throttledFcp / 1000).toFixed(2)}s (${medians.throttledFcp} ms)`);
+  console.log(
+    `DevTools Throttled LCP:   ${(medians.throttledLcp / 1000).toFixed(2)}s (${medians.throttledLcp} ms)`,
+  );
+  console.log(
+    `DevTools Throttled FCP:   ${(medians.throttledFcp / 1000).toFixed(2)}s (${medians.throttledFcp} ms)`,
+  );
   console.log(`DevTools Throttled TBT:   ${medians.throttledTbt} ms`);
   console.log(`Cumulative Layout Shift:  ${medians.throttledCls}`);
   console.log(`Simulated (Lantern) Score: ${medians.simulatedScore}`);

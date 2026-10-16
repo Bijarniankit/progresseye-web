@@ -82,7 +82,9 @@ async function captureAll() {
           const cropPath = path.join(artifactDir, "cp3-scene3-attendance-4rows-crop.png");
           const plateLocator = page.locator('[data-testid="hero-plate"]');
           await plateLocator.screenshot({ path: cropPath });
-          console.log(`Saved clean detail crop (no controls): cp3-scene3-attendance-4rows-crop.png`);
+          console.log(
+            `Saved clean detail crop (no controls): cp3-scene3-attendance-4rows-crop.png`,
+          );
         }
 
         // If this is Scene 1 at 360px, capture the plate + note crop

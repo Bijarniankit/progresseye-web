@@ -224,17 +224,13 @@ This document records architectural, visual, and copy decisions modifying or com
 - **Problem**: In performance benchmarks under mobile CPU throttling, live `<feTurbulence>` procedural noise calculations coupled with 64px Gaussian blurs forced CPU-bound rasterization passes on every paint. This caused an LCP regression (observed LCP increased to 1.62s and TBT rose to 157ms).
 - **Resolution**: Removed the CPU-intensive `feTurbulence` procedural filter overlay and heavy `blur-3xl` passes from `HeroSection`. Replaced with lightweight, GPU-composited CSS `radial-gradient` ambient washes (`var(--color-peach-wash)` and `var(--color-mint-wash)`).
 - **Outcome**: TBT dropped from 157ms to 35–52ms; observed LCP dropped to 0.30s–0.33s; DevTools throttled LCP achieved 2.0s, passing the $\le$ 2.5s exit gate.
-### D-028: Hero Plate Breakpoint Sizing, Reserved Controls Slot & Overlapping Crossfade Architecture
-- **Plate Sizing Across Breakpoints**:
+### D-028: Hero Plate Breakpoint Sizing & Overlapping Crossfade Architecture
+- **Plate Sizing Across Breakpoints (Initial Implementation)**:
   - `360px` (Mobile Portrait): `328px` diameter (100% of container: 360px viewport minus 32px padding).
   - `768px` (Tablet Portrait): `460px` diameter (`max-w-[460px]` spec maximum).
   - `1024px` (Laptop / Tablet Landscape): `381px` diameter (constrained by 12-column grid 5-column slot at 1024px breakpoint: 960px container minus 352px grid gaps, 5 columns = 381.33px).
   - `1280px` (Desktop Spec Baseline): `460px` diameter (`max-w-[460px]` spec maximum fully restored).
   - `1536px` (Ultra-Wide Desktop): `460px` diameter (`max-w-[460px]` spec maximum).
-- **Reserved 44px Controls Container**:
-  - The carousel navigation toolbar (`<nav aria-label="Carousel controls">`) renders inside a reserved `<div className="mt-6 h-[44px] flex items-center justify-center">` container.
-  - In pure SSR HTML before client hydration (or when JavaScript is disabled), this container maintains its exact 44px reserved vertical height.
-  - Sizing is 100.0% identical between JavaScript-enabled and JavaScript-disabled states across all breakpoints, resulting in zero cumulative layout shift across client hydration (CLS = 0.0000).
 - **Overlapping Crossfade Animation Architecture**:
   - Replaced sequential `mode="wait"` exit transitions with concurrent absolute overlapping crossfades (`AnimatePresence initial={false}` with `<m.div className="absolute inset-0 ...">`).
   - The outgoing scene fades out while the incoming scene simultaneously fades and scales in, ensuring the circular illustrative plate is never blank or empty during transitions.
@@ -251,13 +247,38 @@ This document records architectural, visual, and copy decisions modifying or com
 - **User-Accepted Deviation from WCAG 2.2.2 (Level A - Pause, Stop, Hide)**:
   - WCAG 2.2.2 requires an explicit user mechanism to pause, stop, or hide moving/auto-updating content lasting > 5 seconds.
   - The project owner explicitly approved omitting a visible pause button in favor of a minimalist aesthetic.
-  - Motion safeguards retained (6 distinct safeguards):
-    1. **Pointer Hover**: Rotation, orbit border spin, and cloud drift pause on `pointerenter` over the plate and resume on `pointerleave`.
-    2. **Pointer-Down Hold (Touch & Hold)**: Rotation and animations pause immediately on `pointerdown` and resume on `pointerup` or `pointercancel`.
-    3. **Tap Toggle (Mobile Tap)**: Tapping the plate toggles pause state; resumes on second tap or automatically after a 15-second safety timeout.
-    4. **Tab Visibility**: Rotation pauses when the browser tab is hidden (`document.hidden` via `visibilitychange`) and resumes upon return.
-    5. **Intersection Observer**: Rotation pauses when the hero plate is scrolled out of viewport view and resumes when re-entering view.
-    6. **Prefers-Reduced-Motion**: Under `prefers-reduced-motion: reduce`, rotation and all motion are permanently disabled; Scene 1 renders statically with zero rotation, drift, or transitions.
+- **Formal Pause State Machine Specification**:
+  - **Inputs / Events Monitored**: `pointerenter`, `pointerleave`, `pointerdown`, `pointerup`, `pointercancel`, `click`, 15-second safety timer, `visibilitychange`, `IntersectionObserver`, and `prefers-reduced-motion`.
+  - **Compound Pause Condition**:
+    `isPaused = Boolean(shouldReduceMotion) || isHovered || isPointerHeld || isTapped || !isInView || !isTabVisible`
+  - **State Transitions**:
+    1. **Hover (`isHovered`)**:
+       - `pointerenter` over plate container sets `isHovered = true` (pauses interval and sets `animationPlayState = "paused"`).
+       - `pointerleave` sets `isHovered = false` and `isPointerHeld = false`. If `isTapped === false`, rotation resumes.
+    2. **Pointer Down / Touch-and-Hold (`isPointerHeld`)**:
+       - `pointerdown` sets `isPointerHeld = true` immediately upon contact.
+       - `pointerup` or `pointercancel` sets `isPointerHeld = false`.
+    3. **Tap / Mouse-Click Toggle (`isTapped`)**:
+       - `click` toggles `isTapped = !isTapped`.
+       - When transitioning to `true`: Clears any existing timeout and arms a 15,000ms safety timeout (`tapTimeoutRef`).
+       - When transitioning to `false`: Clears the timeout immediately and resumes rotation (provided not hovered or held).
+    4. **15-Second Safety Auto-Resume Timeout**:
+       - After 15 seconds without user interaction, the timeout fires and resets `isTapped = false`, restoring rotation.
+       - Verified with Playwright virtual clock test (`page.clock.fastForward(15000)`).
+    5. **Pointer Leave While Tap-Paused**:
+       - If a user clicks the plate with a mouse (setting `isTapped = true`) and moves the cursor away, `onPointerLeave` clears `isHovered`, but `isTapped` remains `true`. The plate remains paused until either clicked again or the 15-second timeout elapses.
+    6. **Tab Visibility (`isTabVisible`)**:
+       - `document.hidden === true` sets `isTabVisible = false` (pausing rotation during background tab execution). Resumes on tab foreground.
+    7. **Off-Screen Intersection (`isInView`)**:
+       - `IntersectionObserver` with 0.1 threshold pauses rotation when hero scrolls out of view and resumes when re-entering.
+    8. **Reduced Motion (`shouldReduceMotion`)**:
+       - Under `prefers-reduced-motion: reduce`, rotation and all motion are permanently disabled; Scene 1 renders statically.
+- **Rotation Limit Policy Decision (Pending User Selection)**:
+  - Options under review:
+    - `[A]` Infinite auto-rotation loop protected by the 6 motion safeguards.
+    - `[B]` Auto-stop after 3 complete cycles (9 slide transitions total, ~47 seconds runtime), permanently settling on Scene 1.
+    - `[C]` Auto-stop after 1 complete cycle (3 slide transitions total, ~16 seconds runtime), permanently settling on Scene 1.
+  - The chosen option will be permanently codified here once selected by the user.
 - **Removal of 44px Controls Slot & Vertical Centering**:
   - The 44px reserved controls container below the plate was removed.
   - The circular plate is vertically centered directly against the left headline column via CSS grid `items-center`.

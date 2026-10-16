@@ -245,19 +245,21 @@ async function generateCompleteReport() {
   <header>
     <div class="header-row">
       <div>
-        <h1>Phase 5 Complete Verification Report</h1>
+        <h1>Phase 5 Complete Verification Report (v4)</h1>
         <p class="subtitle">Hero Section, Editorial Layout, Vector Illustration Scenes &amp; Decorative Plate Architecture</p>
         <div class="header-meta">
-          <strong>Date:</strong> October 15, 2026 &nbsp;|&nbsp;
+          <strong>Date:</strong> October 16, 2026 &nbsp;|&nbsp;
           <strong>Branch:</strong> <code>phase-05/hero-carousel</code> &nbsp;|&nbsp;
-          <strong>Commit SHA:</strong> <code>6286b953a72edb257b3536783af084b84b3a013b</code>
+          <strong>Main Local Squash:</strong> <code>6286b95</code> &nbsp;|&nbsp;
+          <strong>Pending Branch Commits:</strong> <code>e152f8a</code>, <code>6e28257</code><br>
+          <strong>Environment / CI:</strong> Linux CI not yet run &nbsp;|&nbsp; Baselines not yet on Linux (Generated on Windows 11)
         </div>
       </div>
       <div class="text-right">
         <div class="meta-badges">
-          <span class="badge badge-success">Exit Gate Passed</span>
-          <span class="badge badge-blue">Stage 5 Complete</span>
-          <span class="badge badge-dark">Squash-Merged to Main</span>
+          <span class="badge badge-success">Exit Gate Met (Throttled LCP 1.99s)</span>
+          <span class="badge badge-blue">Stage 5 Complete (Pending Push)</span>
+          <span class="badge badge-dark">Linux CI Not Yet Run</span>
         </div>
       </div>
     </div>
@@ -288,7 +290,8 @@ async function generateCompleteReport() {
 
   <h2>1. Executive Summary &amp; Scope Completed</h2>
   <p>
-    Phase 5 delivers the production hero section for ProgressEye 2.0. All tasks across Checkpoints 1, 2, and 3 have been executed, verified, and merged into <code>main</code> with git tag <code>phase-05-approved</code>.
+    Phase 5 delivers the production hero section for ProgressEye 2.0. Checkpoints 1, 2, and 3 have been completed and verified locally.
+    <strong>Git Status:</strong> Initial squash commit <code>6286b95</code> is on local <code>main</code> with local tag <code>phase-05-approved</code>. Review fixes (commits <code>e152f8a</code>, <code>6e28257</code>, and subsequent pause state machine / 15s tap auto-resume tests) are staged on branch <code>phase-05/hero-carousel</code>. Both repositories currently have zero Git remotes configured (<code>git remote -v</code> is empty); all previous PR merges were local operations. Linux CI has not yet run on GitHub Actions, and visual baselines have not yet been generated on Linux.
   </p>
   <ul>
     <li><strong>Checkpoint 1 (CP1) — Typography &amp; Editorial Column</strong>: Responsive display typography (Poppins 800/700/600/500 italic + Inter), CSS-only word reveal animation, warm cream hero background (<code>--color-surface-hero</code>), unified dark slate surface (<code>#020617</code>), and primary/secondary CTA buttons.</li>
@@ -455,7 +458,7 @@ async function generateCompleteReport() {
       <ul>
         <li><strong>Unit Tests</strong>: <strong>27 / 27 passed</strong> across 8 test files via Vitest.</li>
         <li><strong>Accessibility Tests</strong>: <strong>28 / 28 passed</strong> via Axe-core Playwright audit across all routes.</li>
-        <li><strong>E2E Tests</strong>: <strong>99 / 99 passed</strong> (88 in marketing-shell, 3 in hero-editorial, 8 in hero-carousel).</li>
+        <li><strong>E2E Tests</strong>: <strong>100 / 100 passed</strong> (88 in marketing-shell, 3 in hero-editorial, 9 in hero-carousel including 15s tap auto-resume test). Total Playwright suite: <strong>136 / 136 tests passed</strong> (30 accessibility audits, 100 e2e tests, 6 visual captures).</li>
       </ul>
     </li>
   </ul>

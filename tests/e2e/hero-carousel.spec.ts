@@ -170,6 +170,32 @@ test.describe("Hero Visual — Safeguards (Reduced Motion, Hover Pause, No Overf
     await expect(plate).toHaveCSS("animation-play-state", "running");
   });
 
+  test("tap toggle pauses plate and automatically resumes after 15-second safety timeout", async ({
+    page,
+  }) => {
+    await page.clock.install();
+    await page.goto("http://localhost:3000/");
+    await page.waitForLoadState("networkidle");
+
+    const plateContainer = page.locator('[data-testid="hero-plate-container"]');
+    const plate = page.locator('[data-testid="hero-plate"]');
+    await expect(plate).toBeVisible();
+
+    // Initial state is running
+    await expect(plate).toHaveCSS("animation-play-state", "running");
+
+    // Tap (click) the plate to trigger pause
+    await plateContainer.click();
+    await page.mouse.move(0, 0);
+    await expect(plate).toHaveCSS("animation-play-state", "paused");
+
+    // Fast-forward virtual clock by 15000ms
+    await page.clock.fastForward(15000);
+
+    // Verify plate automatically resumes running
+    await expect(plate).toHaveCSS("animation-play-state", "running");
+  });
+
   test("guarantees zero horizontal overflow across 360, 768, 1024, 1280, 1536px viewports", async ({
     page,
   }) => {
