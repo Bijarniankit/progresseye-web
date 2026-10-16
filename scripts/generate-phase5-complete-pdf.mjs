@@ -457,8 +457,9 @@ async function generateCompleteReport() {
     <li><strong>Comprehensive Test Suite Execution</strong>:
       <ul>
         <li><strong>Unit Tests</strong>: <strong>27 / 27 passed</strong> across 8 test files via Vitest.</li>
-        <li><strong>Accessibility Tests</strong>: <strong>30 / 30 passed</strong> across 2 test files via Axe-core Playwright audit (28 in marketing-shell, 2 in tokens).</li>
-        <li><strong>E2E Tests</strong>: <strong>104 / 104 passed</strong> (88 in marketing-shell, 3 in hero-editorial, 13 in hero-carousel with discrete safeguard tests). Total Playwright suite: <strong>140 / 140 tests passed</strong> (30 accessibility audits, 104 e2e tests, 6 visual captures).</li>
+        <li><strong>Accessibility Tests</strong>: <strong>30 / 30 tests</strong> in suite; <strong>28 / 28 passed</strong> on production routes (2 dev-only route tests cleanly skipped by production guard).</li>
+        <li><strong>E2E Tests</strong>: <strong>104 / 104 passed</strong> (88 in marketing-shell, 3 in hero-editorial, 13 in hero-carousel with discrete safeguard tests).</li>
+        <li><strong>Visual Capture Specifications</strong>: <strong>6 / 6 capture specs executed</strong> in <code>tests/visual/marketing-shell.visual.spec.ts</code>. These are screenshot capture tooling for review artifact generation, not automated visual regression assertions (they invoke <code>page.screenshot()</code>, not <code>expect().toHaveScreenshot()</code>). Visual regression baselines are kept out of the CI gate for now and planned for Phase 10. Total Playwright suite: <strong>140 / 140 specs executed</strong>.</li>
       </ul>
     </li>
   </ul>
