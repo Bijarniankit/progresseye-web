@@ -8,10 +8,11 @@ test.describe("Hero Visual — Decorative Plate Semantics & Accessibility", () =
     await page.goto("http://localhost:3000/");
     await page.waitForLoadState("networkidle");
 
-    // Plate container is marked aria-hidden="true"
+    // Plate container is marked aria-hidden="true" and has no tabindex (not focusable)
     const plateContainer = page.locator('[data-testid="hero-plate-container"]');
     await expect(plateContainer).toBeVisible();
     await expect(plateContainer).toHaveAttribute("aria-hidden", "true");
+    await expect(plateContainer).not.toHaveAttribute("tabindex");
 
     // Circular plate element exists
     const plate = page.locator('[data-testid="hero-plate"]');
@@ -28,6 +29,12 @@ test.describe("Hero Visual — Decorative Plate Semantics & Accessibility", () =
     await expect(page.getByRole("button", { name: /previous slide/i })).toHaveCount(0);
     await expect(page.getByRole("button", { name: /next slide/i })).toHaveCount(0);
     await expect(page.getByRole("button", { name: /pause/i })).toHaveCount(0);
+
+    // Hero plate contains strictly ZERO buttons, links, or interactive/focusable elements
+    const interactiveElements = plateContainer.locator(
+      'button, a, input, select, textarea, [role="button"], [role="link"], [tabindex]:not([tabindex="-1"])',
+    );
+    await expect(interactiveElements).toHaveCount(0);
   });
 
   test("h1 accessible name remains unchanged as 'The school workspace that runs itself.'", async ({
@@ -92,7 +99,9 @@ test.describe("Hero Visual — Safeguards (Reduced Motion, Hover Pause, No Overf
     await context.close();
   });
 
-  test("pauses animations and rotation on pointer hover over plate", async ({ page }) => {
+  test("pauses animations and rotation on pointer hover and resumes on pointer leave", async ({
+    page,
+  }) => {
     await page.goto("http://localhost:3000/");
     await page.waitForLoadState("networkidle");
 
@@ -100,18 +109,132 @@ test.describe("Hero Visual — Safeguards (Reduced Motion, Hover Pause, No Overf
     const plate = page.locator('[data-testid="hero-plate"]');
     await expect(plate).toBeVisible();
 
-    // Hover over plate
+    // Hover over plate -> paused
     await plateContainer.hover();
     await page.waitForTimeout(100);
-
-    // Animation play state must be paused
     await expect(plate).toHaveCSS("animation-play-state", "paused");
 
-    // Move pointer away
+    // Move pointer away -> resumes
     await page.mouse.move(0, 0);
     await page.waitForTimeout(100);
+    await expect(plate).toHaveCSS("animation-play-state", "running");
+  });
 
-    // Animation play state must resume running
+  test("pauses animations and rotation on pointer-down hold and resumes on pointer release", async ({
+    page,
+  }) => {
+    await page.goto("http://localhost:3000/");
+    await page.waitForLoadState("networkidle");
+
+    const plateContainer = page.locator('[data-testid="hero-plate-container"]');
+    const plate = page.locator('[data-testid="hero-plate"]');
+    await expect(plate).toBeVisible();
+
+    // Pointer down (tap-and-hold) -> paused
+    await plateContainer.dispatchEvent("pointerdown");
+    await page.waitForTimeout(100);
+    await expect(plate).toHaveCSS("animation-play-state", "paused");
+
+    // Pointer up -> resumes
+    await plateContainer.dispatchEvent("pointerup");
+    await page.waitForTimeout(100);
+    await expect(plate).toHaveCSS("animation-play-state", "running");
+  });
+
+  test("toggles pause state on successive taps or clicks", async ({ page }) => {
+    await page.goto("http://localhost:3000/");
+    await page.waitForLoadState("networkidle");
+
+    const plateContainer = page.locator('[data-testid="hero-plate-container"]');
+    const plate = page.locator('[data-testid="hero-plate"]');
+    await expect(plate).toBeVisible();
+
+    // First tap -> paused
+    await plateContainer.click();
+    await page.mouse.move(0, 0);
+    await page.waitForTimeout(100);
+    await expect(plate).toHaveCSS("animation-play-state", "paused");
+
+    // Second tap -> resumes
+    await plateContainer.click();
+    await page.mouse.move(0, 0);
+    await page.waitForTimeout(100);
+    await expect(plate).toHaveCSS("animation-play-state", "running");
+  });
+
+  test("pauses rotation and animations when browser tab is hidden and resumes when visible", async ({
+    page,
+  }) => {
+    await page.goto("http://localhost:3000/");
+    await page.waitForLoadState("networkidle");
+
+    const plate = page.locator('[data-testid="hero-plate"]');
+    await expect(plate).toBeVisible();
+
+    // Tab visibility change -> pauses when document is hidden
+    await page.evaluate(() => {
+      Object.defineProperty(document, "hidden", { value: true, configurable: true });
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    await page.waitForTimeout(100);
+    await expect(plate).toHaveCSS("animation-play-state", "paused");
+
+    // Resumes when tab becomes visible again
+    await page.evaluate(() => {
+      Object.defineProperty(document, "hidden", { value: false, configurable: true });
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    await page.waitForTimeout(100);
+    await expect(plate).toHaveCSS("animation-play-state", "running");
+  });
+
+  test("pauses rotation and animations when plate is scrolled out of viewport (IntersectionObserver)", async ({
+    page,
+  }) => {
+    await page.goto("http://localhost:3000/");
+    await page.waitForLoadState("networkidle");
+
+    const plate = page.locator('[data-testid="hero-plate"]');
+    await expect(plate).toBeVisible();
+
+    // Scroll off-screen -> paused via IntersectionObserver
+    await page.evaluate(() => {
+      window.scrollTo(0, document.body.scrollHeight);
+    });
+    await page.waitForTimeout(300);
+    await expect(plate).toHaveCSS("animation-play-state", "paused");
+
+    // Resumes when scrolled back into viewport
+    await page.evaluate(() => {
+      window.scrollTo(0, 0);
+    });
+    await page.waitForTimeout(300);
+    await expect(plate).toHaveCSS("animation-play-state", "running");
+  });
+
+  test("tap toggle pauses plate and automatically resumes after 15-second safety timeout", async ({
+    page,
+  }) => {
+    await page.clock.install();
+    await page.goto("http://localhost:3000/");
+    await page.waitForLoadState("networkidle");
+
+    const plateContainer = page.locator('[data-testid="hero-plate-container"]');
+    const plate = page.locator('[data-testid="hero-plate"]');
+    await expect(plate).toBeVisible();
+
+    // Initial state is running
+    await expect(plate).toHaveCSS("animation-play-state", "running");
+
+    // Tap (click) the plate to trigger pause
+    await plateContainer.click();
+    await page.mouse.move(0, 0);
+    await expect(plate).toHaveCSS("animation-play-state", "paused");
+
+    // Fast-forward virtual clock by 15000ms
+    await page.clock.fastForward(15000);
+
+    // Verify plate automatically resumes running
     await expect(plate).toHaveCSS("animation-play-state", "running");
   });
 

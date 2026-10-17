@@ -33,6 +33,8 @@ coverage/
 .nyc_output/
 playwright-report/
 test-results/
+reports/
+docs/reports/
 *.tsbuildinfo
 lighthouse-*.json
 benchmark-*.json
