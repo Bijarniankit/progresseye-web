@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { STORAGE_KEYS } from "@/config/storage-keys";
 
 test.describe("Hero Visual — Decorative Plate Semantics & Accessibility", () => {
   test("plate is decorative with aria-hidden='true' and no carousel widget controls", async ({
@@ -306,5 +307,198 @@ test.describe("Hero Visual — Safeguards (Reduced Motion, Hover Pause, No Overf
     });
 
     expect(totalCls).toBeLessThan(0.01);
+  });
+});
+
+test.describe("Hero Visual — Option B Rotation Limit (9 Transitions, Session, Replay)", () => {
+  test("stops auto-rotation after 9th transition (3 complete loops)", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("http://localhost:3000/");
+    await page.waitForLoadState("networkidle");
+
+    const plate = page.locator('[data-testid="hero-plate"]');
+    await expect(plate).toBeVisible();
+    await expect(plate).toHaveCSS("animation-play-state", "running");
+
+    // Fast-forward virtual clock through 9 transitions (9 * 5200ms)
+    for (let i = 0; i < 9; i++) {
+      await page.clock.fastForward(5200);
+    }
+
+    // Verify plate is now paused due to reaching rotation limit
+    await expect(plate).toHaveCSS("animation-play-state", "paused");
+
+    // Verify sessionStorage has recorded that the rotation played
+    const storageValue = await page.evaluate(
+      (key) => window.sessionStorage.getItem(key),
+      STORAGE_KEYS.HERO_ROTATION_PLAYED,
+    );
+    expect(storageValue).toBe("true");
+
+    // Verify plate remains paused on Scene 1 even after more time passes
+    await page.clock.fastForward(5200);
+    await expect(plate).toHaveCSS("animation-play-state", "paused");
+  });
+
+  test("replays rotation on tap after auto-stopping", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("http://localhost:3000/");
+    await page.waitForLoadState("networkidle");
+
+    const plateContainer = page.locator('[data-testid="hero-plate-container"]');
+    const plate = page.locator('[data-testid="hero-plate"]');
+    await expect(plate).toBeVisible();
+
+    // Fast-forward virtual clock through 9 transitions to trigger auto-stop
+    for (let i = 0; i < 9; i++) {
+      await page.clock.fastForward(5200);
+    }
+    await expect(plate).toHaveCSS("animation-play-state", "paused");
+
+    // Tap the plate container to trigger replay
+    await plateContainer.click();
+    await page.mouse.move(0, 0);
+
+    // Verify rotation resumes running
+    await expect(plate).toHaveCSS("animation-play-state", "running");
+
+    // Verify sessionStorage played flag remains "true" during manual replay
+    const storageValue = await page.evaluate(
+      (key) => window.sessionStorage.getItem(key),
+      STORAGE_KEYS.HERO_ROTATION_PLAYED,
+    );
+    expect(storageValue).toBe("true");
+  });
+
+  test("replay, then reload starts stopped", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("http://localhost:3000/");
+    await page.waitForLoadState("networkidle");
+
+    const plateContainer = page.locator('[data-testid="hero-plate-container"]');
+    const plate = page.locator('[data-testid="hero-plate"]');
+    await expect(plate).toBeVisible();
+
+    // Fast-forward virtual clock through 9 transitions to trigger auto-stop
+    for (let i = 0; i < 9; i++) {
+      await page.clock.fastForward(5200);
+    }
+    await expect(plate).toHaveCSS("animation-play-state", "paused");
+
+    // Tap to replay
+    await plateContainer.click();
+    await page.mouse.move(0, 0);
+    await expect(plate).toHaveCSS("animation-play-state", "running");
+
+    // Verify sessionStorage retains played = true
+    const storageValue = await page.evaluate(
+      (key) => window.sessionStorage.getItem(key),
+      STORAGE_KEYS.HERO_ROTATION_PLAYED,
+    );
+    expect(storageValue).toBe("true");
+
+    // Reload page mid-replay to simulate return visit/refresh
+    await page.reload();
+    await page.waitForLoadState("networkidle");
+
+    // Verify plate starts stopped immediately on reload
+    await expect(plate).toHaveCSS("animation-play-state", "paused");
+  });
+
+  test("plate rotates normally and does not crash when sessionStorage throws on get/set/remove", async ({
+    page,
+  }) => {
+    // Intercept sessionStorage before navigation to simulate restricted/disabled storage environment
+    await page.addInitScript(() => {
+      const throwingStorage = {
+        getItem: () => {
+          throw new DOMException("The operation is insecure.", "SecurityError");
+        },
+        setItem: () => {
+          throw new DOMException("The operation is insecure.", "SecurityError");
+        },
+        removeItem: () => {
+          throw new DOMException("The operation is insecure.", "SecurityError");
+        },
+        clear: () => {
+          throw new DOMException("The operation is insecure.", "SecurityError");
+        },
+        key: () => null,
+        length: 0,
+      };
+      Object.defineProperty(window, "sessionStorage", {
+        value: throwingStorage,
+        configurable: true,
+      });
+    });
+
+    await page.goto("http://localhost:3000/");
+    await page.waitForLoadState("networkidle");
+
+    const plateContainer = page.locator('[data-testid="hero-plate-container"]');
+    const plate = page.locator('[data-testid="hero-plate"]');
+    await expect(plate).toBeVisible();
+
+    // Plate starts and rotates normally (fallback active)
+    await expect(plate).toHaveCSS("animation-play-state", "running");
+
+    // Tap toggle functions without crashing
+    await plateContainer.click();
+    await page.mouse.move(0, 0);
+    await expect(plate).toHaveCSS("animation-play-state", "paused");
+
+    await plateContainer.click();
+    await page.mouse.move(0, 0);
+    await expect(plate).toHaveCSS("animation-play-state", "running");
+  });
+
+  test("return visit in the same session starts stopped", async ({ page }) => {
+    // Navigate and set the session storage flag representing a previous completion
+    await page.goto("http://localhost:3000/");
+    await page.evaluate(
+      (key) => window.sessionStorage.setItem(key, "true"),
+      STORAGE_KEYS.HERO_ROTATION_PLAYED,
+    );
+
+    // Reload page to simulate return visit within the same session
+    await page.reload();
+    await page.waitForLoadState("networkidle");
+
+    const plate = page.locator('[data-testid="hero-plate"]');
+    await expect(plate).toBeVisible();
+
+    // Verify plate starts stopped immediately
+    await expect(plate).toHaveCSS("animation-play-state", "paused");
+  });
+
+  test("reduced motion + tap does nothing", async ({ browser }) => {
+    const context = await browser.newContext({
+      reducedMotion: "reduce",
+    });
+    const page = await context.newPage();
+    await page.goto("http://localhost:3000/");
+    await page.waitForLoadState("networkidle");
+
+    const plateContainer = page.locator('[data-testid="hero-plate-container"]');
+    const plate = page.locator('[data-testid="hero-plate"]');
+    await expect(plate).toBeVisible();
+
+    // Initial reduced-motion state: Scene 1 visible, paused
+    const scene1 = plate.locator("svg").first();
+    await expect(scene1).toBeVisible();
+
+    // Tap the plate container under reduced motion
+    await plateContainer.click();
+    await page.waitForTimeout(300);
+
+    // Plate strictly remains stationary on Scene 1, no rotation starts
+    await expect(scene1).toBeVisible();
+    const storageValue = await page.evaluate(
+      (key) => window.sessionStorage.getItem(key),
+      STORAGE_KEYS.HERO_ROTATION_PLAYED,
+    );
+    expect(storageValue).toBeNull();
+
+    await context.close();
   });
 });

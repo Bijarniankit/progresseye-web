@@ -3,6 +3,7 @@
 import { AnimatePresence, domAnimation, LazyMotion, m, useReducedMotion } from "motion/react";
 import * as React from "react";
 import { SchoolScene } from "@/components/illustrations";
+import { STORAGE_KEYS } from "@/config/storage-keys";
 
 // Lazy-load Scenes 2 and 3 for optimal initial bundle and SSR speed
 const FeaturesScene = React.lazy(() =>
@@ -22,22 +23,51 @@ export function HeroCarousel({ initialScene = 0, autoRotateIntervalMs = 5200 }: 
   const [isHovered, setIsHovered] = React.useState(false);
   const [isPointerHeld, setIsPointerHeld] = React.useState(false);
   const [isTapped, setIsTapped] = React.useState(false);
+  const [isAutoStopped, setIsAutoStopped] = React.useState(false);
   const [isInView, setIsInView] = React.useState(true);
   const [isTabVisible, setIsTabVisible] = React.useState(true);
   const [isMounted, setIsMounted] = React.useState(false);
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const tapTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  const transitionCountRef = React.useRef(0);
   const shouldReduceMotion = useReducedMotion();
 
   React.useEffect(() => {
     setIsMounted(true);
+    try {
+      if (
+        typeof window !== "undefined" &&
+        window.sessionStorage.getItem(STORAGE_KEYS.HERO_ROTATION_PLAYED) === "true"
+      ) {
+        setIsAutoStopped(true);
+      }
+    } catch {
+      // sessionStorage unavailable or restricted
+    }
     return () => {
       if (tapTimeoutRef.current) clearTimeout(tapTimeoutRef.current);
     };
   }, []);
 
   const handleTap = React.useCallback(() => {
+    // Under prefers-reduced-motion, tap strictly does nothing
+    if (shouldReduceMotion) return;
+
+    // If rotation reached 9-transition limit or was previously played in session, tap replays without clearing played flag
+    if (isAutoStopped) {
+      setIsAutoStopped(false);
+      transitionCountRef.current = 0;
+      try {
+        if (typeof window !== "undefined") {
+          window.sessionStorage.setItem(STORAGE_KEYS.HERO_ROTATION_PLAYED, "true");
+        }
+      } catch {
+        // ignore
+      }
+      return;
+    }
+
     setIsTapped((prev) => {
       const next = !prev;
       if (tapTimeoutRef.current) clearTimeout(tapTimeoutRef.current);
@@ -49,7 +79,7 @@ export function HeroCarousel({ initialScene = 0, autoRotateIntervalMs = 5200 }: 
       }
       return next;
     });
-  }, []);
+  }, [shouldReduceMotion, isAutoStopped]);
 
   // Preload Scenes 2 and 3 during idle periods after hydration
   React.useEffect(() => {
@@ -106,27 +136,40 @@ export function HeroCarousel({ initialScene = 0, autoRotateIntervalMs = 5200 }: 
   }, []);
 
   // Determine whether auto-rotation and decorative animations are paused:
-  // Pauses on hover, on tap-and-hold (pointer down), on tap toggle, off-screen, tab hidden, or reduced motion
+  // Pauses on hover, on tap-and-hold (pointer down), on tap toggle, off-screen, tab hidden, auto-stop limit, or reduced motion
   const isPaused =
     Boolean(shouldReduceMotion) ||
+    isAutoStopped ||
     isHovered ||
     isPointerHeld ||
     isTapped ||
     !isInView ||
     !isTabVisible;
 
-  // Auto-rotation timer (5.2s crossfade between scenes 1, 2, 3)
+  // Auto-rotation timer (5.2s crossfade between scenes 1, 2, 3, stopping after 9 transitions)
   React.useEffect(() => {
     if (isPaused) return;
 
     const interval = setInterval(() => {
+      transitionCountRef.current += 1;
       setCurrentSlide((prev) => ((prev + 1) % 3) as 0 | 1 | 2);
+
+      if (transitionCountRef.current >= 9) {
+        setIsAutoStopped(true);
+        try {
+          if (typeof window !== "undefined") {
+            window.sessionStorage.setItem(STORAGE_KEYS.HERO_ROTATION_PLAYED, "true");
+          }
+        } catch {
+          // ignore
+        }
+      }
     }, autoRotateIntervalMs);
 
     return () => clearInterval(interval);
   }, [isPaused, autoRotateIntervalMs]);
 
-  const animationPlayState = isPaused ? "paused" : "running";
+  const animationPlayState = !isMounted ? "running" : isPaused ? "paused" : "running";
 
   return (
     <LazyMotion features={domAnimation}>
