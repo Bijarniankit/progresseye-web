@@ -273,12 +273,24 @@ This document records architectural, visual, and copy decisions modifying or com
        - `IntersectionObserver` with 0.1 threshold pauses rotation when hero scrolls out of view and resumes when re-entering.
     8. **Reduced Motion (`shouldReduceMotion`)**:
        - Under `prefers-reduced-motion: reduce`, rotation and all motion are permanently disabled; Scene 1 renders statically.
-- **Rotation Limit Policy Decision (Pending User Selection)**:
-  - Options under review:
-    - `[A]` Infinite auto-rotation loop protected by the 6 motion safeguards.
-    - `[B]` Auto-stop after 3 complete cycles (9 slide transitions total, ~47 seconds runtime), permanently settling on Scene 1.
-    - `[C]` Auto-stop after 1 complete cycle (3 slide transitions total, ~16 seconds runtime), permanently settling on Scene 1.
-  - The chosen option will be permanently codified here once selected by the user.
+- **Rotation Limit Policy Decided: Option B (owner decision)**:
+  - **Auto-Stop After 3 Cycles (9 Transitions)**:
+    - Auto-rotation runs for exactly 3 complete cycles across the 3 illustrative scenes (9 transitions total, ~47 seconds total runtime).
+    - Upon completing transition 9, rotation halts permanently (`isAutoStopped = true`, `animationPlayState = "paused"`) and settles statically on Scene 1 (`SchoolScene`).
+    - Stored in `sessionStorage` under `STORAGE_KEYS.HERO_ROTATION_PLAYED` (`pe_hero_played = "true"`).
+  - **Tap-to-Replay Mechanism**:
+    - When auto-stopped, a user tap or mouse click on the hero plate triggers a manual replay.
+    - **What the user actually sees on tap**: Replay does NOT advance the slide immediately. The plate animation resumes running immediately (`animationPlayState = "running"`), and the visual remains on Scene 1 for the full 5.2s interval before transitioning smoothly to Scene 2.
+    - Replay resets `transitionCountRef.current = 0` and resumes auto-rotation for another 3 cycles (`isAutoStopped = false`).
+    - **Replay Keeps Flag Set**: Replaying does NOT clear the `pe_hero_played` flag in `sessionStorage`. If a user navigates away or refreshes the page mid-replay, return visits continue to start stopped rather than restarting the full 3-cycle auto-play sequence.
+  - **Return Visits in Session**:
+    - On component mount (`useEffect`), the carousel inspects `sessionStorage.getItem(STORAGE_KEYS.HERO_ROTATION_PLAYED)`.
+    - If `"true"`, `isAutoStopped` initializes to `true`, and rotation never starts. Scene 1 renders statically.
+  - **Prefers-Reduced-Motion Safety**:
+    - Under `prefers-reduced-motion: reduce`, rotation and all motion are permanently disabled. Tapping does not replay or trigger rotation under any condition.
+  - **Storage Failure Fallback**:
+    - All `sessionStorage` reads and writes are wrapped in `try/catch` error blocks.
+    - If storage access throws (e.g., third-party cookies disabled, Safari private browsing security restrictions, or storage quota exceeded), the component safely falls back to in-memory state: rotation limits, manual tap toggle, and pause safeguards continue to function normally without crashing or unhandled exceptions.
 - **Removal of 44px Controls Slot & Vertical Centering**:
   - The 44px reserved controls container below the plate was removed.
   - The circular plate is vertically centered directly against the left headline column via CSS grid `items-center`.
