@@ -94,8 +94,24 @@ The application utilizes browser client-side storage for functional user prefere
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Why: Speed** | `src/components/marketing/why/why-section.tsx` | "Designed to stay quick on slow connections." | Design goal / target specification | **Yes** | Phase 14 (App Shell Performance) |
 | **Why: Privacy** | `src/components/marketing/why/why-section.tsx` | "Each school's data is kept separate by design." | Target architecture (RLS isolation) | **Yes** | Phase 13 (Multi-tenant RLS) |
-| **Why: Everywhere** | `src/components/marketing/why/why-section.tsx` | "Works in any modern browser on desktop, tablet and phone." | Responsive web standard | **Yes** | Phase 14 (App Shell UX) |
-| **Why: India** | `src/components/marketing/why/why-section.tsx` | "Built around Indian schools: rupee and lakh/crore formatting." | Localization roadmap (Hindi planned) | **Yes** | Phase 15 (Localization Engine) |
+| **Why: Everywhere** | `src/components/marketing/why/why-section.tsx` | "Works in any modern browser on desktop, tablet and phone. Nothing to install." | Responsive web standard | **Yes** | Phase 14 (App Shell UX) |
+| **Why: India** | `src/components/marketing/why/why-section.tsx` | "Built around Indian schools: rupee and lakh/crore formatting. English now, Hindi planned." | Localization roadmap (Hindi planned) | **Yes** | Phase 15 (Localization Engine) |
 | **Pricing: Starter Student Limit** | `src/config/pricing.ts` (`studentLimit: 100`) | `100` students free tier cap | **Invented Placeholder** (`TODO-REAL-DATA`) | **Yes** | Phase 8 (Commercial Sign-off) |
 | **Pricing: School Tier Annual Price** | `src/config/pricing.ts` (`annualPricePerStudent: 25`) | `₹25 / student / month` (Save 17% derived) | **Commercial Target** (`TODO-REAL-DATA`) | **Yes** | Phase 8 (Pricing Sign-off) |
 | **Pricing: School Tier Monthly Price** | `src/config/pricing.ts` (`monthlyPricePerStudent: 30`) | `₹30 / student / month` | **Commercial Target** (`TODO-REAL-DATA`) | **Yes** | Phase 8 (Pricing Sign-off) |
+| **Pricing: Starter Bullet 1** | `src/config/pricing.ts` | Daily attendance roll call | Planned scope (`status: planned`) | **Yes** | Phase 16 (Attendance Engine) |
+| **Pricing: Starter Bullet 2** | `src/config/pricing.ts` | Fee recording | Planned scope (`status: planned`) | **Yes** | Phase 17 (Fees & Finance) |
+| **Pricing: Starter Bullet 3** | `src/config/pricing.ts` | Student & parent directory | Planned scope (`status: planned`) | **Yes** | Phase 13 (User Management) |
+| **Pricing: Starter Bullet 4** | `src/config/pricing.ts` | Notice board & announcements | Planned scope (`status: planned`) | **Yes** | Phase 19 (Comms) |
+| **Pricing: Starter Bullet 5** | `src/config/pricing.ts` | Staff web portal | Planned scope (`status: planned`) | **Yes** | Phase 14 (App Shell) |
+| **Pricing: School Bullet 1** | `src/config/pricing.ts` | Daily attendance & alerts | Planned scope (`status: planned`) | **Yes** | Phase 16 (Attendance Engine) |
+| **Pricing: School Bullet 2** | `src/config/pricing.ts` | Automated fee collection & receipts | Planned scope (`status: planned`) | **Yes** | Phase 17 (Fees & Finance) |
+| **Pricing: School Bullet 3** | `src/config/pricing.ts` | Exams, grading & report cards | Planned scope (`status: planned`) | **Yes** | Phase 18 (Exams & Gradebook) |
+| **Pricing: School Bullet 4** | `src/config/pricing.ts` | Staff & teacher accounts | Planned scope (`status: planned`) | **Yes** | Phase 13 (User Management) |
+| **Pricing: School Bullet 5** | `src/config/pricing.ts` | Parent communication portal | Planned scope (`status: planned`) | **Yes** | Phase 19 (Parent Comms) |
+| **Pricing: District Bullet 1** | `src/config/pricing.ts` | Multi-campus aggregated analytics | Planned scope (`status: planned`) | **Yes** | Phase 20 (Reports & Dashboards) |
+| **Pricing: District Bullet 2** | `src/config/pricing.ts` | Centralized group finance & fee roll-up | Planned scope (`status: planned`) | **Yes** | Phase 17 (Multi-Campus Finance) |
+| **Pricing: District Bullet 3** | `src/config/pricing.ts` | Custom SIS & board integrations | Planned scope (`status: planned`) | **Yes** | Phase 21 (Integrations) |
+| **Pricing: District Bullet 4** | `src/config/pricing.ts` | Dedicated onboarding & support | Planned scope (`status: planned`) | **Yes** | Phase 8 (Support Contracts) |
+| **Pricing: District Bullet 5** | `src/config/pricing.ts` | On-site teacher & staff training | Planned scope (`status: planned`) | **Yes** | Phase 8 (Professional Services) |
+

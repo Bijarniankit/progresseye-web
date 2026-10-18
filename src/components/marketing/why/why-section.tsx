@@ -1,70 +1,62 @@
-import { Check, ShieldCheck, Smartphone, Sparkles, X, Zap } from "lucide-react";
+import { ShieldCheck, Smartphone, Sparkles, Zap } from "lucide-react";
 import { whyRowsConfig } from "@/config/landing-claims";
 
 export interface WhyRow {
   id: string;
+  name: string;
   category: string;
   icon: typeof Zap;
-  legacyText: string;
-  progressEyeText: string;
+  text: string;
 }
 
 const WHY_ROWS: WhyRow[] = [
   {
     id: "speed",
+    name: "Speed",
     category: "Performance on slow connections",
     icon: Zap,
-    legacyText:
-      "Heavy megabyte downloads, multi-second page freezes, and slow transitions on spotty mobile data.",
-    progressEyeText:
-      "Designed to stay quick on slow connections. Tiny initial payload, lean styling, and sub-second renders.",
+    text: "Designed to stay quick on slow connections.",
   },
   {
     id: "privacy",
+    name: "Privacy",
     category: "Student privacy & multitenancy",
     icon: ShieldCheck,
-    legacyText:
-      "Shared database tables, co-mingled student records, and complex cross-tenant query vulnerabilities.",
-    progressEyeText:
-      "Each school's data is kept separate by design. PostgreSQL Row-Level Security guarantees tenant boundary isolation.",
+    text: "Each school's data is kept separate by design.",
   },
   {
     id: "everywhere",
+    name: "Everywhere",
     category: "Device & operating system support",
     icon: Smartphone,
-    legacyText:
-      "Requires dedicated Windows desktop clients, local servers, or slow proprietary mobile wrappers.",
-    progressEyeText:
-      "Works in any modern browser on desktop, tablet and phone. Nothing to install, zero local hardware requirements.",
+    text: "Works in any modern browser on desktop, tablet and phone. Nothing to install.",
   },
   {
     id: "india",
+    name: "India",
     category: "Designed for Indian schools",
     icon: Sparkles,
-    legacyText:
-      "Western accounting defaults, million/billion numbering, foreign date formats, and rigid international structures.",
-    progressEyeText:
-      "Built around Indian schools: rupee and lakh/crore formatting. English now, Hindi planned. Tailored for CBSE and ICSE norms.",
+    text: "Built around Indian schools: rupee and lakh/crore formatting. English now, Hindi planned.",
   },
 ];
 
 /**
- * Server Component: Why ProgressEye Comparison Section
+ * Server Component: Why ProgressEye Architectural Goals
  *
- * Communicates honest design goals and architectural contrast against legacy ERPs.
- * Every row is marked as a planned design goal (blocks public launch = Yes).
+ * Renders the 4 approved architectural design goals without competitor claims.
+ * Every item is flagged as a planned roadmap target (blocks public launch = Yes).
  */
 export function WhySection() {
   return (
     <section
       id="why"
       aria-labelledby="why-heading"
-      className="py-16 sm:py-24 border-b border-[var(--color-border)] relative overflow-hidden"
+      className="scroll-mt-20 lg:scroll-mt-24 py-16 sm:py-24 border-b border-[var(--color-border)] relative overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Section Header */}
         <div className="max-w-3xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border border-blue-300/50 dark:border-blue-700/50">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[var(--color-surface-subtle)] text-[var(--color-text)] border border-[var(--color-border)]">
             <span>Why ProgressEye</span>
             <span aria-hidden="true">·</span>
             <span>Architectural Goals</span>
@@ -78,9 +70,7 @@ export function WhySection() {
           </h2>
 
           <p className="text-base sm:text-lg text-[var(--color-text-muted)] leading-relaxed">
-            Most school software is either a 20-year-old desktop ERP or a generic foreign system
-            with a rupee symbol added. We designed ProgressEye from scratch for modern Indian school
-            operations.
+            We designed ProgressEye from scratch around the daily operations of Indian schools.
           </p>
 
           {/* Honest architectural disclaimer banner */}
@@ -90,143 +80,47 @@ export function WhySection() {
               aria-hidden="true"
             />
             <span>
-              <strong>Design Goal Commitments</strong>: The comparisons below reflect our target
-              engineering specifications and product roadmap. No unverified benchmark figures are
-              asserted until production validation.
+              <strong>Design Goal Commitments</strong>: Design goals, not measured results. Target
+              specifications and architectural roadmap. Verified metrics will be measured against
+              production workloads upon rollout.
             </span>
           </div>
         </div>
 
-        {/* Comparison Table for Desktop / Tablet */}
-        <div className="hidden md:block rounded-[var(--radius-xl)] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-e1)] overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <caption className="sr-only">
-              Comparison between Legacy School Software and ProgressEye design goals
-            </caption>
-            <thead>
-              <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface-subtle)] text-xs font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
-                <th scope="col" className="p-5 w-1/4">
-                  Feature & Goal
-                </th>
-                <th scope="col" className="p-5 w-3/8 text-[var(--color-text-muted)]">
-                  Legacy School Software
-                </th>
-                <th
-                  scope="col"
-                  className="p-5 w-3/8 text-blue-800 dark:text-blue-300 bg-blue-50/50 dark:bg-blue-950/20 border-l border-[var(--color-border)]"
-                >
-                  <div className="flex items-center justify-between">
-                    <span>ProgressEye</span>
-                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300">
-                      Planned
-                    </span>
-                  </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[var(--color-border)] text-sm">
-              {WHY_ROWS.map((row) => {
-                const IconComponent = row.icon;
-                const claim = whyRowsConfig[row.id];
-
-                return (
-                  <tr
-                    key={row.id}
-                    className="hover:bg-[var(--color-surface-subtle)]/40 transition-colors"
-                  >
-                    {/* Goal category */}
-                    <th
-                      scope="row"
-                      className="p-5 font-semibold text-[var(--color-text)] align-top"
-                    >
-                      <div className="flex items-start gap-2.5">
-                        <IconComponent
-                          className="w-4 h-4 text-[var(--color-brand)] mt-0.5 shrink-0"
-                          aria-hidden="true"
-                        />
-                        <div>
-                          <div>{row.category}</div>
-                          {claim && (
-                            <span className="text-[10px] text-[var(--color-text-muted)] font-normal block mt-0.5">
-                              Status: {claim.status}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </th>
-
-                    {/* Legacy description */}
-                    <td className="p-5 text-[var(--color-text-muted)] align-top">
-                      <div className="flex items-start gap-2">
-                        <X
-                          className="w-4 h-4 text-red-500/70 dark:text-red-400/70 shrink-0 mt-0.5"
-                          aria-hidden="true"
-                        />
-                        <span>{row.legacyText}</span>
-                      </div>
-                    </td>
-
-                    {/* ProgressEye description */}
-                    <td className="p-5 text-[var(--color-text)] align-top font-medium bg-blue-50/20 dark:bg-blue-950/10 border-l border-[var(--color-border)]">
-                      <div className="flex items-start gap-2">
-                        <Check
-                          className="w-4 h-4 text-[var(--color-brand)] shrink-0 mt-0.5"
-                          aria-hidden="true"
-                        />
-                        <span>{row.progressEyeText}</span>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Stacked Cards for Mobile Viewports (< 768px) */}
-        <div className="md:hidden space-y-4">
+        {/* 4 Approved One-Liner Cards (Desktop & Mobile) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {WHY_ROWS.map((row) => {
             const IconComponent = row.icon;
+            const claim = whyRowsConfig[row.id];
 
             return (
               <div
                 key={row.id}
-                className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-5 space-y-4 shadow-[var(--shadow-e1)]"
+                className="rounded-[var(--radius-xl)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 sm:p-8 flex flex-col justify-between space-y-4 shadow-[var(--shadow-e1)] hover:border-[var(--color-brand)]/40 transition-colors"
               >
-                <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)]">
-                  <div className="flex items-center gap-2 font-bold text-sm text-[var(--color-text)]">
-                    <IconComponent
-                      className="w-4 h-4 text-[var(--color-brand)]"
-                      aria-hidden="true"
-                    />
-                    <span>{row.category}</span>
-                  </div>
-                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300">
-                    Planned
-                  </span>
-                </div>
-
-                {/* Legacy vs ProgressEye mobile comparison */}
-                <div className="space-y-3 text-xs">
-                  <div className="p-3 rounded-[var(--radius-md)] bg-[var(--color-surface-subtle)] space-y-1">
-                    <div className="flex items-center gap-1.5 font-semibold text-[var(--color-text-muted)]">
-                      <X className="w-3.5 h-3.5 text-red-500/70" aria-hidden="true" />
-                      <span>Legacy Systems</span>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] flex items-center justify-center text-[var(--color-brand)]">
+                        <IconComponent className="w-5 h-5" aria-hidden="true" />
+                      </div>
+                      <div>
+                        <h3 className="font-display font-bold text-lg text-[var(--color-text)]">
+                          {row.name}
+                        </h3>
+                        <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+                          {row.category}
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-[var(--color-text-muted)] leading-relaxed pl-5">
-                      {row.legacyText}
-                    </p>
+                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] border border-[var(--color-border)]">
+                      {claim?.status ?? "Planned"}
+                    </span>
                   </div>
 
-                  <div className="p-3 rounded-[var(--radius-md)] bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200/50 dark:border-blue-900/50 space-y-1">
-                    <div className="flex items-center gap-1.5 font-semibold text-blue-800 dark:text-blue-300">
-                      <Check className="w-3.5 h-3.5 text-[var(--color-brand)]" aria-hidden="true" />
-                      <span>ProgressEye Goal</span>
-                    </div>
-                    <p className="text-[var(--color-text)] font-medium leading-relaxed pl-5">
-                      {row.progressEyeText}
-                    </p>
-                  </div>
+                  <p className="text-sm sm:text-base text-[var(--color-text)] font-normal leading-relaxed pt-2">
+                    {row.text}
+                  </p>
                 </div>
               </div>
             );

@@ -40,7 +40,7 @@ export function PricingCards() {
             }`}
           >
             <span>Annual billing</span>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-700 text-white uppercase tracking-wider">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--color-brand)] text-[var(--color-brand-foreground)] uppercase tracking-wider">
               Save {ANNUAL_SAVINGS_PERCENT}%
             </span>
           </button>
@@ -66,23 +66,28 @@ export function PricingCards() {
               <div className="text-3xl sm:text-4xl font-extrabold font-display text-[var(--color-text)]">
                 {starter.customPriceLabel}
               </div>
-              <p className="text-xs text-[var(--color-text-muted)] mt-1">
-                Small schools up to {starter.studentLimit} students
-              </p>
             </div>
 
-            {/* Feature list */}
-            <ul className="space-y-3 text-xs sm:text-sm text-[var(--color-text)]">
-              {starter.features.map((feature) => (
-                <li key={feature} className="flex items-start gap-2.5">
-                  <Check
-                    className="w-4 h-4 text-[var(--color-brand)] shrink-0 mt-0.5"
-                    aria-hidden="true"
-                  />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
+            {/* Feature list under Planned label */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+                <span>Planned Scope</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] border border-[var(--color-border)]">
+                  Planned
+                </span>
+              </div>
+              <ul className="space-y-3 text-xs sm:text-sm text-[var(--color-text)]">
+                {starter.features.map((feature) => (
+                  <li key={feature.text} className="flex items-start gap-2.5">
+                    <Check
+                      className="w-4 h-4 text-[var(--color-brand)] shrink-0 mt-0.5"
+                      aria-hidden="true"
+                    />
+                    <span>{feature.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           <div className="pt-8">
@@ -95,59 +100,67 @@ export function PricingCards() {
           </div>
         </div>
 
-        {/* TIER 2: School (Most Popular — Inverted Card) */}
-        <div className="rounded-[var(--radius-xl)] p-6 sm:p-8 flex flex-col justify-between relative bg-neutral-950 text-neutral-50 dark:bg-neutral-100 dark:text-neutral-900 border border-neutral-800 dark:border-neutral-300 shadow-2xl scale-100 lg:-translate-y-2">
+        {/* TIER 2: School (Most Popular — Inverted Semantic Card) */}
+        <div className="rounded-[var(--radius-xl)] p-6 sm:p-8 flex flex-col justify-between relative bg-[var(--color-surface-contrast)] text-[var(--color-text-inverse)] border border-[var(--color-border)] shadow-[var(--shadow-e3)] scale-100 lg:-translate-y-2">
           {/* Most popular floating badge */}
           <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-            <span className="px-3 py-1 rounded-full text-[10px] font-extrabold tracking-widest uppercase bg-blue-700 text-white shadow-md">
+            <span className="px-3 py-1 rounded-full text-[10px] font-extrabold tracking-widest uppercase bg-[var(--color-brand)] text-[var(--color-brand-foreground)] shadow-md">
               {school.badge}
             </span>
           </div>
 
           <div className="space-y-6">
             <div>
-              <h3 className="text-xl font-bold font-display text-white dark:text-neutral-900">
+              <h3 className="text-xl font-bold font-display text-[var(--color-text-inverse)]">
                 {school.name}
               </h3>
-              <p className="text-xs sm:text-sm text-neutral-300 dark:text-neutral-700 mt-1.5">
+              <p className="text-xs sm:text-sm text-[var(--color-text-inverse)]/80 mt-1.5">
                 {school.tagline}
               </p>
             </div>
 
             {/* Price block */}
-            <div className="pt-2 pb-4 border-b border-neutral-800 dark:border-neutral-300">
+            <div className="pt-2 pb-4 border-b border-[var(--color-text-inverse)]/20">
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl sm:text-3xl font-extrabold flex items-center text-white dark:text-neutral-900">
+                <span className="text-2xl sm:text-3xl font-extrabold flex items-center text-[var(--color-text-inverse)]">
                   <IndianRupee className="w-6 h-6 mr-0.5 inline shrink-0" aria-hidden="true" />
                   <span className="font-display">{schoolPrice}</span>
                 </span>
-                <span className="text-xs text-neutral-300 dark:text-neutral-700">
+                <span className="text-xs text-[var(--color-text-inverse)]/80">
                   {school.billingPeriodLabel}
                 </span>
               </div>
-              <p className="text-xs text-neutral-400 dark:text-neutral-700 mt-1">
+              <p className="text-xs text-[var(--color-text-inverse)]/70 mt-1">
                 {isAnnual ? `Billed annually (Save ${ANNUAL_SAVINGS_PERCENT}%)` : "Billed monthly"}
               </p>
             </div>
 
-            {/* Feature list */}
-            <ul className="space-y-3 text-xs sm:text-sm text-neutral-200 dark:text-neutral-800">
-              {school.features.map((feature) => (
-                <li key={feature} className="flex items-start gap-2.5">
-                  <Check
-                    className="w-4 h-4 text-blue-400 dark:text-blue-600 shrink-0 mt-0.5"
-                    aria-hidden="true"
-                  />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
+            {/* Feature list under Planned label */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[var(--color-text-inverse)]/70">
+                <span>Planned Scope</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--color-surface)] text-[var(--color-text)] border border-[var(--color-border)]">
+                  Planned
+                </span>
+              </div>
+              <ul className="space-y-3 text-xs sm:text-sm text-[var(--color-text-inverse)]">
+                {school.features.map((feature) => (
+                  <li key={feature.text} className="flex items-start gap-2.5">
+                    <Check
+                      className="w-4 h-4 text-[var(--color-brand)] shrink-0 mt-0.5"
+                      aria-hidden="true"
+                    />
+                    <span>{feature.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           <div className="pt-8">
             <Link
               href={school.ctaHref}
-              className="block w-full py-2.5 px-4 rounded-[var(--radius-md)] text-center text-sm font-semibold bg-white text-neutral-950 hover:bg-neutral-200 dark:bg-neutral-950 dark:text-white dark:hover:bg-neutral-800 transition-colors shadow-sm focus-ring"
+              className="block w-full py-2.5 px-4 rounded-[var(--radius-md)] text-center text-sm font-semibold bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-subtle)] transition-colors shadow-sm focus-ring border border-[var(--color-border)]"
             >
               {school.ctaLabel}
             </Link>
@@ -171,23 +184,28 @@ export function PricingCards() {
               <div className="text-3xl sm:text-4xl font-extrabold font-display text-[var(--color-text)]">
                 {district.customPriceLabel}
               </div>
-              <p className="text-xs text-[var(--color-text-muted)] mt-1">
-                Custom enterprise rollout for campus networks
-              </p>
             </div>
 
-            {/* Feature list */}
-            <ul className="space-y-3 text-xs sm:text-sm text-[var(--color-text)]">
-              {district.features.map((feature) => (
-                <li key={feature} className="flex items-start gap-2.5">
-                  <Check
-                    className="w-4 h-4 text-[var(--color-brand)] shrink-0 mt-0.5"
-                    aria-hidden="true"
-                  />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
+            {/* Feature list under Planned label */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+                <span>Planned Scope</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] border border-[var(--color-border)]">
+                  Planned
+                </span>
+              </div>
+              <ul className="space-y-3 text-xs sm:text-sm text-[var(--color-text)]">
+                {district.features.map((feature) => (
+                  <li key={feature.text} className="flex items-start gap-2.5">
+                    <Check
+                      className="w-4 h-4 text-[var(--color-brand)] shrink-0 mt-0.5"
+                      aria-hidden="true"
+                    />
+                    <span>{feature.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           <div className="pt-8">

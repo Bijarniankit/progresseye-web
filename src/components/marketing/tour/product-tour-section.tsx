@@ -5,18 +5,15 @@ export function ProductTourSection() {
     <section
       id="tour"
       aria-label="Product tour preview"
-      className="py-16 sm:py-20 lg:py-24 border-b border-[var(--color-border-muted)] bg-[var(--color-surface)]"
+      className="scroll-mt-20 lg:scroll-mt-24 py-16 sm:py-20 lg:py-24 border-b border-[var(--color-border-muted)] bg-[var(--color-surface)]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border border-blue-300/50 dark:border-blue-700/50">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[var(--color-surface-subtle)] text-[var(--color-text)] border border-[var(--color-border)]">
             <span>Interactive Product Tour</span>
-            <span
-              className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400"
-              aria-hidden="true"
-            />
-            <span className="text-[10px] uppercase font-bold tracking-wider opacity-90">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-brand)]" aria-hidden="true" />
+            <span className="text-[10px] uppercase font-bold tracking-wider text-[var(--color-text-muted)]">
               Planned
             </span>
           </div>

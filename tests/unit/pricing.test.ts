@@ -31,4 +31,14 @@ describe("Pricing Configuration & Dynamic Derivations", () => {
       expect(claim.blocksLaunch).toBe(true);
     }
   });
+
+  it("verifies every pricing tier feature bullet has status planned", () => {
+    for (const tier of Object.values(PRICING_TIERS)) {
+      expect(tier.features.length).toBeGreaterThan(0);
+      for (const feature of tier.features) {
+        expect(feature.status).toBe("planned");
+        expect(typeof feature.text).toBe("string");
+      }
+    }
+  });
 });

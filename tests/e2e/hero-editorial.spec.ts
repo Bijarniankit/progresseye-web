@@ -30,7 +30,7 @@ test.describe("Hero Editorial Column & Accessible Structure", () => {
     await expect(subtitle).toBeVisible();
 
     // Check Primary CTA
-    const primaryCta = page.getByRole("link", { name: "Book a free demo" });
+    const primaryCta = page.getByRole("link", { name: "Book a free demo" }).first();
     await expect(primaryCta).toBeVisible();
     await expect(primaryCta).toHaveAttribute("href", "/demo");
 

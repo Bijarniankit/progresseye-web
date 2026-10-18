@@ -18,7 +18,7 @@ function BentoCard({ title, description, className = "", children }: BentoCardPr
           <h3 className="font-display text-lg sm:text-xl font-bold text-[var(--color-text)]">
             {title}
           </h3>
-          <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border border-blue-300/50 dark:border-blue-700/50 uppercase tracking-wider">
+          <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] border border-[var(--color-border)] uppercase tracking-wider">
             Planned
           </span>
         </div>
@@ -98,13 +98,10 @@ export function BentoGrid() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border border-blue-300/50 dark:border-blue-700/50">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[var(--color-surface-subtle)] text-[var(--color-text)] border border-[var(--color-border)]">
             <span>Modular Architecture</span>
-            <span
-              className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400"
-              aria-hidden="true"
-            />
-            <span className="text-[10px] uppercase font-bold tracking-wider opacity-90">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-brand)]" aria-hidden="true" />
+            <span className="text-[10px] uppercase font-bold tracking-wider text-[var(--color-text-muted)]">
               Planned
             </span>
           </div>
