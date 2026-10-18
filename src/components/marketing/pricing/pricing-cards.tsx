@@ -109,7 +109,7 @@ export function PricingCards() {
               <h3 className="text-xl font-bold font-display text-white dark:text-neutral-900">
                 {school.name}
               </h3>
-              <p className="text-xs sm:text-sm text-neutral-300 dark:text-neutral-600 mt-1.5">
+              <p className="text-xs sm:text-sm text-neutral-300 dark:text-neutral-700 mt-1.5">
                 {school.tagline}
               </p>
             </div>
@@ -121,11 +121,11 @@ export function PricingCards() {
                   <IndianRupee className="w-6 h-6 mr-0.5 inline shrink-0" aria-hidden="true" />
                   <span className="font-display">{schoolPrice}</span>
                 </span>
-                <span className="text-xs text-neutral-300 dark:text-neutral-600">
+                <span className="text-xs text-neutral-300 dark:text-neutral-700">
                   {school.billingPeriodLabel}
                 </span>
               </div>
-              <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-1">
+              <p className="text-xs text-neutral-400 dark:text-neutral-700 mt-1">
                 {isAnnual ? `Billed annually (Save ${ANNUAL_SAVINGS_PERCENT}%)` : "Billed monthly"}
               </p>
             </div>
