@@ -119,10 +119,10 @@ export function BentoGrid() {
 
         {/* 6-Card Asymmetric Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Card 1: Roles done right (col-span-2 on lg) */}
+          {/* Card 1: Student & staff records (col-span-2 on lg) */}
           <BentoCard
-            title="Roles done right"
-            description="Purpose-built interfaces for administrators, principals, teachers, students, and parents."
+            title="Student & staff records"
+            description="Planned: unified student directory and staff profiles with role-based access."
             className="lg:col-span-2"
           >
             <div className="p-4 rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] border border-[var(--color-border)] flex flex-wrap items-center justify-between gap-4">
@@ -139,15 +139,15 @@ export function BentoGrid() {
               </div>
               <div className="text-xs font-semibold text-[var(--color-text-muted)] flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-[var(--color-brand)]" />
-                <span>Strict multi-tenant role boundaries (Phase 13)</span>
+                <span>Role-based directory and roster management (Phase 15)</span>
               </div>
             </div>
           </BentoCard>
 
-          {/* Card 2: Attendance in one tap (col-span-1) */}
+          {/* Card 2: Quick daily attendance (col-span-1) */}
           <BentoCard
-            title="Attendance in one tap"
-            description="Daily morning roll calls completed in seconds across all grades and sections."
+            title="Quick daily attendance"
+            description="Planned: take attendance from phone or desktop and notify guardians of absences."
             className="lg:col-span-1"
           >
             <div className="p-3.5 rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] border border-[var(--color-border)] space-y-2">
@@ -175,7 +175,7 @@ export function BentoGrid() {
           {/* Card 3: Fees that collect themselves (col-span-1) */}
           <BentoCard
             title="Fees that collect themselves"
-            description="Automated reconciliation, installment tracking, and digital receipt generation."
+            description="Planned: collect fees online (UPI first) with receipts and due reminders."
             className="lg:col-span-1"
           >
             <div className="p-3.5 rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] border border-[var(--color-border)] space-y-2.5">
@@ -200,7 +200,7 @@ export function BentoGrid() {
           {/* Card 4: Exams and report cards (col-span-2 on lg) */}
           <BentoCard
             title="Exams & report cards"
-            description="Grade calculations, multi-subject weightings, and printable term report cards."
+            description="Planned: configurable grading scales, term weightings, and printable report cards."
             className="lg:col-span-2"
           >
             <div className="p-4 rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] border border-[var(--color-border)] flex flex-wrap items-center justify-between gap-3">
@@ -228,7 +228,7 @@ export function BentoGrid() {
           {/* Card 5: Communication that lands (col-span-1) */}
           <BentoCard
             title="Communication that lands"
-            description="Direct broadcasts to parents via app notifications, SMS, and email."
+            description="Planned: broadcast notices to parents and staff via SMS and email."
             className="lg:col-span-1"
           >
             <div className="space-y-1.5">
@@ -240,8 +240,7 @@ export function BentoGrid() {
               </div>
               <div className="p-2 rounded-[var(--radius-md)] bg-[var(--color-surface-subtle)] border border-[var(--color-border)] text-xs flex items-center justify-between">
                 <span className="flex items-center gap-1.5 font-medium text-[var(--color-text)]">
-                  <Check className="w-3.5 h-3.5 text-emerald-800 dark:text-emerald-400" /> 1,284
-                  Parents
+                  <Check className="w-3.5 h-3.5 text-emerald-800 dark:text-emerald-400" /> Class 8-A
                 </span>
                 <span className="text-[10px] text-emerald-800 dark:text-emerald-300 font-bold">
                   Delivered
@@ -253,7 +252,7 @@ export function BentoGrid() {
           {/* Card 6: Insights that lead to action (col-span-2 on lg) */}
           <BentoCard
             title="Insights that lead to action"
-            description="Visual trendlines for attendance patterns, collection velocity, and academic metrics."
+            description="Planned: visual overview of attendance patterns, fee collection, and academic progress."
             className="lg:col-span-2"
           >
             <div className="p-4 rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] border border-[var(--color-border)] flex items-center justify-between gap-4">

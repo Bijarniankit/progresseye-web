@@ -104,7 +104,7 @@ export function ProductTourShell() {
                 Class VIII-A · Daily Roll Call
               </h3>
               <p className="text-xs sm:text-sm text-[var(--color-text-muted)]">
-                Click any square to simulate marking attendance in real time.
+                Planned: take attendance from a phone or desktop and notify guardians of absences.
               </p>
             </div>
             <div className="flex items-center gap-2.5">
@@ -164,7 +164,7 @@ export function ProductTourShell() {
                 Fee Collection · Term 2 Overview
               </h3>
               <p className="text-xs sm:text-sm text-[var(--color-text-muted)]">
-                Simulated fee reconciliation ledger and recent student receipts.
+                Planned: collect fees online (UPI first) with receipts and due reminders.
               </p>
             </div>
             <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300">
@@ -237,7 +237,7 @@ export function ProductTourShell() {
                 Mathematics Term 1 · Grade Distribution
               </h3>
               <p className="text-xs sm:text-sm text-[var(--color-text-muted)]">
-                Automated grade categorization and sample report card entries.
+                Planned: configurable grading scales and report cards.
               </p>
             </div>
             <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300">

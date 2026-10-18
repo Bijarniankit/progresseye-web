@@ -3,9 +3,13 @@
 import * as React from "react";
 
 /**
- * HashScrollHandler ensures that anchor links (e.g. #tour, #why, #pricing)
+ * HashScrollHandler ensures that anchor links (e.g. #tour, #why, #pricing, #faq, #cta)
  * reliably position at the target element after layout computation,
  * preventing scroll position drift caused by below-fold content-visibility: auto.
+ *
+ * Accessibility & Motion Compliance:
+ * - Uses behavior: "instant" to execute without motion, strictly adhering to prefers-reduced-motion.
+ * - Leaves document.activeElement undisturbed so keyboard navigation and focus rings are not affected.
  */
 export function HashScrollHandler() {
   React.useEffect(() => {

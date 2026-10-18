@@ -43,15 +43,15 @@ Every capability card and module preview in Phase 6 Checkpoint 1 represents plan
 | Module / Card | Component File | Capability Claimed | Verification Status | Blocks Public Launch | Target Phase |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Product Tour: Browser Mockup Domain** | `src/config/site.ts` (`siteConfig.mockDomain`) | Rendered mock domain: `yourschool.example` | Mock preview host | **No** (Mock label) | Phase 6 |
-| **Product Tour: Attendance** | `src/components/marketing/tour/product-tour.tsx` | Daily roll call with 30-square grid (`28 / 30 present`, 93% derived) | Unbuilt / Planned | **Yes** | Phase 16 (Attendance Engine) |
-| **Product Tour: Fees** | `src/components/marketing/tour/product-tour.tsx` | Fee ledger overview (`₹ 14,82,500 of ₹ 17,00,000`, 87% derived) | Unbuilt / Planned | **Yes** | Phase 17 (Fees & Finance) |
-| **Product Tour: Exams** | `src/components/marketing/tour/product-tour.tsx` | Grade distribution & report cards (`53 / 53 graded`, 100% derived) | Unbuilt / Planned | **Yes** | Phase 18 (Exams & Gradebook) |
-| **Bento Card: Roles done right** | `src/components/marketing/bento/bento-grid.tsx` | Multi-tenant RBAC interfaces for Admin, Principal, Teacher, Student, Parent | Unbuilt / Planned | **Yes** | Phase 13 (User & Tenancy Admin) |
-| **Bento Card: Attendance in one tap** | `src/components/marketing/bento/bento-grid.tsx` | Rapid roll call grid across all sections | Unbuilt / Planned | **Yes** | Phase 16 (Attendance Engine) |
-| **Bento Card: Fees that collect themselves** | `src/components/marketing/bento/bento-grid.tsx` | Automated reconciliation and digital receipt generation | Unbuilt / Planned | **Yes** | Phase 17 (Fees & Finance) |
-| **Bento Card: Exams & report cards** | `src/components/marketing/bento/bento-grid.tsx` | Multi-subject weightings and printable term cards | Unbuilt / Planned | **Yes** | Phase 18 (Exams & Gradebook) |
-| **Bento Card: Communication that lands** | `src/components/marketing/bento/bento-grid.tsx` | Direct broadcast engine to parents via App, SMS, and Email | Unbuilt / Planned | **Yes** | Phase 19 (Parent Comms) |
-| **Bento Card: Insights that lead to action** | `src/components/marketing/bento/bento-grid.tsx` | Visual administrative analytics and attendance trendlines | Unbuilt / Planned | **Yes** | Phase 20 (Reports & Dashboards) |
+| **Product Tour: Attendance** | `src/components/marketing/tour/product-tour.tsx` | "Planned: take attendance from a phone or desktop and notify guardians of absences." | Unbuilt / Planned | **Yes** | Phase 16 (Attendance Engine) |
+| **Product Tour: Fees** | `src/components/marketing/tour/product-tour.tsx` | "Planned: collect fees online (UPI first) with receipts and due reminders." | Unbuilt / Planned | **Yes** | Phase 17 (Fees & Finance) |
+| **Product Tour: Exams** | `src/components/marketing/tour/product-tour.tsx` | "Planned: configurable grading scales and report cards." | Unbuilt / Planned | **Yes** | Phase 18 (Exams & Gradebook) |
+| **Bento Card: Student & staff records** | `src/components/marketing/bento/bento-grid.tsx` | "Planned: unified student directory and staff profiles with role-based access." | Unbuilt / Planned | **Yes** | Phase 15 (Student & Staff Directory) |
+| **Bento Card: Quick daily attendance** | `src/components/marketing/bento/bento-grid.tsx` | "Planned: take attendance from phone or desktop and notify guardians of absences." | Unbuilt / Planned | **Yes** | Phase 16 (Attendance Engine) |
+| **Bento Card: Fees that collect themselves** | `src/components/marketing/bento/bento-grid.tsx` | "Planned: collect fees online (UPI first) with receipts and due reminders." | Unbuilt / Planned | **Yes** | Phase 17 (Fees & Finance) |
+| **Bento Card: Exams & report cards** | `src/components/marketing/bento/bento-grid.tsx` | "Planned: configurable grading scales, term weightings, and printable report cards." | Unbuilt / Planned | **Yes** | Phase 18 (Exams & Gradebook) |
+| **Bento Card: Communication that lands** | `src/components/marketing/bento/bento-grid.tsx` | "Planned: broadcast notices to parents and staff via SMS and email." | Unbuilt / Planned | **Yes** | Phase 19 (Parent Comms) |
+| **Bento Card: Insights that lead to action** | `src/components/marketing/bento/bento-grid.tsx` | "Planned: visual overview of attendance patterns, fee collection, and academic progress." | Unbuilt / Planned | **Yes** | Phase 20 (Reports & Dashboards) |
 
 ---
 
@@ -118,14 +118,18 @@ The application utilizes browser client-side storage for functional user prefere
 ---
 
 ## 8. Phase 6 CP3 FAQ & Final CTA Placeholders
-
 | Item / Claim | Component File / Config | Capability / Claim Description | Verification Status | Blocks Public Launch | Target Phase |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **FAQ: UPI & Net Banking** | `src/config/faq.ts` (`payments-upi`) | Designed to support direct UPI, QR code, and net banking reconciliation | Planned capability (`status: planned`) | **Yes** | Phase 18 (Fees & Finance) |
-| **FAQ: CBSE/ICSE/State Boards** | `src/config/faq.ts` (`academics-boards`) | Compliant report card formats for CBSE, ICSE, and state boards | Planned capability (`status: planned`) | **Yes** | Phase 17 (Exams & Gradebook) |
-| **FAQ: DPDP Privacy Compliance** | `src/config/faq.ts` (`privacy-dpdp`) | RLS isolation and workflows designed to adhere to Indian DPDP norms | Planned architecture (`status: planned`) | **Yes** | Phase 13 (Multi-tenant RLS) |
-| **FAQ: Zero Installation** | `src/config/faq.ts` (`platform-install`) | Responsive web workspace with nothing to install | Core design principle | **No** (Design goal) | Phase 14 (App Shell) |
-| **FAQ: Onboarding Timeline** | `src/config/faq.ts` (`onboarding-timeline`) | Setup under an hour using standard spreadsheet templates | Pilot operational target | **Yes** | Phase 8 (Pilot Launch) |
-| **Final CTA: Perks Line** | `src/components/marketing/cta/cta-section.tsx` | "Free Starter tier forever", "Designed for Indian schools", "No credit card required" | Pre-launch terms (`TODO-REAL-DATA`) | **Yes** | Phase 8 (Commercial Sign-off) |
+| **FAQ: UPI & Net Banking** | `src/config/faq.ts` (`payments-upi`) | Planned: collect fees online (UPI first) with digital receipts and pending dues notices | `DRAFT-CONTENT-REVIEW` (`status: planned`) | **Yes** | Phase 18 (Fees & Finance) |
+| **FAQ: CBSE/ICSE/State Boards** | `src/config/faq.ts` (`academics-boards`) | Planned: configurable grading scales and report cards designed to align with board requirements | `DRAFT-CONTENT-REVIEW` (`status: planned`) | **Yes** | Phase 17 (Exams & Gradebook) |
+| **FAQ: DPDP Privacy Compliance** | `src/config/faq.ts` (`privacy-dpdp`) | PostgreSQL Row-Level Security, designed to keep each school's records separate and adhere to DPDP principles | `DRAFT-NEEDS-LEGAL-REVIEW` (`status: planned`) | **Yes** | Phase 13 (Multi-tenant RLS) |
+| **FAQ: Zero Installation** | `src/config/faq.ts` (`platform-install`) | Responsive web application with nothing to install | `DRAFT-CONTENT-REVIEW` | **No** (Design goal) | Phase 14 (App Shell) |
+| **FAQ: Onboarding Timeline** | `src/config/faq.ts` (`onboarding-timeline`) | Planned: initial roster import under an hour using standard spreadsheet templates | `DRAFT-CONTENT-REVIEW` (`status: planned`) | **Yes** | Phase 8 (Pilot Launch) |
+| **FAQ: Onboarding & Staff Training** | `src/config/faq.ts` (`onboarding-training`) | Planned: guided onboarding sessions and step-by-step documentation for staff and teachers | `DRAFT-CONTENT-REVIEW` (`status: planned`) | **Yes** | Phase 8 (Support & Training) |
+| **Pricing / CTA: Free Starter Tier Forever** | `src/config/pricing.ts` / `PLACEHOLDERS.md` | Free Starter tier forever up to 100 students | Planned commercial model (`TODO-REAL-DATA`) | **Yes** | Phase 8 (Commercial Sign-off) |
+| **Final CTA: Indian Schools Focus** | `src/components/marketing/cta/cta-section.tsx` | "Designed for Indian schools" | Product architectural orientation | **No** (Core focus) | Phase 15 (Localization) |
+| **Final CTA: No Credit Card Required** | `src/components/marketing/cta/cta-section.tsx` | "No credit card required" | Planned commercial signup term (`TODO-REAL-DATA`) | **Yes** | Phase 8 (Commercial Sign-off) |
+| **Final CTA: Cancel Anytime** | `src/components/marketing/cta/cta-section.tsx` | "Cancel anytime" | Planned commercial subscription term (`TODO-REAL-DATA`) | **Yes** | Phase 8 (Commercial Sign-off) |
+
 
 

@@ -18,9 +18,9 @@ test.describe("Phase 6 CP3: FAQ Accordion & Final CTA Sections", () => {
       }),
     ).toBeVisible();
 
-    // Verify all 5 question summaries are present
+    // Verify all 6 question summaries are present
     const details = faqSection.locator("details");
-    await expect(details).toHaveCount(5);
+    await expect(details).toHaveCount(6);
 
     // Initial state: first details element is closed
     const firstDetails = details.first();
@@ -31,7 +31,7 @@ test.describe("Phase 6 CP3: FAQ Accordion & Final CTA Sections", () => {
     await firstSummary.click();
     await expect(firstDetails).toHaveAttribute("open");
     await expect(
-      firstDetails.getByText(/ProgressEye is designed to support direct UPI/i),
+      firstDetails.getByText(/Planned: collect fees online \(UPI first\)/i),
     ).toBeVisible();
 
     // Click summary again to collapse
@@ -47,7 +47,7 @@ test.describe("Phase 6 CP3: FAQ Accordion & Final CTA Sections", () => {
     await expect(firstDetails).not.toHaveAttribute("open");
   });
 
-  test("renders Final CTA section with dual-theme card, demo & get-started links, and perks", async ({
+  test("renders Final CTA section with dark card in both themes, demo & get-started links, and perks", async ({
     page,
   }) => {
     await page.goto("http://localhost:3000/#cta");
@@ -63,6 +63,11 @@ test.describe("Phase 6 CP3: FAQ Accordion & Final CTA Sections", () => {
       }),
     ).toBeVisible();
 
+    // Plain text copy
+    await expect(
+      ctaSection.getByText("Book a free demo to see what we are building."),
+    ).toBeVisible();
+
     // Links: Demo -> /demo, Get Started -> /get-started
     const demoLink = ctaSection.getByRole("link", { name: "Book a free demo" });
     await expect(demoLink).toBeVisible();
@@ -73,9 +78,9 @@ test.describe("Phase 6 CP3: FAQ Accordion & Final CTA Sections", () => {
     await expect(getStartedLink).toHaveAttribute("href", "/get-started");
 
     // Perks line
-    await expect(ctaSection.getByText("Free Starter tier forever")).toBeVisible();
     await expect(ctaSection.getByText("Designed for Indian schools")).toBeVisible();
     await expect(ctaSection.getByText("No credit card required")).toBeVisible();
+    await expect(ctaSection.getByText("Cancel anytime")).toBeVisible();
   });
 
   test("passes axe-core accessibility audit on FAQ & Final CTA in light and dark mode", async ({
