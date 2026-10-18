@@ -203,4 +203,20 @@ test.describe("Phase 6 CP1: Product Tour & Bento Grid", () => {
 
     expect(darkAudit.violations).toEqual([]);
   });
+
+  test("renders all three tour panels stacked when JavaScript is disabled", async ({ browser }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+    await page.goto("http://localhost:3000/#tour");
+
+    // All three panels must be rendered in DOM and visible
+    await expect(page.locator("#tour-panel-attendance")).toBeVisible();
+    await expect(page.locator("#tour-panel-fees")).toBeVisible();
+    await expect(page.locator("#tour-panel-exams")).toBeVisible();
+
+    // Verify key panel headings across all three
+    await expect(page.getByText("Class VIII-A · Daily Roll Call")).toBeVisible();
+    await expect(page.getByText("Fee Collection · Term 2 Overview")).toBeVisible();
+    await expect(page.getByText("Mathematics Term 1 · Grade Distribution")).toBeVisible();
+  });
 });

@@ -1,10 +1,17 @@
-import { Check, Clock, X } from "lucide-react";
+import { Check, Clock, IndianRupee, X } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import {
   ATTENDANCE_DERIVED_PERCENT,
   ATTENDANCE_PRESENT_COUNT,
   ATTENDANCE_STUDENTS,
   ATTENDANCE_TOTAL_STUDENTS,
+  EXAM_DERIVED_PERCENT,
+  EXAM_GRADE_DISTRIBUTION,
+  EXAM_GRADED_COUNT,
+  EXAM_TOTAL_STUDENTS,
+  FEE_DERIVED_PERCENT,
+  RECENT_FEE_TRANSACTIONS,
+  SAMPLE_EXAM_MARKS,
 } from "./tour-fixtures";
 
 /**
@@ -56,7 +63,7 @@ export function ProductTourShell() {
       <div
         role="tablist"
         aria-label="Product tour preview modules"
-        className="flex items-center border-b border-[var(--color-border)] bg-[var(--color-surface)] px-4 sm:px-6 pt-3 gap-2 overflow-x-auto"
+        className="tour-no-js-hidden flex items-center border-b border-[var(--color-border)] bg-[var(--color-surface)] px-4 sm:px-6 pt-3 gap-2 overflow-x-auto"
       >
         {tabs.map((tab) => (
           <button
@@ -141,6 +148,153 @@ export function ProductTourShell() {
             </span>
           </div>
         </div>
+      </div>
+
+      {/* No-JS Fallback: Stack Fees and Exams panels when JavaScript is disabled */}
+      <div className="tour-no-js-panel">
+        {/* PANEL 2: Fees (No-JS Fallback) */}
+        <section
+          id="tour-panel-fees"
+          aria-label="Fee Collection Overview"
+          className="border-t border-[var(--color-border)] p-4 sm:p-6 lg:p-8 space-y-6 bg-[var(--color-surface)]"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[var(--color-border)]">
+            <div>
+              <h3 className="text-base sm:text-lg font-bold text-[var(--color-text)]">
+                Fee Collection · Term 2 Overview
+              </h3>
+              <p className="text-xs sm:text-sm text-[var(--color-text-muted)]">
+                Simulated fee reconciliation ledger and recent student receipts.
+              </p>
+            </div>
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300">
+              {FEE_DERIVED_PERCENT}% Collected
+            </span>
+          </div>
+
+          <div className="p-4 rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] border border-[var(--color-border)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+                Total Term Collection
+              </span>
+              <div className="text-2xl sm:text-3xl font-extrabold font-display text-[var(--color-text)] flex items-center">
+                <IndianRupee className="w-6 h-6 mr-1" />
+                14,82,500
+              </div>
+              <p className="text-xs text-[var(--color-text-muted)]">
+                Target: ₹ 17,00,000 · Remaining: ₹ 2,17,500
+              </p>
+            </div>
+            <div className="w-full sm:w-64 space-y-1.5">
+              <div className="flex justify-between text-xs font-semibold text-[var(--color-text)]">
+                <span>Progress</span>
+                <span>{FEE_DERIVED_PERCENT}%</span>
+              </div>
+              <div className="w-full h-3 rounded-full bg-[var(--color-border)] overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-[var(--color-brand)]"
+                  style={{ width: `${FEE_DERIVED_PERCENT}%` }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+              Recent Sample Transactions
+            </span>
+            <div className="divide-y divide-[var(--color-border)] rounded-[var(--radius-md)] border border-[var(--color-border)] overflow-hidden">
+              {RECENT_FEE_TRANSACTIONS.map((tx) => (
+                <div
+                  key={tx.id}
+                  className="p-3 bg-[var(--color-surface)] flex items-center justify-between text-xs sm:text-sm"
+                >
+                  <div>
+                    <div className="font-semibold text-[var(--color-text)]">{tx.studentName}</div>
+                    <div className="text-xs text-[var(--color-text-muted)]">{tx.grade}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-bold text-[var(--color-text)]">
+                      ₹ {tx.amount.toLocaleString("en-IN")}
+                    </div>
+                    <div className="text-[11px] text-[var(--color-text-muted)]">{tx.date}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* PANEL 3: Exams (No-JS Fallback) */}
+        <section
+          id="tour-panel-exams"
+          aria-label="Exam Grade Distribution"
+          className="border-t border-[var(--color-border)] p-4 sm:p-6 lg:p-8 space-y-6 bg-[var(--color-surface)]"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[var(--color-border)]">
+            <div>
+              <h3 className="text-base sm:text-lg font-bold text-[var(--color-text)]">
+                Mathematics Term 1 · Grade Distribution
+              </h3>
+              <p className="text-xs sm:text-sm text-[var(--color-text-muted)]">
+                Automated grade categorization and sample report card entries.
+              </p>
+            </div>
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300">
+              {EXAM_GRADED_COUNT} / {EXAM_TOTAL_STUDENTS} Graded ({EXAM_DERIVED_PERCENT}%)
+            </span>
+          </div>
+
+          <div className="p-4 rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] border border-[var(--color-border)]">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)] block mb-3">
+              Class Grade Breakdown ({EXAM_GRADED_COUNT} Students)
+            </span>
+            <div className="grid grid-cols-5 gap-3 text-center">
+              {EXAM_GRADE_DISTRIBUTION.map((item) => (
+                <div key={item.grade} className="flex flex-col items-center">
+                  <span className="text-xs font-bold text-[var(--color-text)]">{item.count}</span>
+                  <div className="w-full h-16 bg-[var(--color-border)]/50 rounded-t-[var(--radius-sm)] flex items-end justify-center p-1 my-1">
+                    <div
+                      className="w-full rounded-[var(--radius-sm)]"
+                      style={{
+                        height: `${(item.count / 18) * 100}%`,
+                        backgroundColor: item.colorVar,
+                      }}
+                    />
+                  </div>
+                  <span className="text-xs font-bold text-[var(--color-text)]">{item.grade}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+              Sample Report Card Preview
+            </span>
+            <div className="divide-y divide-[var(--color-border)] rounded-[var(--radius-md)] border border-[var(--color-border)] overflow-hidden">
+              {SAMPLE_EXAM_MARKS.map((rec) => (
+                <div
+                  key={rec.id}
+                  className="p-3 bg-[var(--color-surface)] flex items-center justify-between text-xs sm:text-sm"
+                >
+                  <div>
+                    <div className="font-semibold text-[var(--color-text)]">{rec.studentName}</div>
+                    <div className="text-xs text-[var(--color-text-muted)]">{rec.subject}</div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs text-[var(--color-text-muted)]">
+                      {rec.marks} / {rec.totalMarks}
+                    </span>
+                    <span className="px-2 py-0.5 rounded text-xs font-bold bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300">
+                      {rec.grade}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

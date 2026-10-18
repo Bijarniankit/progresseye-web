@@ -117,3 +117,14 @@
     opacity: 1;
   }
 }
+
+/* No-JS fallback styles for progressive enhancement */
+html.no-js .tour-no-js-hidden {
+  display: none;
+}
+.tour-no-js-panel {
+  display: none;
+}
+html.no-js .tour-no-js-panel {
+  display: block;
+}

@@ -85,3 +85,17 @@ The application utilizes browser client-side storage for functional user prefere
    - **Phase 8 Privacy & Cookie Notice Classification**:
      - **Category**: Strictly Functional / Essential Session Preference.
      - **Exemption**: Exempt from consent banners under ePrivacy / GDPR / DPDP guidelines as it stores zero personal identifiable information (PII), transmits no telemetry, and exists solely to fulfill user-requested motion reduction and state continuity.
+
+---
+
+## 7. Phase 6 CP2 Why Rows & Pricing Placeholders
+
+| Item / Row | Component File / Config | Capability / Value Claimed | Verification Status | Blocks Public Launch | Target Phase |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Why: Speed** | `src/components/marketing/why/why-section.tsx` | "Designed to stay quick on slow connections." | Design goal / target specification | **Yes** | Phase 14 (App Shell Performance) |
+| **Why: Privacy** | `src/components/marketing/why/why-section.tsx` | "Each school's data is kept separate by design." | Target architecture (RLS isolation) | **Yes** | Phase 13 (Multi-tenant RLS) |
+| **Why: Everywhere** | `src/components/marketing/why/why-section.tsx` | "Works in any modern browser on desktop, tablet and phone." | Responsive web standard | **Yes** | Phase 14 (App Shell UX) |
+| **Why: India** | `src/components/marketing/why/why-section.tsx` | "Built around Indian schools: rupee and lakh/crore formatting." | Localization roadmap (Hindi planned) | **Yes** | Phase 15 (Localization Engine) |
+| **Pricing: Starter Student Limit** | `src/config/pricing.ts` (`studentLimit: 100`) | `100` students free tier cap | **Invented Placeholder** (`TODO-REAL-DATA`) | **Yes** | Phase 8 (Commercial Sign-off) |
+| **Pricing: School Tier Annual Price** | `src/config/pricing.ts` (`annualPricePerStudent: 25`) | `₹25 / student / month` (Save 17% derived) | **Commercial Target** (`TODO-REAL-DATA`) | **Yes** | Phase 8 (Pricing Sign-off) |
+| **Pricing: School Tier Monthly Price** | `src/config/pricing.ts` (`monthlyPricePerStudent: 30`) | `₹30 / student / month` | **Commercial Target** (`TODO-REAL-DATA`) | **Yes** | Phase 8 (Pricing Sign-off) |

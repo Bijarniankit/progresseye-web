@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { BentoGrid } from "@/components/marketing/bento/bento-grid";
 import { HeroSection } from "@/components/marketing/hero/hero-section";
+import { PricingSection } from "@/components/marketing/pricing/pricing-section";
 import { ProductTourSection } from "@/components/marketing/tour/product-tour-section";
 import { TrustStrip } from "@/components/marketing/trust/trust-strip";
+import { WhySection } from "@/components/marketing/why/why-section";
 
 export const metadata: Metadata = {
   title: "The school workspace that runs itself",
@@ -32,6 +34,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
       {/* Features Bento Grid Section */}
       <BentoGrid />
+
+      {/* Why ProgressEye Comparison Section */}
+      <WhySection />
+
+      {/* Pricing Section with Billing Toggle */}
+      <PricingSection />
     </div>
   );
 }
