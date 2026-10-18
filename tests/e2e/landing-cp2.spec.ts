@@ -116,6 +116,7 @@ test.describe("Phase 6 CP2: Why ProgressEye & Pricing Sections", () => {
       // Track CLS during anchor navigation
       await page.goto(`http://localhost:3000/#${sectionId}`);
       await page.waitForLoadState("networkidle");
+      await page.waitForTimeout(100);
 
       const section = page.locator(`#${sectionId}`);
       await expect(section).toBeVisible();

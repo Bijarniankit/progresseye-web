@@ -115,3 +115,17 @@ The application utilizes browser client-side storage for functional user prefere
 | **Pricing: District Bullet 4** | `src/config/pricing.ts` | Dedicated onboarding & support | Planned scope (`status: planned`) | **Yes** | Phase 8 (Support Contracts) |
 | **Pricing: District Bullet 5** | `src/config/pricing.ts` | On-site teacher & staff training | Planned scope (`status: planned`) | **Yes** | Phase 8 (Professional Services) |
 
+---
+
+## 8. Phase 6 CP3 FAQ & Final CTA Placeholders
+
+| Item / Claim | Component File / Config | Capability / Claim Description | Verification Status | Blocks Public Launch | Target Phase |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **FAQ: UPI & Net Banking** | `src/config/faq.ts` (`payments-upi`) | Designed to support direct UPI, QR code, and net banking reconciliation | Planned capability (`status: planned`) | **Yes** | Phase 18 (Fees & Finance) |
+| **FAQ: CBSE/ICSE/State Boards** | `src/config/faq.ts` (`academics-boards`) | Compliant report card formats for CBSE, ICSE, and state boards | Planned capability (`status: planned`) | **Yes** | Phase 17 (Exams & Gradebook) |
+| **FAQ: DPDP Privacy Compliance** | `src/config/faq.ts` (`privacy-dpdp`) | RLS isolation and workflows designed to adhere to Indian DPDP norms | Planned architecture (`status: planned`) | **Yes** | Phase 13 (Multi-tenant RLS) |
+| **FAQ: Zero Installation** | `src/config/faq.ts` (`platform-install`) | Responsive web workspace with nothing to install | Core design principle | **No** (Design goal) | Phase 14 (App Shell) |
+| **FAQ: Onboarding Timeline** | `src/config/faq.ts` (`onboarding-timeline`) | Setup under an hour using standard spreadsheet templates | Pilot operational target | **Yes** | Phase 8 (Pilot Launch) |
+| **Final CTA: Perks Line** | `src/components/marketing/cta/cta-section.tsx` | "Free Starter tier forever", "Designed for Indian schools", "No credit card required" | Pre-launch terms (`TODO-REAL-DATA`) | **Yes** | Phase 8 (Commercial Sign-off) |
+
+

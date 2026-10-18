@@ -55,7 +55,10 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-dvh antialiased bg-surface text-text" suppressHydrationWarning>
+      <body
+        className="min-h-dvh antialiased bg-[var(--color-surface)] text-[var(--color-text)]"
+        suppressHydrationWarning
+      >
         <RootProvider>{children}</RootProvider>
       </body>
     </html>

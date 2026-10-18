@@ -66,7 +66,11 @@ test.describe("Hero Visual — Decorative Plate Semantics & Accessibility", () =
       document.documentElement.classList.remove("light");
       document.documentElement.classList.add("dark");
     });
-    await page.waitForTimeout(300);
+    // Trigger render update for off-screen content-visibility sections
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(100);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(200);
 
     const darkResults = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])

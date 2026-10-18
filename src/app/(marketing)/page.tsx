@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { BentoGrid } from "@/components/marketing/bento/bento-grid";
+import { FinalCtaSection } from "@/components/marketing/cta/cta-section";
+import { FaqSection } from "@/components/marketing/faq/faq-section";
 import { HeroSection } from "@/components/marketing/hero/hero-section";
 import { PricingSection } from "@/components/marketing/pricing/pricing-section";
 import { ProductTourSection } from "@/components/marketing/tour/product-tour-section";
@@ -40,6 +42,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
       {/* Pricing Section with Billing Toggle */}
       <PricingSection />
+
+      {/* FAQ Accordion Section */}
+      <FaqSection />
+
+      {/* Final Call to Action Section */}
+      <FinalCtaSection />
     </div>
   );
 }
