@@ -16,17 +16,25 @@ describe("FAQ Configuration & Planned Markers", () => {
     }
   });
 
-  it("phrases unbuilt payment, academic, and privacy capabilities honestly as planned", () => {
+  it("phrases unbuilt payment, academic, and privacy capabilities honestly as planned without phase numbers", () => {
+    // Assert no answer contains internal phase numbers
+    for (const faq of landingFaqs) {
+      expect(faq.answer).not.toMatch(/Phase\s+\d+/i);
+    }
+
     const upiFaq = landingFaqs.find((f) => f.id === "payments-upi");
-    expect(upiFaq?.answer).toMatch(/collect fees online|planned for Phase 18/i);
+    expect(upiFaq?.answer).toMatch(/collect fees online/i);
 
     const reportCardFaq = landingFaqs.find((f) => f.id === "academics-boards");
-    expect(reportCardFaq?.answer).toMatch(/planned for Phase 17|board requirements/i);
+    expect(reportCardFaq?.answer).toMatch(/board requirements/i);
 
     const privacyFaq = landingFaqs.find((f) => f.id === "privacy-dpdp");
     expect(privacyFaq?.answer).toMatch(/PostgreSQL Row-Level Security|adhere to Indian/i);
 
+    const onboardingFaq = landingFaqs.find((f) => f.id === "onboarding-timeline");
+    expect(onboardingFaq?.answer).toMatch(/structured spreadsheet templates/i);
+
     const trainingFaq = landingFaqs.find((f) => f.id === "onboarding-training");
-    expect(trainingFaq?.answer).toMatch(/guided onboarding sessions|planned for Phase 8/i);
+    expect(trainingFaq?.answer).toMatch(/guided orientation walkthroughs/i);
   });
 });

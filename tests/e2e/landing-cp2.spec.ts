@@ -196,4 +196,25 @@ test.describe("Phase 6 CP2: Why ProgressEye & Pricing Sections", () => {
     const darkAudit = await new AxeBuilder({ page }).include(["#why", "#pricing"]).analyze();
     expect(darkAudit.violations).toEqual([]);
   });
+
+  test("verifies subpages load 0 bytes of the motion/react vendor chunk", async ({ page }) => {
+    for (const subpage of ["/features", "/demo", "/faq", "/about", "/pricing"]) {
+      const jsRequests: string[] = [];
+      const listener = (req: { url: () => string }) => {
+        const url = req.url();
+        if (url.includes(".js")) {
+          jsRequests.push(url);
+        }
+      };
+
+      page.on("request", listener);
+      await page.goto(`http://localhost:3000${subpage}`);
+      await page.waitForLoadState("networkidle");
+      page.off("request", listener);
+
+      // Assert motion/react vendor chunk (0_cx2_ft5g-al.js) is NOT requested on subpages
+      const loadedMotion = jsRequests.some((url) => url.includes("0_cx2_ft5g-al"));
+      expect(loadedMotion).toBe(false);
+    }
+  });
 });

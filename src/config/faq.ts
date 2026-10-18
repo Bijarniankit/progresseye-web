@@ -16,23 +16,23 @@ export const landingFaqs: FaqItem[] = [
   {
     id: "payments-upi",
     category: "payments",
-    status: "planned", // DRAFT-CONTENT-REVIEW: Planned for Phase 18 (Fees & Finance). Blocks public launch.
+    status: "planned", // DRAFT-CONTENT-REVIEW: Online fee collection via UPI and net banking. Blocks public launch.
     question: "Can ProgressEye handle fee collection via UPI and net banking?",
     answer:
-      "Planned: collect fees online (UPI first) with digital receipts and pending dues notices once linked to your school merchant gateway (planned for Phase 18).",
+      "Planned: collect fees online (UPI first) with digital receipts and pending dues notices once linked to your school merchant gateway.",
   },
   {
     id: "academics-boards",
     category: "academics",
-    status: "planned", // DRAFT-CONTENT-REVIEW: Planned for Phase 17 (Exams & Gradebook). Blocks public launch.
+    status: "planned", // DRAFT-CONTENT-REVIEW: Configurable grading scales and board report card alignment. Blocks public launch.
     question: "Does ProgressEye support CBSE, ICSE, and state-board report cards?",
     answer:
-      "Planned: configurable grading scales and report cards designed to align with board requirements (planned for Phase 17).",
+      "Planned: configurable grading scales and report cards designed to align with board requirements.",
   },
   {
     id: "privacy-dpdp",
     category: "privacy",
-    status: "planned", // DRAFT-NEEDS-LEGAL-REVIEW: Planned tenant isolation and DPDP compliance. Blocks public launch.
+    status: "planned", // DRAFT-NEEDS-LEGAL-REVIEW: Multi-tenant RLS isolation adhering to DPDP. Blocks public launch.
     question: "How is student data kept private and compliant with data protection norms?",
     answer:
       "ProgressEye is architected with PostgreSQL Row-Level Security, designed to keep each school's records separate. Workflows are designed to adhere to Indian Digital Personal Data Protection (DPDP) principles.",
@@ -48,17 +48,17 @@ export const landingFaqs: FaqItem[] = [
   {
     id: "onboarding-timeline",
     category: "onboarding",
-    status: "planned", // DRAFT-CONTENT-REVIEW: Onboarding timeline estimate. Blocks public launch.
-    question: "How long does onboarding take for an existing school?",
+    status: "planned", // DRAFT-CONTENT-REVIEW: School roster onboarding and data migration. Blocks public launch.
+    question: "How does an existing school migrate student and staff records?",
     answer:
-      "Planned: initial roster import and class setup are designed to take under an hour using standard spreadsheet templates during our guided pilot rollout.",
+      "Planned: structured spreadsheet templates and assisted data import workflows to help administrative teams bring in student and staff rosters during guided setup.",
   },
   {
     id: "onboarding-training",
     category: "training",
-    status: "planned", // DRAFT-CONTENT-REVIEW: Onboarding and staff training support. Blocks public launch.
+    status: "planned", // DRAFT-CONTENT-REVIEW: Staff and teacher onboarding orientation. Blocks public launch.
     question: "Do you provide onboarding and teacher training support?",
     answer:
-      "Planned: guided onboarding sessions and step-by-step documentation are planned for administrative staff and teachers during school rollout (planned for Phase 8).",
+      "Planned: guided orientation walkthroughs, role-specific documentation, and live setup support for administrative staff and teachers during school rollout.",
   },
 ];

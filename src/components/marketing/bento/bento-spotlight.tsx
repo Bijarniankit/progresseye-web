@@ -38,7 +38,7 @@ export function BentoSpotlight({ className = "", children }: BentoSpotlightProps
         className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         style={{
           background:
-            "radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(37, 99, 235, 0.08), transparent 65%)",
+            "radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--color-brand) 8%, transparent), transparent 65%)",
         }}
       />
       {children}

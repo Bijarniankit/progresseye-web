@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "School Operations & Parent Portal",
-  description: "Administrative, educator, and parent portal logins will be enabled in Phase 14.",
+  description: "Administrative, educator, and parent portal logins are planned for upcoming release.",
   robots: {
     index: false,
     follow: false,
@@ -22,14 +22,14 @@ export default function LoginPage() {
 
         <div className="space-y-2">
           <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[var(--color-surface-subtle)] text-[var(--color-brand)]">
-            Phase 14 Scope
+            Planned Portal Rollout
           </div>
           <h1 className="font-display text-2xl sm:text-3xl font-bold text-[var(--color-text)]">
             School Operations Portal
           </h1>
           <p className="text-sm text-[var(--color-text-muted)] leading-relaxed">
-            Administrative, teacher, and parent portal authentication will be enabled in Phase 14 as
-            part of the operational security and session rollout.
+            Administrative, teacher, and parent portal authentication will be enabled as
+            part of our upcoming operational security and session rollout.
           </p>
         </div>
 

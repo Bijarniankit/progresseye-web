@@ -86,7 +86,7 @@ export function TiltCard({ children, className = "", max = 5, ...props }: TiltCa
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 rounded-[inherit] transition-opacity duration-300"
           style={{
-            background: `radial-gradient(circle 240px at ${glarePosition.x}px ${glarePosition.y}px, rgba(255,255,255,0.08), transparent 80%)`,
+            background: `radial-gradient(circle 240px at ${glarePosition.x}px ${glarePosition.y}px, color-mix(in srgb, var(--color-surface) 8%, transparent), transparent 80%)`,
           }}
         />
       )}

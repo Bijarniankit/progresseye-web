@@ -139,7 +139,7 @@ export function BentoGrid() {
               </div>
               <div className="text-xs font-semibold text-[var(--color-text-muted)] flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-[var(--color-brand)]" />
-                <span>Role-based directory and roster management (Phase 15)</span>
+                <span>Role-based directory and roster management</span>
               </div>
             </div>
           </BentoCard>

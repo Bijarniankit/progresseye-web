@@ -21,8 +21,10 @@ const whitelistedPatterns = [
 ];
 
 // Regular expression to match 3, 4, 6, or 8-digit hex colors
-// Preceded and followed by non-word characters
 const hexColorRegex = /#([0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/g;
+
+// Regular expression to match raw rgb(), rgba(), hsl(), hsla() literals
+const rgbHslRegex = /(?:^|[^a-zA-Z0-9])(rgba?|hsla?)\s*\([^)]*\)/gi;
 
 // Anchors or ID patterns to ignore
 const ignoredContextPatterns = [
@@ -72,14 +74,13 @@ for (const dir of targetDirs) {
         continue;
       }
 
-      const matches = line.match(hexColorRegex);
-      if (matches) {
-        for (const match of matches) {
-          // Double check: if followed immediately by non-hex identifier characters in the line
+      // 1. Check for raw hex colors
+      const hexMatches = line.match(hexColorRegex);
+      if (hexMatches) {
+        for (const match of hexMatches) {
           const matchIdx = line.indexOf(match);
           const nextChar = line[matchIdx + match.length];
           if (nextChar && /[a-zA-Z0-9_-]/.test(nextChar)) {
-            // It's part of a longer word/anchor like #fedcba-custom, ignore
             continue;
           }
 
@@ -93,15 +94,32 @@ for (const dir of targetDirs) {
           totalErrors++;
         }
       }
+
+      // 2. Check for raw rgb(), rgba(), hsl(), hsla() literals
+      const rgbMatches = line.match(rgbHslRegex);
+      if (rgbMatches) {
+        for (const match of rgbMatches) {
+          console.error(
+            `\x1b[31m[NO-RGB-HSL-VIOLATION]\x1b[0m ${path.relative(projectRoot, file)}:${index + 1}`,
+          );
+          console.error(
+            `  Found rgb/hsl literal: \x1b[33m${match.trim()}\x1b[0m in line: "${line.trim()}"`,
+          );
+          console.error(
+            "  Hint: Replace with color-mix(in srgb, var(--color-brand) X%, transparent) or a semantic CSS variable\n",
+          );
+          totalErrors++;
+        }
+      }
     }
   }
 }
 
 console.log(`[no-hex-check] Scanned ${scannedFiles.length} files.`);
 if (totalErrors > 0) {
-  console.error(`\x1b[31mFAILED: Found ${totalErrors} raw hex color violation(s).\x1b[0m`);
+  console.error(`\x1b[31mFAILED: Found ${totalErrors} raw color violation(s).\x1b[0m`);
   process.exit(1);
 } else {
-  console.log("\x1b[32mPASSED: Zero raw hex colors found in UI components.\x1b[0m");
+  console.log("\x1b[32mPASSED: Zero raw hex, rgb(), or hsl() colors found in UI components.\x1b[0m");
   process.exit(0);
 }

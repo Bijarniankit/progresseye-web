@@ -16,7 +16,7 @@ export function FinalCtaSection() {
       className="content-visibility-auto scroll-mt-20 lg:scroll-mt-24 py-16 sm:py-24 relative overflow-hidden bg-[var(--color-surface)]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative rounded-[var(--radius-xl)] bg-[var(--color-surface-contrast)] text-[var(--color-text-inverse)] dark:bg-[var(--color-surface-card)] dark:text-[var(--color-text)] p-8 sm:p-12 lg:p-16 overflow-hidden shadow-[var(--shadow-e3)] border border-[var(--color-border)] dark:border-[var(--color-brand)]/50 dark:shadow-[0_0_50px_-12px_rgba(96,165,250,0.25)] text-center space-y-8">
+        <div className="relative rounded-[var(--radius-xl)] bg-[var(--color-surface-contrast)] text-[var(--color-text-inverse)] dark:bg-[var(--color-surface-card)] dark:text-[var(--color-text)] p-8 sm:p-12 lg:p-16 overflow-hidden shadow-[var(--shadow-e3)] border border-[var(--color-border)] dark:border-[var(--color-brand)]/50 dark:shadow-[0_0_50px_-12px_color-mix(in_srgb,var(--color-brand)_25%,transparent)] text-center space-y-8">
           {/* Pure CSS Radial Atmosphere (Option B) */}
           <div
             className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--color-brand)_0%,_transparent_65%)] opacity-25 dark:opacity-20"
@@ -49,7 +49,7 @@ export function FinalCtaSection() {
 
             <Link
               href="/get-started"
-              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full font-semibold text-sm sm:text-base border border-white/20 dark:border-[var(--color-border)] text-white dark:text-[var(--color-text)] hover:bg-white/10 dark:hover:bg-[var(--color-surface-subtle)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full font-semibold text-sm sm:text-base border border-white/20 dark:border-[var(--color-brand)]/40 text-white dark:text-[var(--color-text)] hover:bg-white/10 dark:hover:bg-[var(--color-surface-subtle)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
             >
               Get started free
             </Link>
