@@ -44,6 +44,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`no-js ${inter.variable} ${poppins.variable} ${poppinsItalic.variable}`}
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       <head>
@@ -54,7 +55,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-dvh antialiased bg-surface text-text">
+      <body className="min-h-dvh antialiased bg-surface text-text" suppressHydrationWarning>
         <RootProvider>{children}</RootProvider>
       </body>
     </html>
