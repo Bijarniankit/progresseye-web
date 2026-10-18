@@ -30,19 +30,32 @@ The following statistics are cited in architectural specifications (`docs/design
 
 ---
 
-## 3. Stub Feature Cards Below Hero (Landing Route)
+## 3. Stub Feature Cards Below Hero (Removed in Phase 6 CP1)
 
-The landing page (`src/app/(marketing)/page.tsx`) renders three preview cards directly below the hero section. Every technical claim within them is cataloged here:
-
-| Feature Card | Rendered Text / Copy | Technical Claims Made | Implementation Status | Blocks Public Launch | Resolution Requirement |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Card 01: Calm Administrative Flow** | "Structured records and unified dashboards designed to reduce cognitive overhead across daily school management." | 1. **SMS Triggers**: Automated parent notification triggers on student absence.<br>2. **Real-time Attendance**: Unified attendance aggregation dashboard. | Backend BullMQ worker queue supports async dispatch; SMS gateway integration pending. | **Yes** (if SMS claimed in copy) | Verify SMS gateway contract (Twilio/Gupshup) or gate claim with `TODO-REAL-DATA`. |
-| **Card 02: Multi-Tenant Foundation** | "Architected for strict institutional data isolation, role-based access control, and reliable multi-tenant operations." | 1. **PostgreSQL Row-Level Security (RLS)**: Tenant data isolation at the engine level.<br>2. **Immutable Audit Trails**: Change-tracking on sensitive records.<br>3. **Role-Based Access Control (RBAC)**: Strict permission boundaries. | Architecture and Prisma schema specify RLS and tenancy; policies must be verified in migration tests. | **Yes** (Security claim) | Complete Phase 1-4 RLS verification suite before marketing security guarantees. |
-| **Card 03: Connected Community** | "Clear communication channels built to keep administrators, educators, and families informed and coordinated." | 1. **Automated UPI Reconciliation**: Instant reconciliation of fee collections via UPI payment links.<br>2. **DPDP Act Compliance**: India Digital Personal Data Protection Act compliance architecture. | UPI webhook handlers and DPDP consent architecture specified; payment gateway onboarding pending. | **Yes** (Financial/Legal claim) | Integrate verified payment aggregator (Razorpay/Cashfree) and obtain legal DPDP consent review. |
+> **Phase 6 Update**: The three temporary Phase 4 stub cards were removed from `src/app/(marketing)/page.tsx` during Phase 6 CP1 and replaced with the interactive Product Tour and Bento Grid preview sections.
 
 ---
 
-## 4. Hero Illustration Sample Data (Purely Illustrative)
+## 4. Phase 6 CP1 Planned Features & Mockup Registry
+
+Every capability card and module preview in Phase 6 Checkpoint 1 represents planned functionality and is explicitly labeled with `"Preview of planned features, shown with sample data"` and `"Planned"` badges:
+
+| Module / Card | Component File | Capability Claimed | Verification Status | Blocks Public Launch | Target Phase |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Product Tour: Browser Mockup Domain** | `src/config/site.ts` (`siteConfig.mockDomain`) | Rendered mock domain: `yourschool.example` | Mock preview host | **No** (Mock label) | Phase 6 |
+| **Product Tour: Attendance** | `src/components/marketing/tour/product-tour.tsx` | Daily roll call with 30-square grid (`28 / 30 present`, 93% derived) | Unbuilt / Planned | **Yes** | Phase 16 (Attendance Engine) |
+| **Product Tour: Fees** | `src/components/marketing/tour/product-tour.tsx` | Fee ledger overview (`₹ 14,82,500 of ₹ 17,00,000`, 87% derived) | Unbuilt / Planned | **Yes** | Phase 17 (Fees & Finance) |
+| **Product Tour: Exams** | `src/components/marketing/tour/product-tour.tsx` | Grade distribution & report cards (`53 / 53 graded`, 100% derived) | Unbuilt / Planned | **Yes** | Phase 18 (Exams & Gradebook) |
+| **Bento Card: Roles done right** | `src/components/marketing/bento/bento-grid.tsx` | Multi-tenant RBAC interfaces for Admin, Principal, Teacher, Student, Parent | Unbuilt / Planned | **Yes** | Phase 13 (User & Tenancy Admin) |
+| **Bento Card: Attendance in one tap** | `src/components/marketing/bento/bento-grid.tsx` | Rapid roll call grid across all sections | Unbuilt / Planned | **Yes** | Phase 16 (Attendance Engine) |
+| **Bento Card: Fees that collect themselves** | `src/components/marketing/bento/bento-grid.tsx` | Automated reconciliation and digital receipt generation | Unbuilt / Planned | **Yes** | Phase 17 (Fees & Finance) |
+| **Bento Card: Exams & report cards** | `src/components/marketing/bento/bento-grid.tsx` | Multi-subject weightings and printable term cards | Unbuilt / Planned | **Yes** | Phase 18 (Exams & Gradebook) |
+| **Bento Card: Communication that lands** | `src/components/marketing/bento/bento-grid.tsx` | Direct broadcast engine to parents via App, SMS, and Email | Unbuilt / Planned | **Yes** | Phase 19 (Parent Comms) |
+| **Bento Card: Insights that lead to action** | `src/components/marketing/bento/bento-grid.tsx` | Visual administrative analytics and attendance trendlines | Unbuilt / Planned | **Yes** | Phase 20 (Reports & Dashboards) |
+
+---
+
+## 5. Hero Illustration Sample Data (Purely Illustrative)
 
 The hero carousel scenes render illustrative mockups designed to communicate product capabilities without asserting real school data:
 
@@ -54,7 +67,7 @@ The hero carousel scenes render illustrative mockups designed to communicate pro
 
 ---
 
-## 5. Client Storage Registry & Privacy Note (Phase 8 Compliance)
+## 6. Client Storage Registry & Privacy Note (Phase 8 Compliance)
 
 The application utilizes browser client-side storage for functional user preferences. These keys are defined centrally in `src/config/storage-keys.ts`:
 
