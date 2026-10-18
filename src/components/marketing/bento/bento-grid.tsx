@@ -92,8 +92,9 @@ const SPARKLINE_DATA = [
 export function BentoGrid() {
   return (
     <section
+      id="bento"
       aria-label="Planned feature modules overview"
-      className="py-16 sm:py-20 lg:py-24 border-b border-[var(--color-border-muted)] bg-[var(--color-surface-subtle)]/30"
+      className="content-visibility-auto scroll-mt-20 lg:scroll-mt-24 py-16 sm:py-20 lg:py-24 border-b border-[var(--color-border-muted)] bg-[var(--color-surface-subtle)]/30"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Section Header */}

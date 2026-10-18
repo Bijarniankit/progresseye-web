@@ -5,7 +5,7 @@ export function ProductTourSection() {
     <section
       id="tour"
       aria-label="Product tour preview"
-      className="scroll-mt-20 lg:scroll-mt-24 py-16 sm:py-20 lg:py-24 border-b border-[var(--color-border-muted)] bg-[var(--color-surface)]"
+      className="content-visibility-auto scroll-mt-20 lg:scroll-mt-24 py-16 sm:py-20 lg:py-24 border-b border-[var(--color-border-muted)] bg-[var(--color-surface)]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Section Header */}

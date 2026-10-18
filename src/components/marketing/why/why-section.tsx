@@ -51,7 +51,7 @@ export function WhySection() {
     <section
       id="why"
       aria-labelledby="why-heading"
-      className="scroll-mt-20 lg:scroll-mt-24 py-16 sm:py-24 border-b border-[var(--color-border)] relative overflow-hidden"
+      className="content-visibility-auto scroll-mt-20 lg:scroll-mt-24 py-16 sm:py-24 border-b border-[var(--color-border)] relative overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Section Header */}

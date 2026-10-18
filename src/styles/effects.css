@@ -128,3 +128,9 @@ html.no-js .tour-no-js-hidden {
 html.no-js .tour-no-js-panel {
   display: block;
 }
+
+/* Content visibility optimization for below-fold marketing sections */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
+}

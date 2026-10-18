@@ -219,4 +219,36 @@ test.describe("Phase 6 CP1: Product Tour & Bento Grid", () => {
     await expect(page.getByText("Fee Collection · Term 2 Overview")).toBeVisible();
     await expect(page.getByText("Mathematics Term 1 · Grade Distribution")).toBeVisible();
   });
+
+  test("network evidence: tour island chunk is NOT requested at scroll 0, and is requested only after scrolling near #tour", async ({
+    page,
+  }) => {
+    const jsRequests: string[] = [];
+    page.on("request", (req) => {
+      const url = req.url();
+      if (url.includes(".js")) {
+        jsRequests.push(url);
+      }
+    });
+
+    await page.goto("http://localhost:3000/");
+    await page.waitForLoadState("networkidle");
+
+    // Assert at scroll position 0, no product-tour chunk is requested
+    const scrollY = await page.evaluate(() => window.scrollY);
+    expect(scrollY).toBe(0);
+    const tourChunkAtZero = jsRequests.some((url) => url.includes("1677qz4xi_e99"));
+    expect(tourChunkAtZero).toBe(false);
+
+    // Scroll near #tour to trigger the 200px rootMargin IntersectionObserver
+    await page.locator("#tour").scrollIntoViewIfNeeded();
+    await page.waitForTimeout(600);
+
+    // Assert the product-tour island chunk has now been requested and loaded
+    const tourChunkAfterScroll = jsRequests.some((url) => url.includes("1677qz4xi_e99"));
+    expect(tourChunkAfterScroll).toBe(true);
+
+    // Assert the interactive tabs are rendered
+    await expect(page.locator("#tour").getByRole("tab", { name: /attendance/i })).toBeVisible();
+  });
 });

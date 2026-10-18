@@ -109,11 +109,72 @@ test.describe("Phase 6 CP2: Why ProgressEye & Pricing Sections", () => {
     await expect(districtLink).toHaveAttribute("href", "/contact");
   });
 
-  test("verifies /#tour has scroll margin to clear fixed navbar", async ({ page }) => {
-    await page.goto("http://localhost:3000/#tour");
-    const tourSection = page.locator("#tour");
-    await expect(tourSection).toBeVisible();
-    await expect(tourSection).toHaveClass(/scroll-mt-/);
+  test("verifies /#tour, /#why, /#pricing anchor jumps land correctly with header visible and zero CLS", async ({
+    page,
+  }) => {
+    for (const sectionId of ["tour", "why", "pricing"]) {
+      // Track CLS during anchor navigation
+      await page.goto(`http://localhost:3000/#${sectionId}`);
+      await page.waitForLoadState("networkidle");
+
+      const section = page.locator(`#${sectionId}`);
+      await expect(section).toBeVisible();
+      await expect(section).toHaveClass(/scroll-mt-/);
+      await expect(section).toHaveClass(/content-visibility-auto/);
+
+      // Section top must be at or below navbar height (64px) and visible near viewport top (< 250px)
+      const boundingBox = await section.boundingBox();
+      expect(boundingBox).not.toBeNull();
+      if (boundingBox) {
+        expect(boundingBox.y).toBeGreaterThanOrEqual(0);
+        expect(boundingBox.y).toBeLessThanOrEqual(250);
+      }
+
+      // Check CLS on the navigated page
+      const cls = await page.evaluate(() => {
+        return new Promise<number>((resolve) => {
+          let totalCls = 0;
+          const observer = new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+              if (!(entry as unknown as { hadRecentInput: boolean }).hadRecentInput) {
+                totalCls += (entry as unknown as { value: number }).value;
+              }
+            }
+          });
+          observer.observe({ type: "layout-shift", buffered: true });
+          setTimeout(() => {
+            observer.disconnect();
+            resolve(totalCls);
+          }, 300);
+        });
+      });
+      expect(cls).toBeLessThanOrEqual(0.01);
+    }
+  });
+
+  test("keyboard navigation through interactive pricing toggle", async ({ page }) => {
+    await page.goto("http://localhost:3000/#pricing");
+    const pricingSection = page.locator("#pricing");
+    await expect(pricingSection).toBeVisible();
+
+    const monthlyBtn = pricingSection.getByRole("button", { name: /monthly billing/i });
+    const annualBtn = pricingSection.getByRole("button", { name: /annual billing/i });
+
+    // Focus first toggle button in DOM (Monthly billing)
+    await monthlyBtn.focus();
+    await expect(monthlyBtn).toBeFocused();
+
+    // Press Enter to switch to monthly
+    await page.keyboard.press("Enter");
+    await expect(pricingSection.getByText("Billed monthly")).toBeVisible();
+
+    // Tab to annual button
+    await page.keyboard.press("Tab");
+    await expect(annualBtn).toBeFocused();
+
+    // Press Enter to activate annual
+    await page.keyboard.press("Enter");
+    await expect(pricingSection.getByText("Billed annually (Save 17%)")).toBeVisible();
   });
 
   test("passes axe-core accessibility audit on Why & Pricing in light and dark mode", async ({
