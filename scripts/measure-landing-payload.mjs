@@ -1,4 +1,3 @@
-import fs from "node:fs";
 import zlib from "node:zlib";
 import { chromium } from "@playwright/test";
 
@@ -25,9 +24,7 @@ async function main() {
   await browser.close();
 
   const html = responses.find(
-    (r) =>
-      r.url === "http://localhost:3000/" ||
-      r.contentType.includes("text/html"),
+    (r) => r.url === "http://localhost:3000/" || r.contentType.includes("text/html"),
   );
   const cssList = responses.filter(
     (r) => r.contentType.includes("text/css") || r.url.endsWith(".css"),

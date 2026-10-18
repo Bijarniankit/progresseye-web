@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "School Operations & Parent Portal",
-  description: "Administrative, educator, and parent portal logins are planned for upcoming release.",
+  description:
+    "Administrative, educator, and parent portal logins are planned for upcoming release.",
   robots: {
     index: false,
     follow: false,
@@ -28,8 +29,8 @@ export default function LoginPage() {
             School Operations Portal
           </h1>
           <p className="text-sm text-[var(--color-text-muted)] leading-relaxed">
-            Administrative, teacher, and parent portal authentication will be enabled as
-            part of our upcoming operational security and session rollout.
+            Administrative, teacher, and parent portal authentication will be enabled as part of our
+            upcoming operational security and session rollout.
           </p>
         </div>
 

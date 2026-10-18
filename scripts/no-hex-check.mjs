@@ -120,6 +120,8 @@ if (totalErrors > 0) {
   console.error(`\x1b[31mFAILED: Found ${totalErrors} raw color violation(s).\x1b[0m`);
   process.exit(1);
 } else {
-  console.log("\x1b[32mPASSED: Zero raw hex, rgb(), or hsl() colors found in UI components.\x1b[0m");
+  console.log(
+    "\x1b[32mPASSED: Zero raw hex, rgb(), or hsl() colors found in UI components.\x1b[0m",
+  );
   process.exit(0);
 }
