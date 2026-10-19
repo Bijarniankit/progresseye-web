@@ -101,4 +101,54 @@ test.describe("Phase 6 CP3: FAQ Accordion & Final CTA Sections", () => {
     const darkAudit = await new AxeBuilder({ page }).include(["#faq", "#cta"]).analyze();
     expect(darkAudit.violations).toEqual([]);
   });
+
+  test("maintains zero layout shift (CLS <= 0.01) across full load and full page scroll in light and dark mode", async ({
+    page,
+  }) => {
+    for (const theme of ["light", "dark"] as const) {
+      await page.goto("http://localhost:3000/");
+
+      await page.evaluate((t) => {
+        if (t === "dark") {
+          document.documentElement.classList.add("dark");
+          document.documentElement.classList.remove("light");
+        } else {
+          document.documentElement.classList.remove("dark");
+          document.documentElement.classList.add("light");
+        }
+
+        (window as unknown as { __recordedShifts: number[] }).__recordedShifts = [];
+        const observer = new PerformanceObserver((entryList) => {
+          for (const entry of entryList.getEntries()) {
+            const shift = entry as PerformanceEntry & { value: number; hadRecentInput: boolean };
+            if (!shift.hadRecentInput) {
+              (window as unknown as { __recordedShifts: number[] }).__recordedShifts.push(
+                shift.value,
+              );
+            }
+          }
+        });
+        observer.observe({ type: "layout-shift", buffered: true });
+      }, theme);
+
+      await page.waitForLoadState("networkidle");
+
+      // Scroll gradually through the page to bottom and back to top
+      const scrollHeight = await page.evaluate(() => document.body.scrollHeight);
+      const step = 400;
+      for (let y = 0; y <= scrollHeight; y += step) {
+        await page.evaluate((top) => window.scrollTo(0, top), y);
+        await page.waitForTimeout(40);
+      }
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await page.waitForTimeout(200);
+
+      const totalCls = await page.evaluate(() => {
+        const shifts = (window as unknown as { __recordedShifts: number[] }).__recordedShifts || [];
+        return shifts.reduce((acc, val) => acc + val, 0);
+      });
+
+      expect(totalCls, `CLS in ${theme} mode must be <= 0.01`).toBeLessThanOrEqual(0.01);
+    }
+  });
 });

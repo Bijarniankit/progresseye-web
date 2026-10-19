@@ -22,7 +22,7 @@ export function HeroSection({ carouselSlot, sceneIndex = 0 }: HeroSectionProps) 
           }}
         />
         <div
-          className="absolute top-1/2 -right-24 h-96 w-96 rounded-full opacity-60 dark:opacity-15 pointer-events-none"
+          className="absolute top-32 -right-24 h-96 w-96 rounded-full opacity-60 dark:opacity-15 pointer-events-none"
           style={{
             background: "radial-gradient(circle, var(--color-mint-wash) 0%, transparent 70%)",
           }}

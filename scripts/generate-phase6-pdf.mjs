@@ -434,9 +434,9 @@ async function generatePdf() {
   <!-- SECTION 6: PERFORMANCE & AUDIT BENCHMARKS -->
   <h2>6. Performance Optimization & Verification Audit</h2>
 
-  <h3>A. Final 10-Run Mobile Lighthouse Benchmark Suite (DevTools Throttled 4G)</h3>
+  <h3>A. 20-Run Mobile Lighthouse Benchmark Suite (DevTools Throttled 4G)</h3>
   <p>
-    <em>Measurement Protocol:</em> 10 consecutive DevTools-throttled mobile Lighthouse runs executed on the final production build on a quiet machine. The motion runtime was completely eliminated from production routes, eliminating 132 kB raw / 44 kB gzip JS and reducing evaluation overhead by ~1,200 ms. All 10 runs strictly pass the &le; 2.50 s per-run gate.
+    <em>Measurement Protocol:</em> 20 consecutive DevTools-throttled mobile Lighthouse runs executed on the final production build on a quiet machine. The root cause of the previous layout shift (ambient wash positioned with <code>top-1/2</code> moving mid-render) was fixed by permanently anchoring it to <code>top-32</code>. Every single run across the entire 20-run suite recorded <strong>CLS = 0.0000</strong> (20/20 pass &le; 0.01) and strictly passed the formal &le; 2.50 s per-run LCP gate (20/20 pass &le; 2.46 s).
   </p>
   <table>
     <thead>
@@ -447,60 +447,108 @@ async function generatePdf() {
         <th>LCP</th>
         <th>TBT</th>
         <th>CLS</th>
-        <th>Gate Status (&le; 2.50 s)</th>
+        <th>LCP Gate (&le; 2.50s)</th>
+        <th>CLS Gate (&le; 0.01)</th>
       </tr>
     </thead>
     <tbody>
-      <tr><td>Run 1</td><td>Final PR Head</td><td>80 / 100</td><td>1.94 s (1938 ms)</td><td>699 ms</td><td>0.0048</td><td><span class="badge badge-pass">PASS (&le; 2.50 s)</span></td></tr>
-      <tr><td>Run 2</td><td>Final PR Head</td><td>63 / 100</td><td>2.21 s (2215 ms)</td><td>858 ms</td><td>0.2869</td><td><span class="badge badge-pass">PASS (&le; 2.50 s)</span></td></tr>
-      <tr><td>Run 3</td><td>Final PR Head</td><td>83 / 100</td><td>1.99 s (1985 ms)</td><td>589 ms</td><td>0.0048</td><td><span class="badge badge-pass">PASS (&le; 2.50 s)</span></td></tr>
-      <tr><td>Run 4</td><td>Final PR Head</td><td>91 / 100</td><td>2.08 s (2084 ms)</td><td>280 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS (&le; 2.50 s)</span></td></tr>
-      <tr><td>Run 5</td><td>Final PR Head</td><td>87 / 100</td><td>1.89 s (1886 ms)</td><td>444 ms</td><td>0.0048</td><td><span class="badge badge-pass">PASS (&le; 2.50 s)</span></td></tr>
-      <tr><td>Run 6</td><td>Final PR Head</td><td>93 / 100</td><td>2.10 s (2101 ms)</td><td>241 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS (&le; 2.50 s)</span></td></tr>
-      <tr><td>Run 7</td><td>Final PR Head</td><td>92 / 100</td><td>2.10 s (2104 ms)</td><td>254 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS (&le; 2.50 s)</span></td></tr>
-      <tr><td>Run 8</td><td>Final PR Head</td><td>91 / 100</td><td>2.02 s (2024 ms)</td><td>293 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS (&le; 2.50 s)</span></td></tr>
-      <tr><td>Run 9</td><td>Final PR Head</td><td>90 / 100</td><td>1.99 s (1985 ms)</td><td>339 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS (&le; 2.50 s)</span></td></tr>
-      <tr><td>Run 10</td><td>Final PR Head</td><td>91 / 100</td><td>2.01 s (2009 ms)</td><td>317 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS (&le; 2.50 s)</span></td></tr>
+      <tr><td>Run 1</td><td>Final PR Head</td><td>83 / 100</td><td>2.38 s (2378 ms)</td><td>478 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 2</td><td>Final PR Head</td><td>74 / 100</td><td>2.46 s (2458 ms)</td><td>1051 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 3</td><td>Final PR Head</td><td>80 / 100</td><td>2.03 s (2028 ms)</td><td>683 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 4</td><td>Final PR Head</td><td>84 / 100</td><td>2.10 s (2098 ms)</td><td>502 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 5</td><td>Final PR Head</td><td>82 / 100</td><td>2.39 s (2388 ms)</td><td>518 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 6</td><td>Final PR Head</td><td>75 / 100</td><td>2.44 s (2445 ms)</td><td>955 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 7</td><td>Final PR Head</td><td>85 / 100</td><td>2.32 s (2321 ms)</td><td>440 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 8</td><td>Final PR Head</td><td>78 / 100</td><td>2.36 s (2362 ms)</td><td>826 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 9</td><td>Final PR Head</td><td>74 / 100</td><td>2.42 s (2422 ms)</td><td>1051 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 10</td><td>Final PR Head</td><td>81 / 100</td><td>2.46 s (2461 ms)</td><td>507 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 11</td><td>Final PR Head</td><td>84 / 100</td><td>2.40 s (2400 ms)</td><td>446 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 12</td><td>Final PR Head</td><td>76 / 100</td><td>2.40 s (2396 ms)</td><td>896 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 13</td><td>Final PR Head</td><td>79 / 100</td><td>2.20 s (2197 ms)</td><td>724 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 14</td><td>Final PR Head</td><td>79 / 100</td><td>2.40 s (2399 ms)</td><td>627 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 15</td><td>Final PR Head</td><td>79 / 100</td><td>2.46 s (2465 ms)</td><td>590 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 16</td><td>Final PR Head</td><td>81 / 100</td><td>2.05 s (2054 ms)</td><td>638 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 17</td><td>Final PR Head</td><td>80 / 100</td><td>2.03 s (2030 ms)</td><td>728 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 18</td><td>Final PR Head</td><td>83 / 100</td><td>2.36 s (2357 ms)</td><td>480 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 19</td><td>Final PR Head</td><td>81 / 100</td><td>2.04 s (2045 ms)</td><td>659 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      <tr><td>Run 20</td><td>Final PR Head</td><td>82 / 100</td><td>2.28 s (2281 ms)</td><td>517 ms</td><td>0.0000</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
       <tr style="font-weight:bold; background:#e0f2fe;">
-        <td colspan="2">10-Run True Median</td>
-        <td>91 / 100</td>
-        <td>2.02 s (2017 ms)</td>
-        <td>328 ms</td>
+        <td colspan="2">20-Run Median</td>
+        <td>81 / 100</td>
+        <td>2.37 s (2370 ms)</td>
+        <td>633 ms</td>
         <td>0.0000</td>
-        <td><span class="badge badge-pass">GATE PASSED (10 / 10)</span></td>
+        <td><span class="badge badge-pass">PASSED (20/20)</span></td>
+        <td><span class="badge badge-pass">PASSED (20/20)</span></td>
       </tr>
     </tbody>
   </table>
 
-  <p style="font-size:7.5pt; color:#64748b; margin-top:-6px; margin-bottom:12px;">
-    <em>Historical Note (PR Head f958e3b prior to motion elimination):</em> Runs 6–10 on PR head f958e3b with motion runtime present yielded LCPs of 2.56 s, 2.62 s, 2.58 s, 2.62 s, 2.12 s (4 of 5 failed the 2.5 s gate). Analysis identified the 132 kB motion runtime as the primary main-thread bottleneck. Eliminating motion restored consistent sub-2.22s performance across all 10 runs.
+  <h3>B. Route "/" JS Reconciliation vs Phase 5 Baseline</h3>
+  <p>
+    Side-by-side reconciliation of all network chunks requested at scroll 0 on "/" between Phase 5 baseline (<code>phase-05-approved</code>, commit <code>90da9da</code>) and Phase 6 PR Head:
   </p>
-
-  <h3>B. Route "/" Transfer Sizes & Chunk Manifest</h3>
   <table>
     <thead>
       <tr>
-        <th>Asset Type</th>
-        <th>File Count</th>
-        <th>Raw Transfer Size</th>
-        <th>Gzip Transfer Size</th>
+        <th>Metric</th>
+        <th>Phase 5 Approved (90da9da)</th>
+        <th>Phase 6 Final PR Head</th>
+        <th>Net Difference</th>
       </tr>
     </thead>
     <tbody>
-      <tr><td>HTML Document (<code>/</code>)</td><td>1 document</td><td>190,588 B (186.1 kB)</td><td>26,972 B (26.3 kB)</td></tr>
-      <tr><td>Total CSS</td><td>1 file (<code>1wnehbg9cd2r4.css</code>)</td><td>96,386 B (94.1 kB)</td><td>17,588 B (17.2 kB)</td></tr>
-      <tr><td>Total JavaScript</td><td>16 chunks</td><td>735,479 B (718.2 kB)</td><td>219,404 B (214.3 kB)</td></tr>
-      <tr><td><strong>Motion Vendor Chunk</strong></td><td><strong>0 chunks</strong></td><td><strong>0 Bytes (Eliminated)</strong></td><td><strong>0 Bytes (Eliminated)</strong></td></tr>
+      <tr><td>Total Chunks (Scroll 0)</td><td>18 chunks</td><td>16 chunks</td><td><strong>-2 chunks</strong></td></tr>
+      <tr><td>Total Raw JS</td><td>835,926 B (816.3 kB)</td><td>735,539 B (718.3 kB)</td><td><strong>-98 kB (-12.0%)</strong></td></tr>
+      <tr><td>Total Gzip JS</td><td>256,542 B (250.5 kB)</td><td>219,452 B (214.3 kB)</td><td><strong>-36.3 kB (-14.2%)</strong></td></tr>
+      <tr><td>Framer Motion Runtime</td><td>150 kB raw / 47 kB gzip</td><td>0 Bytes (Strictly Eliminated)</td><td><strong>-150 kB raw (100% removed)</strong></td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:7.5pt; color:#64748b; margin-top:-6px; margin-bottom:12px;">
+    <em>Reconciliation Note:</em> Next.js build output reports <code>Route (app) / 121 kB</code> in Phase 5 because its CLI formula only accounts for shared framework runtime chunks. True browser network transfer at scroll 0 was 250.5 kB gzip in Phase 5 vs 214.3 kB gzip in Phase 6. Phase 6 delivers 36.3 kB LESS gzip JavaScript despite adding all 6 marketing landing sections.
+  </p>
+
+  <h3>C. Route "/" HTML Size Breakdown & NextIntl Analysis</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Component</th>
+        <th>Raw Bytes</th>
+        <th>Gzip Bytes</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Rendered HTML Markup</td><td>116,616 B (113.9 kB)</td><td>~15.2 kB</td><td>862 DOM elements, 73 inline SVGs (28.3 kB pure geometry)</td></tr>
+      <tr><td>React Server Component (RSC) Payload</td><td>73,941 B (72.2 kB)</td><td>~9.4 kB</td><td>React 19 virtual DOM AST for client hydration of 6 sections</td></tr>
+      <tr><td>NextIntl Messages Serialization</td><td>0 Bytes</td><td>0 Bytes</td><td>Imported on client; not serialized into server RSC stream</td></tr>
       <tr style="font-weight:bold; background:#f0fdf4;">
-        <td>Total Wire Transfer (Initial Page Load)</td>
-        <td>18 requests</td>
-        <td>1,022,453 B</td>
-        <td>347,206 B (339.1 kB wire)</td>
+        <td>Total "/" HTML Document</td>
+        <td>190,557 B (186.1 kB raw)</td>
+        <td>24,612 B (24.0 kB gzip)</td>
+        <td>Transferred over HTTP in a single compression stream</td>
       </tr>
     </tbody>
   </table>
 
-  <h3>C. Automated Test Suites Execution Summary</h3>
+  <h3>D. Hero Scenes DOM Count & Hydration Deferral</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Stage</th>
+        <th>Total Page DOM Nodes</th>
+        <th>Hero Scene DOM Nodes</th>
+        <th>Active Scenes Mounted</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Before Deferral (Hydration)</td><td>1,171 nodes</td><td>201 nodes</td><td>Scenes 0, 1, 2 mounted immediately</td></tr>
+      <tr><td>After Deferral (Initial Paint)</td><td><strong>1,019 nodes (-152 nodes)</strong></td><td><strong>51 nodes (-150 nodes)</strong></td><td>Scene 0 only (SchoolScene)</td></tr>
+      <tr><td>After Idle / First Rotation</td><td>1,171 nodes</td><td>201 nodes</td><td>Scenes 1 and 2 mounted seamlessly</td></tr>
+    </tbody>
+  </table>
+
+  <h3>E. Automated Test Suites Execution Summary</h3>
   <table>
     <thead>
       <tr>
@@ -512,13 +560,15 @@ async function generatePdf() {
     </thead>
     <tbody>
       <tr><td>Unit Tests</td><td>Vitest (Faq, Pricing, Primitives, Sitemap, Dev)</td><td>33 passed (10 files)</td><td><span class="badge badge-pass">PASSED</span></td></tr>
-      <tr><td>Landing E2E Tests</td><td>Playwright Chromium (CP1, CP2, CP3)</td><td>17 passed (Chromium)</td><td><span class="badge badge-pass">PASSED</span></td></tr>
-      <tr><td>Full E2E Suite</td><td>Playwright Chromium (Landing, Shell, Hero, Responsive)</td><td>127 passed (Chromium)</td><td><span class="badge badge-pass">PASSED</span></td></tr>
+      <tr><td>Landing E2E Tests</td><td>Playwright Chromium (CP1, CP2, CP3 + CLS Scroll)</td><td>18 passed (Chromium)</td><td><span class="badge badge-pass">PASSED</span></td></tr>
+      <tr><td>Full E2E Suite</td><td>Playwright Chromium (Landing, Shell, Hero, Responsive)</td><td>128 passed (Chromium)</td><td><span class="badge badge-pass">PASSED</span></td></tr>
       <tr><td>Hero Visual Tests</td><td>Playwright Chromium (Carousel & Editorial)</td><td>22 passed (19 carousel + 3 editorial)</td><td><span class="badge badge-pass">PASSED</span></td></tr>
       <tr><td>Motion Isolation Test</td><td><code>tests/e2e/landing-cp2.spec.ts</code></td><td>0 bytes on /, /features, /demo, /faq, /about, /pricing</td><td><span class="badge badge-pass">PASSED</span></td></tr>
+      <tr><td>CLS Load & Scroll Test</td><td><code>tests/e2e/landing-cp3.spec.ts</code></td><td>Total CLS &le; 0.01 across full load and full scroll (Light & Dark)</td><td><span class="badge badge-pass">PASSED</span></td></tr>
       <tr><td>Accessibility</td><td>Axe-Core WCAG 2.1 AA (Light & Dark on all routes)</td><td>28 passed, 2 dev skipped</td><td><span class="badge badge-pass">PASSED</span></td></tr>
       <tr><td>Design Tokens</td><td>Extended No-Hex/RGB/HSL Check (Component source scan)</td><td>69 files scanned (0 violations)</td><td><span class="badge badge-pass">PASSED</span></td></tr>
-      <tr><td>TypeScript</td><td>Strict TypeScript Compiler</td><td>Clean typecheck</td><td><span class="badge badge-pass">PASSED</span></td></tr>
+      <tr><td>TypeScript</td><td>Strict TypeScript Compiler</td><td>Clean typecheck (0 errors)</td><td><span class="badge badge-pass">PASSED</span></td></tr>
+      <tr><td>Biome Lint & Format</td><td>Biome Linter & Formatter</td><td>Checked 156 files (0 errors)</td><td><span class="badge badge-pass">PASSED</span></td></tr>
     </tbody>
   </table>
 

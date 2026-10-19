@@ -45,6 +45,7 @@ export function HeroCarousel({ initialScene = 0, autoRotateIntervalMs = 5200 }: 
   const [isInView, setIsInView] = React.useState(true);
   const [isTabVisible, setIsTabVisible] = React.useState(true);
   const [isMounted, setIsMounted] = React.useState(false);
+  const [mountDeferredScenes, setMountDeferredScenes] = React.useState(false);
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const tapTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
@@ -63,8 +64,32 @@ export function HeroCarousel({ initialScene = 0, autoRotateIntervalMs = 5200 }: 
     } catch {
       // sessionStorage unavailable or restricted
     }
+
+    const mountScenes = () => {
+      setMountDeferredScenes(true);
+    };
+
+    let idleId: number | null = null;
+    let timerId: NodeJS.Timeout | null = null;
+
+    if ("requestIdleCallback" in window) {
+      idleId = (
+        window as Window & {
+          requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number;
+        }
+      ).requestIdleCallback(mountScenes, { timeout: 3000 });
+    } else {
+      timerId = setTimeout(mountScenes, 2500);
+    }
+
     return () => {
       if (tapTimeoutRef.current) clearTimeout(tapTimeoutRef.current);
+      if (idleId !== null && "cancelIdleCallback" in window) {
+        (window as Window & { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(
+          idleId,
+        );
+      }
+      if (timerId !== null) clearTimeout(timerId);
     };
   }, []);
 
@@ -98,32 +123,6 @@ export function HeroCarousel({ initialScene = 0, autoRotateIntervalMs = 5200 }: 
       return next;
     });
   }, [shouldReduceMotion, isAutoStopped]);
-
-  // Preload Scenes 2 and 3 during idle periods after hydration
-  React.useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const preload = () => {
-      // Dynamic import triggers chunk prefetch without blocking main thread
-      import("@/components/illustrations");
-    };
-
-    if ("requestIdleCallback" in window) {
-      const handle = (
-        window as Window & { requestIdleCallback: (cb: () => void) => number }
-      ).requestIdleCallback(preload);
-      return () => {
-        if ("cancelIdleCallback" in window) {
-          (window as Window & { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(
-            handle,
-          );
-        }
-      };
-    }
-
-    const timer = setTimeout(preload, 1200);
-    return () => clearTimeout(timer);
-  }, []);
 
   // Monitor visibility of browser tab
   React.useEffect(() => {
@@ -242,8 +241,8 @@ export function HeroCarousel({ initialScene = 0, autoRotateIntervalMs = 5200 }: 
             <SchoolScene />
           </div>
 
-          {/* Scenes 1 and 2: Hydrated crossfade layers, deferred until mounted and not reduced motion */}
-          {isMounted && !shouldReduceMotion && (
+          {/* Scenes 1 and 2: Hydrated crossfade layers, deferred until idle or rotation */}
+          {isMounted && !shouldReduceMotion && (mountDeferredScenes || currentSlide !== 0) && (
             <>
               <div
                 data-scene-index={1}
