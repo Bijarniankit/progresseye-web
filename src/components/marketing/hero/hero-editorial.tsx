@@ -42,7 +42,7 @@ export function HeroEditorial() {
         </Link>
 
         <Link
-          href="/features"
+          href="/#tour"
           className="inline-flex items-center gap-2.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)]/70 px-6 py-3 text-sm font-semibold text-[var(--color-text)] backdrop-blur-md transition-all duration-200 hover:border-[var(--color-brand)]/40 hover:bg-[var(--color-surface-subtle)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)] focus-visible:ring-offset-2"
         >
           <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-hero-play-disc)] text-white shadow-xs">

@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* =========================================================================
    LAYER 1: RAW COLOR & VALUE PALETTE
    Global palette variables - NEVER use these directly in UI components.

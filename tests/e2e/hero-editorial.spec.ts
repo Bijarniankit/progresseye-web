@@ -30,14 +30,14 @@ test.describe("Hero Editorial Column & Accessible Structure", () => {
     await expect(subtitle).toBeVisible();
 
     // Check Primary CTA
-    const primaryCta = page.getByRole("link", { name: "Book a free demo" });
+    const primaryCta = page.getByRole("link", { name: "Book a free demo" }).first();
     await expect(primaryCta).toBeVisible();
     await expect(primaryCta).toHaveAttribute("href", "/demo");
 
-    // Check Secondary CTA
+    // Check Secondary CTA (Updated in Phase 6 to link to #tour)
     const secondaryCta = page.getByRole("link", { name: "Watch product tour" });
     await expect(secondaryCta).toBeVisible();
-    await expect(secondaryCta).toHaveAttribute("href", "/features");
+    await expect(secondaryCta).toHaveAttribute("href", "/#tour");
   });
 
   test("static SSR text is completely visible when JavaScript is disabled", async ({ browser }) => {
