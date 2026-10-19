@@ -11,3 +11,62 @@ Deferred maintenance chores and dependency upgrades scheduled for execution at t
 7. **Jest 30**: Upgrade `jest` and `@types/jest` to 30.x in `progresseye-api` once ts-jest / NestJS testing ecosystem stabilizes (closed Dependabot PR #7; major ignored in `dependabot.yml`).
 8. **git identity**: Configure official `user.name` and `user.email` locally across both repositories per owner specification.
 9. **branch protection**: Verify and enforce GitHub branch protection rules (`Linux Verification (ubuntu-latest)`, branch up to date, no force push/deletions) on `main` for both repos.
+
+---
+
+## Phase 6 Follow-ups & Technical Debt (Recorded Post-Approval)
+
+### 1. Phase 10: Interleaved A/B Lighthouse & Real Staging Measurements
+- **Investigation Scope**: Conduct interleaved A/B Lighthouse measurement runs (alternating old commit vs new PR head in identical browser sessions on a quiet machine) to pinpoint and explain the Total Blocking Time (TBT) difference observed during Phase 6 testing (median 328 ms on CP3 early commit vs 633 ms on final PR head).
+- **Staging Verification**: Re-measure all landing page performance gates on a real staging infrastructure environment:
+  - Real mobile hardware devices.
+  - HTTP/2 or HTTP/3 multiplexing with active SSL/TLS edge termination.
+  - Production CDN caching and Brotli compression headers enabled.
+
+### 2. Production Bundle Analysis & Hero Idle-Mounted Scenes Blocking Time
+- **Real Bundle Analyzer**: Run formal webpack / turbopack bundle analysis via `@next/bundle-analyzer` or `next experimental-analyze` instead of heuristic chunk inspection.
+- **Accurate Chunk Mapping**: Replace heuristic / inferred chunk labels in documentation with exact source-mapped module allocations.
+- **Hero Idle Scenes Evaluation**: Quantify whether the hero carousel scenes 1 & 2 (`FeaturesScene`, `FeatureDetailScene`), which are deferred and mounted during browser idle (`requestIdleCallback` / fallback 1500 ms timeout), contribute any blocking time, style recalcs, or long tasks during background execution.
+
+### 3. Hero Scene Component & Illustration Clarification
+- **Scene 0 Identity**: The initial hero scene (`currentSlide === 0`, mounted synchronously on first paint) is the **Heritage Indian School Scene** (`SchoolScene`), previously referred to informally in benchmark notes as "DashboardScene".
+- **Illustration Files**:
+  - `src/components/illustrations/school-scene.tsx` (`SchoolScene`): Heritage school building ("ProgressEye Public School", banyan tree, playground, sun, clouds, birds, Indian flag, school bus).
+  - `src/components/illustrations/features-scene.tsx` (`FeaturesScene`): Attendance, fees, exams quick cards.
+  - `src/components/illustrations/feature-detail-scene.tsx` (`FeatureDetailScene`): Attendance 3x4 dot matrix, fees collection progress bar, exams grade distribution bars.
+  - `src/components/illustrations/index.ts`: Barrel export.
+
+### 4. Placeholders Still Blocking Public Launch (Central Summary from `PLACEHOLDERS.md`)
+The following unverified claims and planned placeholders in `docs/design/PLACEHOLDERS.md` strictly block commercial public launch until real data, verified infrastructure commitments, or phase features are completed:
+- **Corporate & Infrastructure Metadata**:
+  - Legal Entity Name (`src/config/site.ts`: `siteConfig.name` — currently `"ProgressEye Technologies Pvt. Ltd."`).
+  - Production Canonical Domain (`src/config/site.ts`: `siteConfig.url` — decision pending `progresseye.in` vs `progresseye.com`).
+  - Official Support Email (`src/config/site.ts`: `siteConfig.supportEmail` — currently `"support@progresseye.com"`).
+- **Public Quantitative Marketing Claims**:
+  - Customer count: `"35+ schools"` (requires verified active tenant count).
+  - User count: `"14K+ students"` (requires verified database aggregation).
+  - SLA commitments: `"99% uptime"` / `"99.9% SLA"` (requires verified production infrastructure SLA & legal review).
+  - Principal Office Address: Bangalore office location (requires official registered place of business).
+- **Planned Product Tour Capabilities**:
+  - Attendance Engine: Daily roll call & guardian notifications (Phase 16).
+  - Fees & Finance: Online fee collection, UPI-first, receipts, due notices (Phase 17).
+  - Exams & Gradebook: Configurable grading scales & report cards (Phase 18).
+- **Planned Bento Grid Modules**:
+  - Student & staff records (Phase 15).
+  - Quick daily attendance (Phase 16).
+  - Fees that collect themselves (Phase 17).
+  - Exams & report cards (Phase 18).
+  - Communication via SMS and email (Phase 19).
+  - Actionable insights & reporting (Phase 20).
+- **Why ProgressEye Section Claims**:
+  - Speed: Sub-second render goals (Phase 14).
+  - Privacy: Tenant isolation with Row-Level Security (Phase 13).
+  - Everywhere: Universal browser and mobile accessibility (Phase 14).
+  - India: Rupee/lakh formatting & Hindi localization (Phase 15).
+- **Pricing Commercial Model Placeholders**:
+  - Starter Tier Cap: 100 students (`studentLimit: 100`).
+  - School Tier Commercial Rates: ₹25 / student / month annual, ₹30 / student / month monthly.
+  - Commercial Plan Bullets: All 15 tier feature bullets currently marked `status: planned`.
+- **Public FAQ & CTA Claims**:
+  - Payment handling, boards alignment, and DPDP privacy notice (`DRAFT-NEEDS-LEGAL-REVIEW`).
+  - Commercial terms: "Free Starter tier forever", "No credit card required", "Cancel anytime".

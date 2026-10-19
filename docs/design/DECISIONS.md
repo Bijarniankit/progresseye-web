@@ -305,3 +305,38 @@ This document records architectural, visual, and copy decisions modifying or com
   - Vector artwork inside Scene 1 (`SchoolScene`) and Scene 2 (`FeaturesScene`) is scaled up by 8% (`transform="translate(-16 -16) scale(1.08)"`) to eliminate empty margin while preserving padding and zero clipping.
   - Scene 3 (`FeatureDetailScene`) remains unscaled to prevent card clipping.
 
+---
+
+### D-016: Hero Mint Wash Positioning and Font Swap CLS Elimination
+- **Context & Problem**: During throttled Lighthouse mobile audits of PR #23 prior to final merge, Run 2 exhibited an unacceptable layout shift score of `0.2869` (with runs 1, 3, and 5 registering minor shifts of `0.0048`). The project performance gate strictly mandates $\text{CLS} \le 0.01$ per run.
+- **Recorded Evidence (`layout-shift-elements`)**:
+  Inspecting the Chrome DevTools / Lighthouse `layout-shift-elements` audit identified the exact shifting DOM element:
+  ```json
+  {
+    "node": {
+      "lhId": "page-1-DIV",
+      "path": "1,HTML,1,BODY,2,DIV,3,MAIN,0,DIV,0,SECTION,0,DIV,1,DIV",
+      "selector": "div > section.relative > div.pointer-events-none > div.absolute",
+      "boundingRect": {
+        "top": 522,
+        "bottom": 906,
+        "left": 124,
+        "right": 508,
+        "width": 384,
+        "height": 384
+      },
+      "snippet": "<div class=\"absolute top-1/2 -right-24 h-96 w-96 rounded-full opacity-60 dark:opacity-…\" style=\"background: radial-gradient(circle, var(--color-mint-wash) 0%, transparent …;\">",
+      "nodeLabel": "div > section.relative > div.pointer-events-none > div.absolute"
+    },
+    "score": 0.00482561521242054
+  }
+  ```
+- **Font System & Displacement Mechanism**:
+  - As documented in `D-002`, the typography system uses `Poppins` (display) and `Inter` (sans) via `next/font/google` with `display: swap`. (Previous working notes mistakenly referenced Instrument Serif / Plus Jakarta Sans).
+  - When web fonts swapped in asynchronously during page load, slight adjustments in font metrics and text height altered the vertical height of `<section className="relative ...">`.
+  - Because the decorative mint wash background blob was styled with `absolute top-1/2 -right-24 ... -translate-y-1/2`, any recalculation of the section's height caused `top: 50%` to recompute, vertically displacing the 384x384px element mid-render and producing a substantial layout shift penalty.
+- **Architectural Decision & Fix**:
+  - Replaced dynamic vertical percentage anchoring (`top-1/2 -translate-y-1/2`) with a deterministic fixed offset: `top-32 -right-24` (anchored fixed `8rem` from the top of the section).
+  - In subsequent 20-run mobile throttled Lighthouse benchmarks, 20 out of 20 runs recorded $\text{CLS} = 0.0000$ (zero shifts).
+  - Added an automated Playwright load-and-scroll test in `tests/e2e/landing-cp3.spec.ts` asserting $\text{totalCls} \le 0.01$ across full load and full page scroll in both light and dark modes.
+
