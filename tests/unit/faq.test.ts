@@ -29,7 +29,9 @@ describe("FAQ Configuration & Planned Markers", () => {
     expect(reportCardFaq?.answer).toMatch(/board requirements/i);
 
     const privacyFaq = landingFaqs.find((f) => f.id === "privacy-dpdp");
-    expect(privacyFaq?.answer).toMatch(/PostgreSQL Row-Level Security|adhere to Indian/i);
+    expect(privacyFaq?.answer).toMatch(
+      /Digital Personal Data Protection|separate from other schools/i,
+    );
 
     const onboardingFaq = landingFaqs.find((f) => f.id === "onboarding-timeline");
     expect(onboardingFaq?.answer).toMatch(/structured spreadsheet templates/i);

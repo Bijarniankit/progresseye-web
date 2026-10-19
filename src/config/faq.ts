@@ -35,7 +35,7 @@ export const landingFaqs: FaqItem[] = [
     status: "planned", // DRAFT-NEEDS-LEGAL-REVIEW: Multi-tenant RLS isolation adhering to DPDP. Blocks public launch.
     question: "How is student data kept private and compliant with data protection norms?",
     answer:
-      "ProgressEye is architected with PostgreSQL Row-Level Security, designed to keep each school's records separate. Workflows are designed to adhere to Indian Digital Personal Data Protection (DPDP) principles.",
+      "Planned: each school's records are designed to be kept separate from other schools'. We are building our data handling with India's Digital Personal Data Protection Act in mind; details will be published before launch.",
   },
   {
     id: "platform-install",

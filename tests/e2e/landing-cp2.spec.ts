@@ -197,24 +197,32 @@ test.describe("Phase 6 CP2: Why ProgressEye & Pricing Sections", () => {
     expect(darkAudit.violations).toEqual([]);
   });
 
-  test("verifies subpages load 0 bytes of the motion/react vendor chunk", async ({ page }) => {
-    for (const subpage of ["/features", "/demo", "/faq", "/about", "/pricing"]) {
-      const jsRequests: string[] = [];
+  test("verifies '/' and marketing subpages load 0 bytes of motion/react runtime", async ({
+    page,
+  }) => {
+    const routesToTest = ["/", "/features", "/demo", "/faq", "/about", "/pricing"];
+    for (const route of routesToTest) {
+      const requestedJs: string[] = [];
       const listener = (req: { url: () => string }) => {
         const url = req.url();
         if (url.includes(".js")) {
-          jsRequests.push(url);
+          requestedJs.push(url);
         }
       };
 
       page.on("request", listener);
-      await page.goto(`http://localhost:3000${subpage}`);
+      await page.goto(`http://localhost:3000${route}`);
       await page.waitForLoadState("networkidle");
       page.off("request", listener);
 
-      // Assert motion/react vendor chunk (0_cx2_ft5g-al.js) is NOT requested on subpages
-      const loadedMotion = jsRequests.some((url) => url.includes("0_cx2_ft5g-al"));
-      expect(loadedMotion).toBe(false);
+      // Assert motion/react runtime chunks are strictly NOT requested on landing or marketing routes
+      const loadedMotion = requestedJs.some(
+        (url) =>
+          url.includes("1tzlwb30no9h5") ||
+          url.includes("0_cx2_ft5g-al") ||
+          url.includes("1bhqwh0veeqd"),
+      );
+      expect(loadedMotion, `Motion chunk must not be loaded on ${route}`).toBe(false);
     }
   });
 });

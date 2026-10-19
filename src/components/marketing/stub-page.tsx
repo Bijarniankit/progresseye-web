@@ -1,7 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
-import { WordReveal } from "@/components/marketing/motion/word-reveal";
 import { Button } from "@/components/ui/button";
 
 export interface StubPageProps {
@@ -24,7 +23,7 @@ export function StubPage({ title, subtitle, badge, children }: StubPageProps) {
           </div>
         )}
         <h1 className="font-display text-[var(--text-h1)] md:text-[clamp(2rem,4vw,3.5rem)] font-extrabold tracking-tight text-[var(--color-text)] leading-[1.1]">
-          <WordReveal text={title} />
+          <span>{title}</span>
         </h1>
         <p className="text-base md:text-lg text-[var(--color-text-muted)] max-w-2xl leading-relaxed">
           {subtitle}
