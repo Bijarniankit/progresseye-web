@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type React from "react";
 import { Footer } from "@/components/marketing/footer";
+import { HashScrollHandler } from "@/components/marketing/hash-scroll-handler";
 import { PublicNavbar } from "@/components/marketing/navbar";
 import { OrganizationJsonLd } from "@/components/marketing/organization-json-ld";
 import { siteConfig } from "@/config/site";
@@ -41,8 +42,9 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
         Skip to main content
       </a>
 
-      {/* Structured Data */}
+      {/* Structured Data & Anchor Hash Stabilization */}
       <OrganizationJsonLd />
+      <HashScrollHandler />
 
       {/* Fixed Navigation Header */}
       <PublicNavbar />

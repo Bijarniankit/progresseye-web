@@ -99,7 +99,16 @@
   animation: cloud-drift 12s ease-in-out infinite;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   .animate-word-reveal,
   .animate-tagline-reveal,
   .animate-cloud-drift {
@@ -107,4 +116,21 @@
     transform: none;
     opacity: 1;
   }
+}
+
+/* No-JS fallback styles for progressive enhancement */
+html.no-js .tour-no-js-hidden {
+  display: none;
+}
+.tour-no-js-panel {
+  display: none;
+}
+html.no-js .tour-no-js-panel {
+  display: block;
+}
+
+/* Content visibility optimization for below-fold marketing sections */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
 }

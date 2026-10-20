@@ -1,7 +1,6 @@
 "use client";
 
 import { Menu, Moon, Sun } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -14,7 +13,6 @@ import { siteConfig } from "@/config/site";
 export function PublicNavbar() {
   const tNav = useTranslations("nav");
   const pathname = usePathname();
-  const shouldReduceMotion = useReducedMotion();
   const { theme, setTheme } = useTheme();
 
   const [scrolled, setScrolled] = React.useState(false);
@@ -82,16 +80,12 @@ export function PublicNavbar() {
                   }`}
                   aria-current={isActive ? "page" : undefined}
                 >
-                  {isActive &&
-                    (shouldReduceMotion ? (
-                      <span className="absolute inset-0 rounded-full bg-[var(--color-surface-subtle)] -z-10" />
-                    ) : (
-                      <motion.span
-                        layoutId="nav-active"
-                        className="absolute inset-0 rounded-full bg-[var(--color-surface-subtle)] -z-10"
-                        transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                      />
-                    ))}
+                  {isActive && (
+                    <span
+                      data-testid="nav-active-pill"
+                      className="absolute inset-0 rounded-full bg-[var(--color-surface-subtle)] -z-10 transition-colors"
+                    />
+                  )}
                   {label}
                 </Link>
               );

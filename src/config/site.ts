@@ -8,6 +8,8 @@ export const siteConfig = {
   supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "support@progresseye.com", // TODO-REAL-DATA: Confirm support email
 
   // Feature & Data Flags
+  hasCustomerLogos: false, // Show customer logos trust strip only when real logos exist (default: false)
+  mockDomain: "yourschool.example", // Internal mock hostname for product tour browser chrome
   hasOpenRoles: false, // Show "We're hiring" badge only when open positions exist (default: false)
   hasConfiguredSocial: Boolean(
     process.env.NEXT_PUBLIC_TWITTER_URL ||

@@ -7,6 +7,12 @@ import { ThemeProvider } from "next-themes";
 import * as React from "react";
 import { Toaster } from "@/components/ui/sonner";
 
+// Only pass namespaces used by client components (nav and footer)
+const clientMessages = {
+  nav: defaultMessages.nav,
+  footer: defaultMessages.footer,
+};
+
 interface RootProviderProps {
   children: React.ReactNode;
   locale?: string;
@@ -16,7 +22,7 @@ interface RootProviderProps {
 export function RootProvider({
   children,
   locale = "en",
-  messages = defaultMessages as unknown as AbstractIntlMessages,
+  messages = clientMessages as unknown as AbstractIntlMessages,
 }: RootProviderProps) {
   const [queryClient] = React.useState(
     () =>

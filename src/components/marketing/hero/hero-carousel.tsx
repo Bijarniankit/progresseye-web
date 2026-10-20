@@ -1,9 +1,27 @@
 "use client";
 
-import { AnimatePresence, domAnimation, LazyMotion, m, useReducedMotion } from "motion/react";
 import * as React from "react";
 import { SchoolScene } from "@/components/illustrations";
 import { STORAGE_KEYS } from "@/config/storage-keys";
+
+function useReducedMotion(): boolean {
+  const [matches, setMatches] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setMatches(mediaQuery.matches);
+
+    const onChange = (e: MediaQueryListEvent) => {
+      setMatches(e.matches);
+    };
+
+    mediaQuery.addEventListener("change", onChange);
+    return () => mediaQuery.removeEventListener("change", onChange);
+  }, []);
+
+  return matches;
+}
 
 // Lazy-load Scenes 2 and 3 for optimal initial bundle and SSR speed
 const FeaturesScene = React.lazy(() =>
@@ -27,6 +45,7 @@ export function HeroCarousel({ initialScene = 0, autoRotateIntervalMs = 5200 }: 
   const [isInView, setIsInView] = React.useState(true);
   const [isTabVisible, setIsTabVisible] = React.useState(true);
   const [isMounted, setIsMounted] = React.useState(false);
+  const [mountDeferredScenes, setMountDeferredScenes] = React.useState(false);
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const tapTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
@@ -45,8 +64,32 @@ export function HeroCarousel({ initialScene = 0, autoRotateIntervalMs = 5200 }: 
     } catch {
       // sessionStorage unavailable or restricted
     }
+
+    const mountScenes = () => {
+      setMountDeferredScenes(true);
+    };
+
+    let idleId: number | null = null;
+    let timerId: NodeJS.Timeout | null = null;
+
+    if ("requestIdleCallback" in window) {
+      idleId = (
+        window as Window & {
+          requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number;
+        }
+      ).requestIdleCallback(mountScenes, { timeout: 3000 });
+    } else {
+      timerId = setTimeout(mountScenes, 2500);
+    }
+
     return () => {
       if (tapTimeoutRef.current) clearTimeout(tapTimeoutRef.current);
+      if (idleId !== null && "cancelIdleCallback" in window) {
+        (window as Window & { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(
+          idleId,
+        );
+      }
+      if (timerId !== null) clearTimeout(timerId);
     };
   }, []);
 
@@ -80,32 +123,6 @@ export function HeroCarousel({ initialScene = 0, autoRotateIntervalMs = 5200 }: 
       return next;
     });
   }, [shouldReduceMotion, isAutoStopped]);
-
-  // Preload Scenes 2 and 3 during idle periods after hydration
-  React.useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const preload = () => {
-      // Dynamic import triggers chunk prefetch without blocking main thread
-      import("@/components/illustrations");
-    };
-
-    if ("requestIdleCallback" in window) {
-      const handle = (
-        window as Window & { requestIdleCallback: (cb: () => void) => number }
-      ).requestIdleCallback(preload);
-      return () => {
-        if ("cancelIdleCallback" in window) {
-          (window as Window & { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(
-            handle,
-          );
-        }
-      };
-    }
-
-    const timer = setTimeout(preload, 1200);
-    return () => clearTimeout(timer);
-  }, []);
 
   // Monitor visibility of browser tab
   React.useEffect(() => {
@@ -172,81 +189,90 @@ export function HeroCarousel({ initialScene = 0, autoRotateIntervalMs = 5200 }: 
   const animationPlayState = !isMounted ? "running" : isPaused ? "paused" : "running";
 
   return (
-    <LazyMotion features={domAnimation}>
-      {/*
-        The plate is decorative artwork per user directive (aria-hidden="true").
-        No carousel controls, no ARIA carousel roles, no keyboard focus trapping.
-        Rotation and orbit/cloud animations pause on hover, tap-and-hold, tap toggle,
-        when off-screen, or when tab is hidden.
-        Under prefers-reduced-motion, Scene 1 is shown statically with no animation.
-      */}
+    /*
+      The plate is decorative artwork per user directive (aria-hidden="true").
+      No carousel controls, no ARIA carousel roles, no keyboard focus trapping.
+      Rotation and orbit/cloud animations pause on hover, tap-and-hold, tap toggle,
+      when off-screen, or when tab is hidden.
+      Under prefers-reduced-motion, Scene 1 is shown statically with no animation.
+    */
+    <div
+      ref={containerRef}
+      aria-hidden="true"
+      data-testid="hero-plate-container"
+      onPointerEnter={() => setIsHovered(true)}
+      onPointerLeave={() => {
+        setIsHovered(false);
+        setIsPointerHeld(false);
+      }}
+      onPointerDown={() => setIsPointerHeld(true)}
+      onPointerUp={() => setIsPointerHeld(false)}
+      onPointerCancel={() => setIsPointerHeld(false)}
+      onClick={handleTap}
+      className="relative flex items-center justify-center w-full select-none cursor-pointer"
+    >
+      {/* Main circular illustrative plate with responsive diameter (328/500/430/520px) */}
       <div
-        ref={containerRef}
-        aria-hidden="true"
-        data-testid="hero-plate-container"
-        onPointerEnter={() => setIsHovered(true)}
-        onPointerLeave={() => {
-          setIsHovered(false);
-          setIsPointerHeld(false);
-        }}
-        onPointerDown={() => setIsPointerHeld(true)}
-        onPointerUp={() => setIsPointerHeld(false)}
-        onPointerCancel={() => setIsPointerHeld(false)}
-        onClick={handleTap}
-        className="relative flex items-center justify-center w-full select-none cursor-pointer"
+        data-testid="hero-plate"
+        className="relative aspect-square w-full max-w-[328px] md:max-w-[500px] lg:max-w-[430px] xl:max-w-[520px] rounded-full p-4 sm:p-6 shadow-md border-2 border-[var(--color-hero-plate-border)] flex items-center justify-center transition-colors overflow-hidden"
+        style={{ background: "var(--color-hero-plate-bg)", animationPlayState }}
       >
-        {/* Main circular illustrative plate with responsive diameter (328/500/430/520px) */}
+        {/* 80-second rotating dashed orbit border (pauses on hover, tab-hidden, off-screen, or reduced-motion) */}
         <div
-          data-testid="hero-plate"
-          className="relative aspect-square w-full max-w-[328px] md:max-w-[500px] lg:max-w-[430px] xl:max-w-[520px] rounded-full p-4 sm:p-6 shadow-md border-2 border-[var(--color-hero-plate-border)] flex items-center justify-center transition-colors overflow-hidden"
-          style={{ background: "var(--color-hero-plate-bg)", animationPlayState }}
-        >
-          {/* 80-second rotating dashed orbit border (pauses on hover, tab-hidden, off-screen, or reduced-motion) */}
-          <div
-            className="pointer-events-none absolute inset-0 rounded-full border border-dashed border-[var(--color-hero-plate-border)] animate-[spin_80s_linear_infinite] will-change-transform"
-            style={{ animationPlayState }}
-          />
+          className="pointer-events-none absolute inset-0 rounded-full border border-dashed border-[var(--color-hero-plate-border)] animate-[spin_80s_linear_infinite] will-change-transform"
+          style={{ animationPlayState }}
+        />
 
-          {/* Active Scene Presentation Container */}
+        {/* Active Scene Presentation Container */}
+        <div
+          data-testid="hero-active-scene"
+          className="relative w-full h-full flex items-center justify-center overflow-hidden"
+          style={{ animationPlayState }}
+        >
+          {/* Scene 0 (SchoolScene): Always rendered in initial SSR HTML for no-JS and LCP */}
           <div
-            data-testid="hero-active-scene"
-            className="relative w-full h-full flex items-center justify-center overflow-hidden"
-            style={{ animationPlayState }}
+            data-scene-index={0}
+            className={`absolute inset-0 w-full h-full flex items-center justify-center transition-opacity duration-[320ms] ease-in-out ${
+              !isMounted || shouldReduceMotion || currentSlide === 0
+                ? "opacity-100 pointer-events-auto"
+                : "opacity-0 pointer-events-none"
+            }`}
           >
-            {!isMounted || shouldReduceMotion ? (
-              /* Pre-hydration SSR Fallback & Reduced-Motion Static Display: Scene 1 visible */
-              <div className="w-full h-full flex items-center justify-center">
-                <SchoolScene />
-              </div>
-            ) : (
-              /* Hydrated Overlapping Crossfade: Plate is never blank or empty during transitions */
-              <AnimatePresence initial={false}>
-                <m.div
-                  key={currentSlide}
-                  data-scene-index={currentSlide}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.32, ease: "easeInOut" }}
-                  className="absolute inset-0 w-full h-full flex items-center justify-center"
-                >
-                  {currentSlide === 0 && <SchoolScene />}
-                  {currentSlide === 1 && (
-                    <React.Suspense fallback={<div className="w-full h-full" />}>
-                      <FeaturesScene />
-                    </React.Suspense>
-                  )}
-                  {currentSlide === 2 && (
-                    <React.Suspense fallback={<div className="w-full h-full" />}>
-                      <FeatureDetailScene />
-                    </React.Suspense>
-                  )}
-                </m.div>
-              </AnimatePresence>
-            )}
+            <SchoolScene />
           </div>
+
+          {/* Scenes 1 and 2: Hydrated crossfade layers, deferred until idle or rotation */}
+          {isMounted && !shouldReduceMotion && (mountDeferredScenes || currentSlide !== 0) && (
+            <>
+              <div
+                data-scene-index={1}
+                className={`absolute inset-0 w-full h-full flex items-center justify-center transition-opacity duration-[320ms] ease-in-out ${
+                  currentSlide === 1
+                    ? "opacity-100 pointer-events-auto"
+                    : "opacity-0 pointer-events-none"
+                }`}
+              >
+                <React.Suspense fallback={<div className="w-full h-full" />}>
+                  <FeaturesScene />
+                </React.Suspense>
+              </div>
+
+              <div
+                data-scene-index={2}
+                className={`absolute inset-0 w-full h-full flex items-center justify-center transition-opacity duration-[320ms] ease-in-out ${
+                  currentSlide === 2
+                    ? "opacity-100 pointer-events-auto"
+                    : "opacity-0 pointer-events-none"
+                }`}
+              >
+                <React.Suspense fallback={<div className="w-full h-full" />}>
+                  <FeatureDetailScene />
+                </React.Suspense>
+              </div>
+            </>
+          )}
         </div>
       </div>
-    </LazyMotion>
+    </div>
   );
 }

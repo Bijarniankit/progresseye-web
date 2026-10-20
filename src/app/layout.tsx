@@ -43,10 +43,22 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${poppins.variable} ${poppinsItalic.variable}`}
+      className={`no-js ${inter.variable} ${poppins.variable} ${poppinsItalic.variable}`}
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
-      <body className="min-h-dvh antialiased bg-surface text-text">
+      <head>
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: Early script swaps no-js class before initial paint
+          dangerouslySetInnerHTML={{
+            __html: "document.documentElement.classList.replace('no-js', 'js')",
+          }}
+        />
+      </head>
+      <body
+        className="min-h-dvh antialiased bg-[var(--color-surface)] text-[var(--color-text)]"
+        suppressHydrationWarning
+      >
         <RootProvider>{children}</RootProvider>
       </body>
     </html>
