@@ -38,7 +38,7 @@ test.describe("Phase 7 CP1: About Page", () => {
       page.getByText("We aim to separate school data strictly by design."),
     ).toBeVisible();
     await expect(
-      page.getByText("We aim for clear interfaces with zero dark patterns or hidden add-ons."),
+      page.getByText("We aim for clear interfaces, plain pricing and no hidden add-ons."),
     ).toBeVisible();
 
     // 5. CTA Section
@@ -47,6 +47,12 @@ test.describe("Phase 7 CP1: About Page", () => {
       name: "See how we think about school software.",
     });
     await expect(ctaHeading).toBeVisible();
+    await expect(
+      page.getByText(
+        "We are building ProgressEye step by step, and we would like to show you where it is heading.",
+      ),
+    ).toBeVisible();
+    await expect(page.getByText("Designed for Indian schools")).toBeVisible();
 
     const mainContent = page.locator("#main-content");
     const demoLink = mainContent.getByRole("link", { name: "Book a demo" });

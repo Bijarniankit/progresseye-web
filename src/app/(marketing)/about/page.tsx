@@ -8,14 +8,14 @@ import { VisionMission } from "@/components/marketing/about/vision-mission";
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "Learn how ProgressEye builds calm, trustworthy operating software for Indian educational institutions.",
+    "Learn how ProgressEye builds calm school management software for Indian educational institutions.",
   alternates: {
     canonical: "/about",
   },
   openGraph: {
     title: "About Us | ProgressEye",
     description:
-      "Learn how ProgressEye builds calm, trustworthy operating software for Indian educational institutions.",
+      "Learn how ProgressEye builds calm school management software for Indian educational institutions.",
     url: "/about",
   },
 };

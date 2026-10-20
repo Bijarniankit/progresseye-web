@@ -155,7 +155,7 @@ Phase 7 pages (About, FAQ, Contact) strictly follow Decision D-016 (Zero-Invente
 | **Value: Transparency** | `src/config/about.ts` | "We believe in straightforward pricing, honest product roadmaps, and clear communication with schools and guardians." | `DRAFT-CONTENT-REVIEW` | **Yes** | Editorial & leadership review. |
 | **Value: Clarity** | `src/config/about.ts` | "Every screen is designed to reduce noise, prevent accidental mistakes, and keep critical records legible at a glance." | `DRAFT-CONTENT-REVIEW` | **Yes** | Editorial & UX design review. |
 | **Value: Reliability** | `src/config/about.ts` | "School days run on rigid routines. Our goal is steady, dependable performance every morning when attendance and roll calls begin." | `DRAFT-CONTENT-REVIEW` | **Yes** | Editorial & engineering review. |
-| **Value: Child safety** | `src/config/about.ts` | "Student data and emergency contacts require extreme care. We treat privacy and access controls as non-negotiable fundamentals." | `DRAFT-CONTENT-REVIEW` | **Yes** | Legal & child data privacy review. |
+| **Value: Child safety** | `src/config/about.ts` | "Student data and emergency contacts require extreme care. We take privacy and access controls seriously." | `DRAFT-CONTENT-REVIEW` | **Yes** | Legal & child data privacy review. |
 
 
 

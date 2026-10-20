@@ -23,8 +23,8 @@ export function AboutCta() {
               See how we think about school software.
             </h2>
             <p className="mx-auto max-w-xl text-sm leading-relaxed text-white/80 sm:text-base dark:text-[var(--color-text-muted)]">
-              We are building ProgressEye with direct input from educators and administrators. Join
-              us on our journey to calmer school days.
+              We are building ProgressEye step by step, and we would like to show you where it is
+              heading.
             </p>
           </div>
 
@@ -49,14 +49,6 @@ export function AboutCta() {
             <span className="flex items-center gap-1.5">
               <Check className="h-4 w-4 text-[var(--color-brand)]" aria-hidden="true" />
               <span>Designed for Indian schools</span>
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Check className="h-4 w-4 text-[var(--color-brand)]" aria-hidden="true" />
-              <span>Gated, verified data only</span>
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Check className="h-4 w-4 text-[var(--color-brand)]" aria-hidden="true" />
-              <span>Zero sales pressure</span>
             </span>
           </div>
         </div>

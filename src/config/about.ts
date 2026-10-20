@@ -53,7 +53,7 @@ export const aboutConfig: AboutConfig = {
       id: "child-safety",
       title: "Child safety",
       description:
-        "Student data and emergency contacts require extreme care. We treat privacy and access controls as non-negotiable fundamentals.",
+        "Student data and emergency contacts require extreme care. We take privacy and access controls seriously.",
       reviewStatus: "DRAFT-CONTENT-REVIEW",
     },
   ],
@@ -63,6 +63,6 @@ export const aboutConfig: AboutConfig = {
     { id: "p1", text: "We aim to respect teachers' time above all else." },
     { id: "p2", text: "We aim to design for patchy connections and everyday phones." },
     { id: "p3", text: "We aim to separate school data strictly by design." },
-    { id: "p4", text: "We aim for clear interfaces with zero dark patterns or hidden add-ons." },
+    { id: "p4", text: "We aim for clear interfaces, plain pricing and no hidden add-ons." },
   ],
 };
