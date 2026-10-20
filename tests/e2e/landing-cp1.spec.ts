@@ -204,6 +204,40 @@ test.describe("Phase 6 CP1: Product Tour & Bento Grid", () => {
     expect(darkAudit.violations).toEqual([]);
   });
 
+  test("passes axe label-content-name-mismatch audit on the product tour in both themes", async ({
+    page,
+  }) => {
+    await page.goto("http://localhost:3000/#tour");
+
+    // Light mode
+    await page.emulateMedia({ colorScheme: "light" });
+    await page.evaluate(() => {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.add("light");
+    });
+    await page.waitForTimeout(100);
+
+    const lightAudit = await new AxeBuilder({ page })
+      .include("#tour")
+      .withRules(["label-content-name-mismatch"])
+      .analyze();
+    expect(lightAudit.violations).toEqual([]);
+
+    // Dark mode
+    await page.emulateMedia({ colorScheme: "dark" });
+    await page.evaluate(() => {
+      document.documentElement.classList.remove("light");
+      document.documentElement.classList.add("dark");
+    });
+    await page.waitForTimeout(100);
+
+    const darkAudit = await new AxeBuilder({ page })
+      .include("#tour")
+      .withRules(["label-content-name-mismatch"])
+      .analyze();
+    expect(darkAudit.violations).toEqual([]);
+  });
+
   test("renders all three tour panels stacked when JavaScript is disabled", async ({ browser }) => {
     const context = await browser.newContext({ javaScriptEnabled: false });
     const page = await context.newPage();
