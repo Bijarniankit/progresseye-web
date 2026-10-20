@@ -307,10 +307,10 @@ This document records architectural, visual, and copy decisions modifying or com
 
 ---
 
-### D-016: Hero Mint Wash Positioning and Font Swap CLS Elimination
+### D-030: Hero Mint Wash Positioning and Font Swap CLS Elimination
 - **Context & Problem**: During throttled Lighthouse mobile audits of PR #23 prior to final merge, Run 2 exhibited an unacceptable layout shift score of `0.2869` (with runs 1, 3, and 5 registering minor shifts of `0.0048`). The project performance gate strictly mandates $\text{CLS} \le 0.01$ per run.
 - **Recorded Evidence (`layout-shift-elements`)**:
-  Inspecting the Chrome DevTools / Lighthouse `layout-shift-elements` audit identified the exact shifting DOM element:
+  Inspecting the Chrome DevTools / Lighthouse `layout-shift-elements` audit identified the exact shifting DOM element (Note: The raw Lighthouse JSON report file from that run is no longer available on disk; the exact element audit evidence was preserved from the session trajectory log):
   ```json
   {
     "node": {
