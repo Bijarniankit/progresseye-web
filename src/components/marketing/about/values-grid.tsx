@@ -40,9 +40,12 @@ export function ValuesGrid() {
                   <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-brand/10 text-brand">
                     {valueIcons[value.id]}
                   </div>
-                  <span className="rounded-md border border-border bg-surface-subtle px-2 py-0.5 text-[11px] font-medium text-text-muted">
-                    {value.reviewStatus}
-                  </span>
+                  {/* Review badges belong in code comments & PLACEHOLDERS.md; only rendered in UI if showDraftBadges flag is enabled */}
+                  {aboutConfig.showDraftBadges && (
+                    <span className="rounded-md border border-border bg-surface-subtle px-2 py-0.5 text-[11px] font-medium text-text-muted">
+                      {value.reviewStatus}
+                    </span>
+                  )}
                 </div>
                 <h3 className="font-display text-xl font-bold text-text">{value.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-text-muted">{value.description}</p>

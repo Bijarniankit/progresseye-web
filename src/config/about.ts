@@ -14,6 +14,7 @@ export interface AboutConfig {
   hasConfiguredStats: boolean;
   hasConfiguredStory: boolean;
   hasConfiguredTeam: boolean;
+  showDraftBadges: boolean;
   values: AboutValue[];
   principles: AboutPrinciple[];
 }
@@ -23,7 +24,9 @@ export const aboutConfig: AboutConfig = {
   hasConfiguredStats: false,
   hasConfiguredStory: false,
   hasConfiguredTeam: false,
+  showDraftBadges: false, // Review badges hidden by default in public UI; tracked in code comments & PLACEHOLDERS.md
 
+  /* DRAFT-CONTENT-REVIEW: Aspirational values. Tracked in PLACEHOLDERS.md. Blocks public launch. */
   values: [
     {
       id: "transparency",
@@ -55,10 +58,11 @@ export const aboutConfig: AboutConfig = {
     },
   ],
 
+  /* Plain intentions: "We aim to..." without implying measured commercial commitments */
   principles: [
-    { id: "p1", text: "Respect teachers' time above all else." },
-    { id: "p2", text: "Design for patchy connections and everyday phones." },
-    { id: "p3", text: "Separate school data strictly by design." },
-    { id: "p4", text: "Zero dark patterns or hidden add-ons." },
+    { id: "p1", text: "We aim to respect teachers' time above all else." },
+    { id: "p2", text: "We aim to design for patchy connections and everyday phones." },
+    { id: "p3", text: "We aim to separate school data strictly by design." },
+    { id: "p4", text: "We aim for clear interfaces with zero dark patterns or hidden add-ons." },
   ],
 };

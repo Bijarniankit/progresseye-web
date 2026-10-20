@@ -5,10 +5,10 @@ test.describe("Phase 7 CP1: About Page", () => {
   test("renders Manifesto Hero, Vision, Mission, Values, Principles, and CTA", async ({ page }) => {
     await page.goto("http://localhost:3000/about");
 
-    // 1. Hero
+    // 1. Hero: Factual claims gated behind hasConfiguredStory (default off)
     const heroHeading = page.getByRole("heading", {
       level: 1,
-      name: /Built by people who've sat in staff rooms/i,
+      name: /Software designed for schools that value calm/i,
     });
     await expect(heroHeading).toBeVisible();
 
@@ -16,7 +16,7 @@ test.describe("Phase 7 CP1: About Page", () => {
     await expect(page.getByRole("heading", { level: 3, name: "Our Vision" })).toBeVisible();
     await expect(page.getByRole("heading", { level: 3, name: "Our Mission" })).toBeVisible();
 
-    // 3. Values Grid with 4 values and DRAFT-CONTENT-REVIEW badges
+    // 3. Values Grid with 4 values; DRAFT-CONTENT-REVIEW badges hidden by default from public UI
     await expect(page.getByRole("heading", { level: 2, name: "Values We Build By" })).toBeVisible();
     await expect(page.getByRole("heading", { level: 3, name: "Transparency" })).toBeVisible();
     await expect(page.getByRole("heading", { level: 3, name: "Clarity" })).toBeVisible();
@@ -24,18 +24,22 @@ test.describe("Phase 7 CP1: About Page", () => {
     await expect(page.getByRole("heading", { level: 3, name: "Child safety" })).toBeVisible();
 
     const reviewBadges = page.getByText("DRAFT-CONTENT-REVIEW");
-    await expect(reviewBadges).toHaveCount(4);
+    await expect(reviewBadges).toHaveCount(0);
 
-    // 4. Principles Strip
+    // 4. Principles Strip: Plain intentions ("We aim to...")
     await expect(
       page.getByRole("heading", { level: 2, name: "How We Approach School Software" }),
     ).toBeVisible();
-    await expect(page.getByText("Respect teachers' time above all else.")).toBeVisible();
+    await expect(page.getByText("We aim to respect teachers' time above all else.")).toBeVisible();
     await expect(
-      page.getByText("Design for patchy connections and everyday phones."),
+      page.getByText("We aim to design for patchy connections and everyday phones."),
     ).toBeVisible();
-    await expect(page.getByText("Separate school data strictly by design.")).toBeVisible();
-    await expect(page.getByText("Zero dark patterns or hidden add-ons.")).toBeVisible();
+    await expect(
+      page.getByText("We aim to separate school data strictly by design."),
+    ).toBeVisible();
+    await expect(
+      page.getByText("We aim for clear interfaces with zero dark patterns or hidden add-ons."),
+    ).toBeVisible();
 
     // 5. CTA Section
     const ctaHeading = page.getByRole("heading", {

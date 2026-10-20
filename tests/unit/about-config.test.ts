@@ -6,9 +6,10 @@ describe("About Configuration and Safety Gates", () => {
     expect(aboutConfig.hasConfiguredStats).toBe(false);
     expect(aboutConfig.hasConfiguredStory).toBe(false);
     expect(aboutConfig.hasConfiguredTeam).toBe(false);
+    expect(aboutConfig.showDraftBadges).toBe(false);
   });
 
-  it("marks all values with DRAFT-CONTENT-REVIEW review status", () => {
+  it("marks all values with DRAFT-CONTENT-REVIEW review status in code/config", () => {
     expect(aboutConfig.values.length).toBeGreaterThan(0);
     for (const val of aboutConfig.values) {
       expect(val.reviewStatus).toBe("DRAFT-CONTENT-REVIEW");
@@ -17,10 +18,10 @@ describe("About Configuration and Safety Gates", () => {
     }
   });
 
-  it("has non-empty non-negotiable principles", () => {
+  it("phrases principles as plain intentions ('We aim to...')", () => {
     expect(aboutConfig.principles.length).toBe(4);
     for (const p of aboutConfig.principles) {
-      expect(p.text.trim().length).toBeGreaterThan(0);
+      expect(p.text.startsWith("We aim to") || p.text.startsWith("We aim for")).toBe(true);
     }
   });
 

@@ -18,6 +18,9 @@ Deferred maintenance chores and dependency upgrades scheduled for execution at t
 
 ### 1. Phase 10: Interleaved A/B Lighthouse & Real Staging Measurements
 - **Investigation Scope**: Conduct interleaved A/B Lighthouse measurement runs (alternating old commit vs new PR head in identical browser sessions on a quiet machine) to pinpoint and explain the Total Blocking Time (TBT) difference observed during Phase 6 testing (median 328 ms on CP3 early commit vs 633 ms on final PR head).
+- **LCP Floor & CSS/Font Optimization**: Benchmark analysis in Phase 7 revealed that even with zero route-specific client JS (100% Server Component), throttled mobile LCP has a lower bound of ~2.0 s due to render-blocking stylesheet weight and font preloading/swapping. In Phase 10 staging, investigate:
+  - Font preload pruning: evaluate which display font weights can be subsetted or deferred without triggering FOUT or CLS.
+  - Critical CSS extraction / inlining: measure if critical path CSS optimization reduces FCP/LCP under mobile throttling.
 - **Staging Verification**: Re-measure all landing page performance gates on a real staging infrastructure environment:
   - Real mobile hardware devices.
   - HTTP/2 or HTTP/3 multiplexing with active SSL/TLS edge termination.

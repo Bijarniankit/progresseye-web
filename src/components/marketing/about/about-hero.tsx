@@ -1,3 +1,5 @@
+import { aboutConfig } from "@/config/about";
+
 export function AboutHero() {
   return (
     <section
@@ -30,19 +32,28 @@ export function AboutHero() {
           <span>Our Mission</span>
         </div>
 
-        {/* H1 Heading */}
+        {/* H1 Heading: Factual team claims strictly gated behind hasConfiguredStory */}
         <h1
           id="about-hero-title"
           className="font-display text-4xl font-extrabold tracking-tight text-text sm:text-5xl md:text-6xl lg:text-7xl"
         >
-          <span className="block">Built by people</span>
-          <span className="block text-brand">who&apos;ve sat in staff rooms.</span>
+          {aboutConfig.hasConfiguredStory ? (
+            <>
+              <span className="block">Built by people</span>
+              <span className="block text-brand">who&apos;ve sat in staff rooms.</span>
+            </>
+          ) : (
+            <>
+              <span className="block">Software designed for schools</span>
+              <span className="block text-brand">that value calm.</span>
+            </>
+          )}
         </h1>
 
-        {/* Subtitle */}
+        {/* Subtitle: Plain product belief with zero claims of past actions/team */}
         <p className="mx-auto mt-6 max-w-2xl text-lg text-text-muted sm:text-xl">
-          Conversations with educators. One belief: software made for schools should feel like the
-          school itself — quiet, capable, and never in the way.
+          One belief: software made for schools should feel like the school itself — quiet, capable,
+          and never in the way.
         </p>
       </div>
     </section>

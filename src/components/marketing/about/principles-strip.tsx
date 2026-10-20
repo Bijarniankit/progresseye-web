@@ -16,7 +16,7 @@ export function PrinciplesStrip() {
             How We Approach School Software
           </h2>
           <p className="mx-auto mt-2 max-w-lg text-sm text-text-muted">
-            Non-negotiable product standards for everything we design and deliver.
+            Four guiding intentions for everything we build.
           </p>
         </div>
 

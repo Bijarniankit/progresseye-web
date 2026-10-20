@@ -340,3 +340,12 @@ This document records architectural, visual, and copy decisions modifying or com
   - In subsequent 20-run mobile throttled Lighthouse benchmarks, 20 out of 20 runs recorded $\text{CLS} = 0.0000$ (zero shifts).
   - Added an automated Playwright load-and-scroll test in `tests/e2e/landing-cp3.spec.ts` asserting $\text{totalCls} \le 0.01$ across full load and full page scroll in both light and dark modes.
 
+### D-031: Phase 7 Public Pages Gated Configuration Flags & Safe Review Architecture
+- **Context & Problem**: Public marketing pages (About, FAQ, Contact) created in Phase 7 risk introducing unverified claims regarding team background, founding narrative, quantitative metrics, or review status tags visible to end users.
+- **Decision & Architecture**:
+  - Gated configuration flags in `src/config/about.ts` (`hasConfiguredStats`, `hasConfiguredStory`, `hasConfiguredTeam`, `showDraftBadges`) strictly default to `false`.
+  - Team background claims (e.g. "Built by people who've sat in staff rooms") are conditionally rendered only when `hasConfiguredStory` is explicitly enabled; otherwise, an aspirational positioning headline renders ("Software designed for schools that value calm.").
+  - Product principles are formulated strictly as plain intentions ("We aim to...") rather than measured operational commitments.
+  - Editorial review tags (`DRAFT-CONTENT-REVIEW`) belong in code comments and `docs/design/PLACEHOLDERS.md`; they are hidden by default from the public DOM via `showDraftBadges: false`.
+
+
