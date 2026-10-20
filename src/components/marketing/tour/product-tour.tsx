@@ -4,6 +4,8 @@ import { Check, Clock, IndianRupee, X } from "lucide-react";
 import * as React from "react";
 import { siteConfig } from "@/config/site";
 import {
+  ATTENDANCE_DERIVED_PERCENT,
+  ATTENDANCE_PRESENT_COUNT,
   ATTENDANCE_STUDENTS,
   ATTENDANCE_TOTAL_STUDENTS,
   EXAM_DERIVED_PERCENT,
@@ -23,11 +25,9 @@ interface ProductTourProps {
 
 export function ProductTour({ initialTab = "attendance" }: ProductTourProps) {
   const [activeTab, setActiveTab] = React.useState<TourTabId>(initialTab);
-  const [attendanceList, setAttendanceList] = React.useState(ATTENDANCE_STUDENTS);
-
-  // Compute live attendance count & derived percentage
-  const presentCount = attendanceList.filter((s) => s.isPresent).length;
-  const derivedAttendancePercent = Math.round((presentCount / ATTENDANCE_TOTAL_STUDENTS) * 100);
+  const attendanceList = ATTENDANCE_STUDENTS;
+  const presentCount = ATTENDANCE_PRESENT_COUNT;
+  const derivedAttendancePercent = ATTENDANCE_DERIVED_PERCENT;
 
   const tabs: Array<{ id: TourTabId; label: string; icon: string }> = [
     { id: "attendance", label: "Attendance", icon: "✓" },
@@ -57,12 +57,6 @@ export function ProductTour({ initialTab = "attendance" }: ProductTourProps) {
       const tabButtons = tabListRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]');
       tabButtons?.[targetIndex]?.focus();
     }
-  };
-
-  const toggleStudent = (id: number) => {
-    setAttendanceList((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, isPresent: !s.isPresent } : s)),
-    );
   };
 
   return (
@@ -158,18 +152,19 @@ export function ProductTour({ initialTab = "attendance" }: ProductTourProps) {
               </div>
             </div>
 
-            {/* Attendance 30-square grid */}
-            <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-10 gap-2 sm:gap-2.5">
+            {/* Attendance 30-square grid (Non-interactive sample preview) */}
+            <ul
+              aria-label="Sample attendance roll call grid"
+              className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-10 gap-2 sm:gap-2.5 list-none p-0 m-0"
+            >
               {attendanceList.map((student) => (
-                <button
+                <li
                   key={student.id}
-                  type="button"
-                  onClick={() => toggleStudent(student.id)}
-                  aria-label={`${student.rollNo}: ${student.isPresent ? "Present" : "Absent"}`}
-                  className={`h-11 rounded-[var(--radius-md)] flex flex-col items-center justify-center text-xs font-semibold transition-all border ${
+                  aria-label={`${student.id} (${student.rollNo}): ${student.isPresent ? "Present" : "Absent"}`}
+                  className={`h-11 rounded-[var(--radius-md)] flex flex-col items-center justify-center text-xs font-semibold border ${
                     student.isPresent
-                      ? "bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800 text-blue-900 dark:text-blue-200 hover:bg-blue-100 dark:hover:bg-blue-950/70"
-                      : "bg-amber-50 dark:bg-amber-950/30 border-amber-300 dark:border-amber-700/60 text-amber-900 dark:text-amber-200 hover:bg-amber-100"
+                      ? "bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800 text-blue-900 dark:text-blue-200"
+                      : "bg-amber-50 dark:bg-amber-950/30 border-amber-300 dark:border-amber-700/60 text-amber-900 dark:text-amber-200"
                   }`}
                 >
                   <span className="text-[10px] font-mono font-semibold">{student.id}</span>
@@ -180,9 +175,9 @@ export function ProductTour({ initialTab = "attendance" }: ProductTourProps) {
                       <X className="w-3.5 h-3.5" />
                     )}
                   </span>
-                </button>
+                </li>
               ))}
-            </div>
+            </ul>
 
             <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)] pt-3 border-t border-[var(--color-border-muted)]">
               <span>Auto-saved to local state · Simulated preview</span>
