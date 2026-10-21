@@ -35,15 +35,14 @@ export function StubPage({ title, subtitle, badge, children }: StubPageProps) {
         {children || (
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-brand)] animate-pulse" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-brand)]" />
               <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
-                Marketing Shell Active
+                Planned Features
               </span>
             </div>
             <p className="text-sm text-[var(--color-text-muted)] leading-relaxed">
-              This route is actively rendered within the universal ProgressEye marketing layout with
-              verified keyboard navigation, theme parity, and semantic landmark hierarchy. Full
-              feature scenes and interactive workflows are arriving throughout our rollout.
+              Planned: comprehensive feature walkthroughs, interactive module previews, and
+              role-specific guides will be introduced here as our rollout progresses.
             </p>
             <div className="pt-2">
               <Button asChild variant="outline" size="sm" className="rounded-full gap-2">

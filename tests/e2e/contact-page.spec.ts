@@ -12,19 +12,22 @@ test.describe("Phase 7 CP3: Contact Page", () => {
     });
     await expect(h1).toBeVisible();
 
-    // 2. Context Card with Walkthrough CTA
+    // 2. Context Card with Demo CTA
     await expect(
       page.getByRole("heading", { level: 3, name: "Experience ProgressEye first-hand" }),
     ).toBeVisible();
-    const demoLink = page.getByRole("link", { name: "Book a free demo" });
+    const demoLink = page.getByRole("link", { name: "Book a free demo", exact: true });
     await expect(demoLink).toBeVisible();
     await expect(demoLink).toHaveAttribute("href", "/demo");
 
     // Channels are gated (all false by default); assert no fake channels are visible
     await expect(page.getByText("Direct Channels")).not.toBeVisible();
 
-    // 3. Contact Form
+    // 3. Contact Form & Pre-submission notice
     await expect(page.getByRole("heading", { level: 2, name: "Send us a message" })).toBeVisible();
+    const formNoticeLink = page.getByRole("link", { name: "book a free demo", exact: true });
+    await expect(formNoticeLink).toBeVisible();
+    await expect(formNoticeLink).toHaveAttribute("href", "/demo");
     await expect(page.getByLabel(/Your name/i)).toBeVisible();
     await expect(page.getByLabel(/Email address/i)).toBeVisible();
     await expect(page.getByLabel(/School \/ Institution Name/i)).toBeVisible();
@@ -160,7 +163,7 @@ test.describe("Phase 7 CP3: Contact Page", () => {
     await expect(notice).toBeVisible();
     await expect(notice).toContainText("Form not connected");
     await expect(notice).toContainText(
-      "This form is not connected yet, so your message was not sent. To reach us, book a free demo.",
+      "This form is not connected yet, so messages are not sent. To reach us, book a free demo.",
     );
 
     // Notice contains working link to /demo
@@ -277,5 +280,27 @@ test.describe("Phase 7 CP3: Contact Page", () => {
         0.01,
       );
     }
+  });
+
+  test("renders noscript notice and demo link without aria-busy when JS is disabled", async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+    await page.goto("http://localhost:3000/contact");
+
+    const noscriptNotice = page.locator("[data-testid='contact-noscript-notice']");
+    await expect(noscriptNotice).toBeVisible();
+    await expect(noscriptNotice).toContainText("book a free demo");
+
+    const demoLink = noscriptNotice.getByRole("link", { name: "book a free demo" });
+    await expect(demoLink).toBeVisible();
+    await expect(demoLink).toHaveAttribute("href", "/demo");
+
+    // Assert that loading skeleton does NOT have aria-busy="true"
+    const skeletonSection = page.locator("section[aria-label='Contact form loading']");
+    await expect(skeletonSection).not.toHaveAttribute("aria-busy", "true");
+
+    await context.close();
   });
 });

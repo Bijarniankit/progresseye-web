@@ -116,7 +116,15 @@ export function ContactForm() {
           Send us a message
         </h2>
         <p className="text-sm text-text-muted">
-          Fill out the details below and we will get back to your school team.
+          This form is not connected yet, so messages are not sent. To reach us,{" "}
+          <Link
+            href="/demo"
+            prefetch={false}
+            className="font-semibold text-brand underline hover:text-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
+          >
+            book a free demo
+          </Link>
+          .
         </p>
       </div>
 
@@ -133,7 +141,7 @@ export function ContactForm() {
               <p className="font-semibold text-text">Form not connected</p>
               {/* DRAFT-CONTENT-REVIEW: Honest notice regarding unbuilt form backend */}
               <p className="text-text-muted leading-relaxed">
-                This form is not connected yet, so your message was not sent. To reach us,{" "}
+                This form is not connected yet, so messages are not sent. To reach us,{" "}
                 <Link
                   href="/demo"
                   prefetch={false}

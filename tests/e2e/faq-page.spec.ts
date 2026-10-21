@@ -62,7 +62,7 @@ test.describe("Phase 7 CP2: FAQ Page", () => {
     await expect(contactLink).toBeVisible();
     await expect(contactLink).toHaveAttribute("href", "/contact");
 
-    const walkthroughLink = page.getByRole("link", { name: "Book a walkthrough" });
+    const walkthroughLink = page.getByRole("link", { name: "Book a free demo" });
     await expect(walkthroughLink).toBeVisible();
     await expect(walkthroughLink).toHaveAttribute("href", "/demo");
   });

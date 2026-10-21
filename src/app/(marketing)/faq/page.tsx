@@ -154,7 +154,7 @@ export default function FaqPage() {
               href="/demo"
               className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-surface px-6 py-3 text-sm font-semibold text-text shadow-2xs transition-colors hover:bg-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus sm:w-auto"
             >
-              <span>Book a walkthrough</span>
+              <span>Book a free demo</span>
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>

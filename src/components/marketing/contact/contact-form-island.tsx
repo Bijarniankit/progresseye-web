@@ -4,8 +4,10 @@ import * as React from "react";
 
 export function ContactFormIsland() {
   const [Form, setForm] = React.useState<React.ComponentType | null>(null);
+  const [isClient, setIsClient] = React.useState(false);
 
   React.useEffect(() => {
+    setIsClient(true);
     import("./contact-form").then((mod) => {
       setForm(() => mod.ContactForm);
     });
@@ -13,20 +15,63 @@ export function ContactFormIsland() {
 
   if (!Form) {
     return (
-      <section
-        aria-label="Contact form loading"
-        aria-busy="true"
-        className="rounded-[var(--radius-xl)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 sm:p-8 shadow-[var(--shadow-e1)] space-y-4"
-      >
-        <div className="h-6 w-32 bg-[var(--color-surface-subtle)] rounded animate-pulse" />
-        <div className="space-y-4">
-          <div className="h-10 bg-[var(--color-surface-subtle)] rounded animate-pulse" />
-          <div className="h-10 bg-[var(--color-surface-subtle)] rounded animate-pulse" />
-          <div className="h-10 bg-[var(--color-surface-subtle)] rounded animate-pulse" />
-          <div className="h-28 bg-[var(--color-surface-subtle)] rounded animate-pulse" />
-          <div className="h-10 w-36 bg-[var(--color-surface-subtle)] rounded animate-pulse" />
-        </div>
-      </section>
+      <div className="space-y-6">
+        <noscript>
+          <div
+            data-testid="contact-noscript-notice"
+            className="rounded-2xl border border-border bg-surface-subtle p-6 sm:p-8 space-y-2"
+          >
+            <p className="font-display text-base font-bold text-text">
+              JavaScript is required for the contact form
+            </p>
+            <p className="text-sm text-text-muted leading-relaxed">
+              This interactive contact form requires JavaScript. To reach our team directly, you can{" "}
+              <a
+                href="/demo"
+                className="font-semibold text-brand underline hover:text-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
+              >
+                book a free demo
+              </a>
+              .
+            </p>
+          </div>
+        </noscript>
+
+        <section
+          aria-label="Contact form loading"
+          aria-busy={isClient ? "true" : undefined}
+          className="rounded-2xl border border-border bg-surface p-6 sm:p-8 lg:p-10 shadow-xs space-y-5"
+        >
+          <div className="space-y-2 mb-6">
+            <div className="h-7 w-48 bg-surface-subtle rounded animate-pulse" />
+            <div className="h-4 w-72 bg-surface-subtle rounded animate-pulse" />
+          </div>
+          <div className="space-y-5">
+            <div className="space-y-1.5">
+              <div className="h-4 w-24 bg-surface-subtle rounded animate-pulse" />
+              <div className="h-10 bg-surface-subtle rounded animate-pulse" />
+            </div>
+            <div className="space-y-1.5">
+              <div className="h-4 w-28 bg-surface-subtle rounded animate-pulse" />
+              <div className="h-10 bg-surface-subtle rounded animate-pulse" />
+            </div>
+            <div className="space-y-1.5">
+              <div className="h-4 w-44 bg-surface-subtle rounded animate-pulse" />
+              <div className="h-10 bg-surface-subtle rounded animate-pulse" />
+            </div>
+            <div className="space-y-1.5">
+              <div className="h-4 w-20 bg-surface-subtle rounded animate-pulse" />
+              <div className="h-10 bg-surface-subtle rounded animate-pulse" />
+            </div>
+            <div className="space-y-1.5">
+              <div className="h-4 w-20 bg-surface-subtle rounded animate-pulse" />
+              <div className="h-28 bg-surface-subtle rounded animate-pulse" />
+            </div>
+            <div className="h-4 w-64 bg-surface-subtle rounded animate-pulse" />
+            <div className="h-10 w-36 bg-surface-subtle rounded animate-pulse" />
+          </div>
+        </section>
+      </div>
     );
   }
 

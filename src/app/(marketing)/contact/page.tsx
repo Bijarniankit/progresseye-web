@@ -1,11 +1,4 @@
-import {
-  ArrowRight,
-  Calendar,
-  HelpCircle,
-  MessageSquare,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, Calendar, HelpCircle, MessageSquare, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ContactFormIsland } from "@/components/marketing/contact/contact-form-island";
@@ -89,8 +82,7 @@ export default function ContactPage() {
                     Experience ProgressEye first-hand
                   </h3>
                   <p className="text-sm text-text-muted leading-relaxed">
-                    We are currently onboarding institutions via guided orientation walkthroughs.
-                    Book a walkthrough to explore the platform with our team.
+                    Want to see what we are building? Book a free demo.
                   </p>
                 </div>
 
@@ -105,10 +97,6 @@ export default function ContactPage() {
                 </div>
 
                 <div className="border-t border-border pt-6 space-y-3">
-                  <div className="flex items-center gap-2.5 text-xs font-medium text-text-muted">
-                    <ShieldCheck className="h-4 w-4 text-brand shrink-0" aria-hidden="true" />
-                    <span>Zero sales pressure & no credit card required</span>
-                  </div>
                   <div className="flex items-center gap-2.5 text-xs font-medium text-text-muted">
                     <Sparkles className="h-4 w-4 text-brand shrink-0" aria-hidden="true" />
                     <span>Designed for Indian school workflows</span>
