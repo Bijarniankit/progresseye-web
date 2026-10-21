@@ -34,11 +34,36 @@ function BentoCard({ title, description, className = "", children }: BentoCardPr
 }
 
 const ROLES_LIST = [
-  { id: "role-admin", role: "Admin", initial: "A", bg: "bg-indigo-600 text-white" },
-  { id: "role-principal", role: "Principal", initial: "P", bg: "bg-blue-600 text-white" },
-  { id: "role-teacher", role: "Teacher", initial: "T", bg: "bg-amber-500 text-white" },
-  { id: "role-student", role: "Student", initial: "S", bg: "bg-emerald-600 text-white" },
-  { id: "role-parent", role: "Parent", initial: "P", bg: "bg-purple-600 text-white" },
+  {
+    id: "role-admin",
+    role: "Admin",
+    initial: "A",
+    bg: "bg-[var(--color-brand)] text-[var(--color-brand-foreground)]",
+  },
+  {
+    id: "role-principal",
+    role: "Principal",
+    initial: "P",
+    bg: "bg-[var(--color-surface-contrast)] text-[var(--color-text-inverse)]",
+  },
+  {
+    id: "role-teacher",
+    role: "Teacher",
+    initial: "T",
+    bg: "bg-[var(--color-warning)] text-[var(--color-brand-foreground)]",
+  },
+  {
+    id: "role-student",
+    role: "Student",
+    initial: "S",
+    bg: "bg-[var(--color-success)] text-[var(--color-brand-foreground)]",
+  },
+  {
+    id: "role-parent",
+    role: "Parent",
+    initial: "P",
+    bg: "bg-[var(--color-terracotta)] text-[var(--color-brand-foreground)]",
+  },
 ];
 
 const ATTENDANCE_DOTS = Array.from({ length: 28 }, (_, i) => ({
@@ -51,26 +76,27 @@ const EXAM_GRADES_LIST = [
     id: "grade-aplus",
     grade: "A+",
     label: "12 Students",
-    badge: "bg-blue-800 dark:bg-blue-700 text-white",
+    badge: "bg-[var(--color-brand)] text-[var(--color-brand-foreground)]",
   },
   {
     id: "grade-a",
     grade: "A",
     label: "18 Students",
-    badge: "bg-blue-700 dark:bg-blue-800 text-white",
+    badge: "bg-[var(--color-surface-contrast)] text-[var(--color-text-inverse)]",
   },
   {
     id: "grade-bplus",
     grade: "B+",
     label: "14 Students",
-    badge: "bg-blue-600 dark:bg-blue-900 text-white dark:text-blue-200",
+    badge:
+      "bg-[var(--color-surface-subtle)] text-[var(--color-text)] border border-[var(--color-border)]",
   },
   {
     id: "grade-c",
     grade: "C",
     label: "7 Students",
     badge:
-      "bg-amber-100 text-amber-900 border border-amber-300 dark:bg-amber-950/70 dark:text-amber-200 dark:border-amber-700/50",
+      "bg-[var(--color-wash-peach)] text-[var(--color-terracotta)] border border-[var(--color-terracotta)]/30",
   },
 ];
 
@@ -155,7 +181,7 @@ export function BentoGrid() {
                 <span className="flex items-center gap-1">
                   <CalendarCheck className="w-3.5 h-3.5 text-[var(--color-brand)]" /> Class 8-A
                 </span>
-                <span className="text-blue-800 dark:text-blue-300 font-semibold">
+                <span className="text-[var(--color-badge-info-text)] font-semibold">
                   28/30 Present
                 </span>
               </div>
@@ -164,7 +190,7 @@ export function BentoGrid() {
                   <div
                     key={dot.id}
                     className={`h-2.5 rounded-[2px] ${
-                      dot.isAbsent ? "bg-amber-400" : "bg-[var(--color-brand)]"
+                      dot.isAbsent ? "bg-[var(--color-warning)]" : "bg-[var(--color-brand)]"
                     }`}
                   />
                 ))}
@@ -183,7 +209,7 @@ export function BentoGrid() {
                 <span className="text-[var(--color-text-muted)] flex items-center gap-1">
                   <Wallet className="w-3.5 h-3.5 text-[var(--color-brand)]" /> Term 2
                 </span>
-                <span className="text-blue-800 dark:text-blue-300 font-bold">87%</span>
+                <span className="text-[var(--color-badge-info-text)] font-bold">87%</span>
               </div>
               <div className="w-full h-2 rounded-full bg-[var(--color-border)] overflow-hidden">
                 <div className="w-[87%] h-full bg-[var(--color-brand)] rounded-full" />
@@ -219,7 +245,7 @@ export function BentoGrid() {
                   </div>
                 ))}
               </div>
-              <span className="text-xs font-semibold text-blue-800 dark:text-blue-300">
+              <span className="text-xs font-semibold text-[var(--color-badge-info-text)]">
                 53/53 Evaluated
               </span>
             </div>
@@ -236,13 +262,15 @@ export function BentoGrid() {
                 <span className="flex items-center gap-1.5 font-medium text-[var(--color-text)]">
                   <Bell className="w-3.5 h-3.5 text-[var(--color-brand)]" /> Sports Day Schedule
                 </span>
-                <span className="text-[10px] text-blue-800 dark:text-blue-300 font-bold">Sent</span>
+                <span className="text-[10px] text-[var(--color-badge-info-text)] font-bold">
+                  Sent
+                </span>
               </div>
               <div className="p-2 rounded-[var(--radius-md)] bg-[var(--color-surface-subtle)] border border-[var(--color-border)] text-xs flex items-center justify-between">
                 <span className="flex items-center gap-1.5 font-medium text-[var(--color-text)]">
-                  <Check className="w-3.5 h-3.5 text-emerald-800 dark:text-emerald-400" /> Class 8-A
+                  <Check className="w-3.5 h-3.5 text-[var(--color-badge-success-text)]" /> Class 8-A
                 </span>
-                <span className="text-[10px] text-emerald-800 dark:text-emerald-300 font-bold">
+                <span className="text-[10px] text-[var(--color-badge-success-text)] font-bold">
                   Delivered
                 </span>
               </div>

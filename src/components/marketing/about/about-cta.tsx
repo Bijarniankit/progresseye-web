@@ -18,11 +18,11 @@ export function AboutCta() {
           <div className="relative z-10 mx-auto max-w-2xl space-y-4">
             <h2
               id="about-cta-heading"
-              className="font-display text-2xl font-extrabold tracking-tight text-white sm:text-3xl lg:text-4xl dark:text-[var(--color-text)]"
+              className="font-display text-2xl font-extrabold tracking-tight text-[var(--color-text-inverse)] sm:text-3xl lg:text-4xl dark:text-[var(--color-text)]"
             >
               See how we think about school software.
             </h2>
-            <p className="mx-auto max-w-xl text-sm leading-relaxed text-white/80 sm:text-base dark:text-[var(--color-text-muted)]">
+            <p className="mx-auto max-w-xl text-sm leading-relaxed text-[var(--color-text-inverse)]/80 sm:text-base dark:text-[var(--color-text-muted)]">
               We are building ProgressEye step by step, and we would like to show you where it is
               heading.
             </p>
@@ -33,19 +33,19 @@ export function AboutCta() {
               href="/demo"
               className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-brand)] px-6 py-3.5 text-sm font-semibold text-[var(--color-brand-foreground)] shadow-[var(--shadow-e2)] transition-colors hover:bg-[var(--color-brand-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] sm:w-auto"
             >
-              <span>Book a demo</span>
+              <span>Book a free demo</span>
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
 
             <Link
               href="/features"
-              className="inline-flex w-full items-center justify-center rounded-full border border-white/20 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] sm:w-auto dark:border-[var(--color-brand)]/40 dark:text-[var(--color-text)] dark:hover:bg-[var(--color-surface-subtle)]"
+              className="inline-flex w-full items-center justify-center rounded-full border border-[var(--color-text-inverse)]/20 px-6 py-3.5 text-sm font-semibold text-[var(--color-text-inverse)] transition-colors hover:bg-[var(--color-text-inverse)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] sm:w-auto dark:border-[var(--color-brand)]/40 dark:text-[var(--color-text)] dark:hover:bg-[var(--color-surface-subtle)]"
             >
               <span>Explore planned features</span>
             </Link>
           </div>
 
-          <div className="relative z-10 mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-white/70 sm:text-sm dark:text-[var(--color-text-muted)]">
+          <div className="relative z-10 mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-[var(--color-text-inverse)]/70 sm:text-sm dark:text-[var(--color-text-muted)]">
             <span className="flex items-center gap-1.5">
               <Check className="h-4 w-4 text-[var(--color-brand)]" aria-hidden="true" />
               <span>Designed for Indian schools</span>

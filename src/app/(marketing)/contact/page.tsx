@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ContactForm } from "@/components/marketing/contact/contact-form";
+import { ContactFormIsland } from "@/components/marketing/contact/contact-form-island";
 import { contactConfig } from "@/config/contact";
 import { landingFaqs } from "@/config/faq";
 
@@ -165,7 +165,7 @@ export default function ContactPage() {
 
             {/* Right Column: Contact Form Island */}
             <div className="lg:col-span-7">
-              <ContactForm />
+              <ContactFormIsland />
             </div>
           </div>
         </div>

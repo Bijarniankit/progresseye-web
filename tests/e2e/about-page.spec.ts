@@ -55,7 +55,7 @@ test.describe("Phase 7 CP1: About Page", () => {
     await expect(page.getByText("Designed for Indian schools")).toBeVisible();
 
     const mainContent = page.locator("#main-content");
-    const demoLink = mainContent.getByRole("link", { name: "Book a demo" });
+    const demoLink = mainContent.getByRole("link", { name: "Book a free demo" });
     await expect(demoLink).toBeVisible();
     await expect(demoLink).toHaveAttribute("href", "/demo");
 
