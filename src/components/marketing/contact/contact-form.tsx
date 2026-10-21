@@ -150,7 +150,18 @@ export function ContactForm() {
 
       <form onSubmit={handleSubmit} noValidate className="space-y-5">
         {/* Honeypot field for bot suppression */}
-        <div className="sr-only" aria-hidden="true">
+        <div
+          className="sr-only"
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            left: "-9999px",
+            opacity: 0,
+            height: 0,
+            width: 0,
+            overflow: "hidden",
+          }}
+        >
           <label htmlFor="contact-website">Leave this field blank</label>
           <input
             id="contact-website"
