@@ -194,6 +194,9 @@ This document records architectural, visual, and copy decisions modifying or com
 ### D-022: Font Licensing (SIL Open Font License 1.1)
 - **Decision**: Added official SIL Open Font License 1.1 documentation to `src/assets/fonts/OFL.txt` covering self-hosted `Inter` (The Inter Project Authors) and `Poppins` (Indian Type Foundry) fonts used across marketing pages and Open Graph images.
 
+### D-023: Phase 5+ Branching & Pull Request Model
+- **Policy**: Starting in Phase 5, all feature development, chore tasks, and fixes must be implemented on dedicated topic branches named `phase-NN/<topic>` (e.g. `phase-05/illustrations`, `phase-05/chore-biome-2`) and merged into `main` via pull requests. Direct pushes to `main` are prohibited under enforced repository branch protection rules.
+
 ### D-024: Unified Dark Surface (#020617)
 - **Decision**: Unify hero section, body canvas, and footer dark backgrounds to a single cohesive dark surface token: `--color-surface-hero: #020617` (matching `--color-surface: #020617` and `--color-surface-footer: #020617`).
 - **Rationale**: Eliminates noticeable slate-navy (#0F172A) vs slate-950 (#020617) boundary seams between the fixed navbar, hero, page body, and footer, creating an immersive, unified dark aesthetic across all marketing routes. Elevated cards continue to use `#0F172A` / `#1E293B` for visual hierarchy.
@@ -307,10 +310,10 @@ This document records architectural, visual, and copy decisions modifying or com
 
 ---
 
-### D-016: Hero Mint Wash Positioning and Font Swap CLS Elimination
+### D-030: Hero Mint Wash Positioning and Font Swap CLS Elimination
 - **Context & Problem**: During throttled Lighthouse mobile audits of PR #23 prior to final merge, Run 2 exhibited an unacceptable layout shift score of `0.2869` (with runs 1, 3, and 5 registering minor shifts of `0.0048`). The project performance gate strictly mandates $\text{CLS} \le 0.01$ per run.
 - **Recorded Evidence (`layout-shift-elements`)**:
-  Inspecting the Chrome DevTools / Lighthouse `layout-shift-elements` audit identified the exact shifting DOM element:
+  Inspecting the Chrome DevTools / Lighthouse `layout-shift-elements` audit identified the exact shifting DOM element (Note: The raw Lighthouse JSON report file from that run is no longer available on disk; the exact element audit evidence was preserved from the session trajectory log):
   ```json
   {
     "node": {
@@ -339,4 +342,13 @@ This document records architectural, visual, and copy decisions modifying or com
   - Replaced dynamic vertical percentage anchoring (`top-1/2 -translate-y-1/2`) with a deterministic fixed offset: `top-32 -right-24` (anchored fixed `8rem` from the top of the section).
   - In subsequent 20-run mobile throttled Lighthouse benchmarks, 20 out of 20 runs recorded $\text{CLS} = 0.0000$ (zero shifts).
   - Added an automated Playwright load-and-scroll test in `tests/e2e/landing-cp3.spec.ts` asserting $\text{totalCls} \le 0.01$ across full load and full page scroll in both light and dark modes.
+
+### D-031: Phase 7 Public Pages Gated Configuration Flags & Safe Review Architecture
+- **Context & Problem**: Public marketing pages (About, FAQ, Contact) created in Phase 7 risk introducing unverified claims regarding team background, founding narrative, quantitative metrics, or review status tags visible to end users.
+- **Decision & Architecture**:
+  - Gated configuration flags in `src/config/about.ts` (`hasConfiguredStats`, `hasConfiguredStory`, `hasConfiguredTeam`, `showDraftBadges`) strictly default to `false`.
+  - Team background claims (e.g. "Built by people who've sat in staff rooms") are conditionally rendered only when `hasConfiguredStory` is explicitly enabled; otherwise, an aspirational positioning headline renders ("Software designed for schools that value calm.").
+  - Product principles are formulated strictly as plain intentions ("We aim to...") rather than measured operational commitments.
+  - Editorial review tags (`DRAFT-CONTENT-REVIEW`) belong in code comments and `docs/design/PLACEHOLDERS.md`; they are hidden by default from the public DOM via `showDraftBadges: false`.
+
 

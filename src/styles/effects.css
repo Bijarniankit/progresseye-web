@@ -87,6 +87,21 @@
   }
 }
 
+@keyframes ink-swoosh {
+  from {
+    stroke-dashoffset: 1200;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-ink-swoosh {
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  animation: ink-swoosh 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 .animate-word-reveal {
   animation: word-reveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -111,9 +126,11 @@
   }
   .animate-word-reveal,
   .animate-tagline-reveal,
-  .animate-cloud-drift {
+  .animate-cloud-drift,
+  .animate-ink-swoosh {
     animation: none;
     transform: none;
+    stroke-dashoffset: 0;
     opacity: 1;
   }
 }

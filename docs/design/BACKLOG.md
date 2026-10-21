@@ -18,6 +18,9 @@ Deferred maintenance chores and dependency upgrades scheduled for execution at t
 
 ### 1. Phase 10: Interleaved A/B Lighthouse & Real Staging Measurements
 - **Investigation Scope**: Conduct interleaved A/B Lighthouse measurement runs (alternating old commit vs new PR head in identical browser sessions on a quiet machine) to pinpoint and explain the Total Blocking Time (TBT) difference observed during Phase 6 testing (median 328 ms on CP3 early commit vs 633 ms on final PR head).
+- **LCP Floor & CSS/Font Optimization**: Benchmark analysis in Phase 7 revealed that even with zero route-specific client JS (100% Server Component), throttled mobile LCP has a lower bound of ~2.0 s due to render-blocking stylesheet weight and font preloading/swapping. In Phase 10 staging, investigate:
+  - Font preload pruning: evaluate which display font weights can be subsetted or deferred without triggering FOUT or CLS.
+  - Critical CSS extraction / inlining: measure if critical path CSS optimization reduces FCP/LCP under mobile throttling.
 - **Staging Verification**: Re-measure all landing page performance gates on a real staging infrastructure environment:
   - Real mobile hardware devices.
   - HTTP/2 or HTTP/3 multiplexing with active SSL/TLS edge termination.
@@ -70,3 +73,17 @@ The following unverified claims and planned placeholders in `docs/design/PLACEHO
 - **Public FAQ & CTA Claims**:
   - Payment handling, boards alignment, and DPDP privacy notice (`DRAFT-NEEDS-LEGAL-REVIEW`).
   - Commercial terms: "Free Starter tier forever", "No credit card required", "Cancel anytime".
+
+---
+
+## Phase 10: Critical Launch Blockers & Performance Architecture
+
+### 1. Lead Capture Inability (Launch Blocker)
+- **Issue**: Every "Book a free demo" and "Contact our team" path across marketing pages currently routes to stubs (`/demo`) or disconnected client-side form notices (`/contact`). The website currently cannot capture, persist, or notify the sales/support team of inbound school leads.
+- **Resolution Target**: Phase 9 (Inquiry & Lead Capture Integration), where API lead capture endpoints and notification webhooks are wired.
+
+### 2. Shared Layout Bundle Weight & Client Component Splitting
+- **Issue**: Every marketing route ships ~208 kB gzip of shared JavaScript across 13 chunks despite pages having 0 B of route-specific client JS (Server Components).
+- **Action Plan**:
+  - Perform a formal, source-mapped bundle analysis (replacing heuristic/guessed chunk labels with exact package sizes from `@next/bundle-analyzer`).
+  - Evaluate code-splitting and dynamic `next/dynamic` lazy-loading for non-critical shared layout islands, particularly the mobile navigation drawer (`MobileDrawer`) and theme provider hydration, so above-the-fold first paint downloads only critical navigation primitives.

@@ -59,6 +59,6 @@ export const landingFaqs: FaqItem[] = [
     status: "planned", // DRAFT-CONTENT-REVIEW: Staff and teacher onboarding orientation. Blocks public launch.
     question: "Do you provide onboarding and teacher training support?",
     answer:
-      "Planned: guided orientation walkthroughs, role-specific documentation, and live setup support for administrative staff and teachers during school rollout.",
+      "Planned: guided orientation walkthroughs, role-specific documentation, and onboarding guidance for administrative staff and teachers during school rollout.",
   },
 ];

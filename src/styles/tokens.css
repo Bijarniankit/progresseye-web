@@ -139,6 +139,17 @@
   --color-status-danger-foreground: #ffffff;
   --color-status-info: #2563eb;
 
+  /* High-Contrast Badge / Chip Tokens (WCAG AA Compliant >= 4.5:1) */
+  --color-badge-info-bg: #eff6ff;
+  --color-badge-info-border: #bfdbfe;
+  --color-badge-info-text: #1e40af;
+  --color-badge-success-bg: #f0fdf4;
+  --color-badge-success-border: #bbf7d0;
+  --color-badge-success-text: #166534;
+  --color-badge-warning-bg: #fffbeb;
+  --color-badge-warning-border: #fde68a;
+  --color-badge-warning-text: #92400e;
+
   /* Focus Ring */
   --focus-ring: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-brand);
 
@@ -173,6 +184,9 @@
   --z-overlay: 50;
   --z-modal: 60;
   --z-toast: 70;
+
+  /* Backdrop Overlay */
+  --color-overlay: rgba(0, 0, 0, 0.5);
 
   /* Vector Scene Tokens (Light Mode) */
   --scene-school-sky-top: #e0e7ff;
@@ -301,12 +315,26 @@
   --color-status-danger-foreground: #ffffff;
   --color-status-info: #60a5fa;
 
+  /* High-Contrast Badge / Chip Tokens (WCAG AA Compliant >= 4.5:1) */
+  --color-badge-info-bg: rgba(30, 58, 138, 0.4);
+  --color-badge-info-border: rgba(96, 165, 250, 0.4);
+  --color-badge-info-text: #93c5fd;
+  --color-badge-success-bg: rgba(20, 83, 45, 0.4);
+  --color-badge-success-border: rgba(34, 197, 94, 0.4);
+  --color-badge-success-text: #86efac;
+  --color-badge-warning-bg: rgba(120, 53, 15, 0.3);
+  --color-badge-warning-border: rgba(245, 158, 11, 0.4);
+  --color-badge-warning-text: #fde68a;
+
   --focus-ring: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-brand);
 
   --shadow-e1: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-e2: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
   --shadow-e3: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
   --shadow-e4: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+
+  /* Backdrop Overlay */
+  --color-overlay: rgba(0, 0, 0, 0.7);
 
   /* Vector Scene Tokens (Dark Mode Option B) */
   --scene-school-sky-top: #1e1b4b;

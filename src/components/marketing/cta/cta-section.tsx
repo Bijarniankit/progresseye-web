@@ -27,12 +27,12 @@ export function FinalCtaSection() {
           <div className="relative z-10 max-w-3xl mx-auto space-y-4">
             <h2
               id="cta-heading"
-              className="text-2xl sm:text-3xl lg:text-5xl font-extrabold font-display tracking-tight text-white dark:text-[var(--color-text)]"
+              className="text-2xl sm:text-3xl lg:text-5xl font-extrabold font-display tracking-tight text-[var(--color-text-inverse)] dark:text-[var(--color-text)]"
             >
               Ready to bring calm to your school administration?
             </h2>
 
-            <p className="text-sm sm:text-base lg:text-lg text-white/80 dark:text-[var(--color-text-muted)] leading-relaxed max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base lg:text-lg text-[var(--color-text-inverse)]/80 dark:text-[var(--color-text-muted)] leading-relaxed max-w-2xl mx-auto">
               Book a free demo to see what we are building.
             </p>
           </div>
@@ -49,14 +49,14 @@ export function FinalCtaSection() {
 
             <Link
               href="/get-started"
-              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full font-semibold text-sm sm:text-base border border-white/20 dark:border-[var(--color-brand)]/40 text-white dark:text-[var(--color-text)] hover:bg-white/10 dark:hover:bg-[var(--color-surface-subtle)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full font-semibold text-sm sm:text-base border border-[var(--color-text-inverse)]/20 dark:border-[var(--color-brand)]/40 text-[var(--color-text-inverse)] dark:text-[var(--color-text)] hover:bg-[var(--color-text-inverse)]/10 dark:hover:bg-[var(--color-surface-subtle)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
             >
               Get started free
             </Link>
           </div>
 
           {/* Perks Row with Planned Scope */}
-          <div className="relative z-10 pt-4 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs sm:text-sm text-white/70 dark:text-[var(--color-text-muted)]">
+          <div className="relative z-10 pt-4 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs sm:text-sm text-[var(--color-text-inverse)]/70 dark:text-[var(--color-text-muted)]">
             <span className="flex items-center gap-1.5">
               <Check className="w-4 h-4 text-[var(--color-brand)]" aria-hidden="true" />
               <span>Designed for Indian schools</span>

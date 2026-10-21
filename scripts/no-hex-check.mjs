@@ -26,6 +26,38 @@ const hexColorRegex = /#([0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F
 // Regular expression to match raw rgb(), rgba(), hsl(), hsla() literals
 const rgbHslRegex = /(?:^|[^a-zA-Z0-9])(rgba?|hsla?)\s*\([^)]*\)/gi;
 
+// Tailwind palette color names
+const paletteColors = [
+  "slate",
+  "gray",
+  "zinc",
+  "neutral",
+  "stone",
+  "red",
+  "orange",
+  "amber",
+  "yellow",
+  "lime",
+  "green",
+  "emerald",
+  "teal",
+  "cyan",
+  "sky",
+  "blue",
+  "indigo",
+  "violet",
+  "purple",
+  "fuchsia",
+  "pink",
+  "rose",
+];
+
+// Regular expression to match Tailwind palette color classes (white, black, and *-[0-9]{2,3})
+const tailwindPaletteRegex = new RegExp(
+  `(?:[a-zA-Z0-9_-]+:)*(?:bg|text|border|ring|divide|from|to|via|accent|fill|stroke|outline|shadow)-(?:(?:${paletteColors.join("|")})-[0-9]{2,3}|white|black)(?:\\/[0-9]+)?(?=[\\s"'\`\\]}>;,)]|$)`,
+  "g",
+);
+
 // Anchors or ID patterns to ignore
 const ignoredContextPatterns = [
   /href=["']#[a-zA-Z0-9_-]+["']/,
@@ -111,6 +143,23 @@ for (const dir of targetDirs) {
           totalErrors++;
         }
       }
+
+      // 3. Check for Tailwind palette color classes (white, black, and *-[0-9]{2,3})
+      const paletteMatches = line.match(tailwindPaletteRegex);
+      if (paletteMatches) {
+        for (const match of paletteMatches) {
+          console.error(
+            `\x1b[31m[NO-PALETTE-VIOLATION]\x1b[0m ${path.relative(projectRoot, file)}:${index + 1}`,
+          );
+          console.error(
+            `  Found Tailwind palette class: \x1b[33m${match}\x1b[0m in line: "${line.trim()}"`,
+          );
+          console.error(
+            "  Hint: Replace with a semantic CSS variable (e.g., text-[var(--color-text-inverse)]) from src/styles/tokens.css\n",
+          );
+          totalErrors++;
+        }
+      }
     }
   }
 }
@@ -121,7 +170,7 @@ if (totalErrors > 0) {
   process.exit(1);
 } else {
   console.log(
-    "\x1b[32mPASSED: Zero raw hex, rgb(), or hsl() colors found in UI components.\x1b[0m",
+    "\x1b[32mPASSED: Zero raw hex, rgb(), hsl(), or Tailwind palette color classes found in UI components.\x1b[0m",
   );
   process.exit(0);
 }

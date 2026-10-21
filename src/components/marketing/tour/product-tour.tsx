@@ -65,9 +65,9 @@ export function ProductTour({ initialTab = "attendance" }: ProductTourProps) {
       <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border)] bg-[var(--color-surface-subtle)]">
         {/* Window controls (traffic lights) */}
         <div className="flex items-center gap-1.5" aria-hidden="true">
-          <span className="w-3 h-3 rounded-full bg-red-400 dark:bg-red-500/80 inline-block" />
-          <span className="w-3 h-3 rounded-full bg-amber-400 dark:bg-amber-500/80 inline-block" />
-          <span className="w-3 h-3 rounded-full bg-green-400 dark:bg-green-500/80 inline-block" />
+          <span className="w-3 h-3 rounded-full bg-[var(--color-danger)] inline-block" />
+          <span className="w-3 h-3 rounded-full bg-[var(--color-warning)] inline-block" />
+          <span className="w-3 h-3 rounded-full bg-[var(--color-success)] inline-block" />
         </div>
 
         {/* Address Bar */}
@@ -81,7 +81,7 @@ export function ProductTour({ initialTab = "attendance" }: ProductTourProps) {
 
         {/* Planned Preview Notice */}
         <div className="flex items-center gap-2">
-          <span className="px-2 py-0.5 text-[10px] sm:text-xs font-semibold rounded-full bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border border-blue-300/50 dark:border-blue-700/50">
+          <span className="px-2 py-0.5 text-[10px] sm:text-xs font-semibold rounded-full bg-[var(--color-badge-info-bg)] text-[var(--color-badge-info-text)] border border-[var(--color-badge-info-border)]">
             Planned
           </span>
         </div>
@@ -109,13 +109,13 @@ export function ProductTour({ initialTab = "attendance" }: ProductTourProps) {
               onKeyDown={(e) => handleKeyDown(e, idx)}
               className={`relative px-4 py-2.5 text-sm font-semibold rounded-t-[var(--radius-md)] flex items-center gap-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] ${
                 isSelected
-                  ? "text-blue-800 dark:text-blue-300 bg-[var(--color-surface-subtle)] border-t border-x border-[var(--color-border)] -mb-px"
+                  ? "text-[var(--color-brand)] bg-[var(--color-surface-subtle)] border-t border-x border-[var(--color-border)] -mb-px"
                   : "text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-subtle)]/50"
               }`}
             >
               <span aria-hidden="true">{tab.icon}</span>
               <span>{tab.label}</span>
-              <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-neutral-200/70 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+              <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] border border-[var(--color-border)]">
                 Sample data
               </span>
             </button>
@@ -143,7 +143,7 @@ export function ProductTour({ initialTab = "attendance" }: ProductTourProps) {
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
-                <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300">
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-[var(--color-badge-info-bg)] text-[var(--color-badge-info-text)]">
                   {presentCount} / {ATTENDANCE_TOTAL_STUDENTS} Present ({derivedAttendancePercent}%)
                 </span>
                 <span className="text-xs text-[var(--color-text-muted)] flex items-center gap-1">
@@ -163,8 +163,8 @@ export function ProductTour({ initialTab = "attendance" }: ProductTourProps) {
                   aria-label={`${student.id} (${student.rollNo}): ${student.isPresent ? "Present" : "Absent"}`}
                   className={`h-11 rounded-[var(--radius-md)] flex flex-col items-center justify-center text-xs font-semibold border ${
                     student.isPresent
-                      ? "bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800 text-blue-900 dark:text-blue-200"
-                      : "bg-amber-50 dark:bg-amber-950/30 border-amber-300 dark:border-amber-700/60 text-amber-900 dark:text-amber-200"
+                      ? "bg-[var(--color-badge-info-bg)] border-[var(--color-badge-info-border)] text-[var(--color-badge-info-text)]"
+                      : "bg-[var(--color-badge-warning-bg)] border-[var(--color-badge-warning-border)] text-[var(--color-badge-warning-text)]"
                   }`}
                 >
                   <span className="text-[10px] font-mono font-semibold">{student.id}</span>
@@ -205,7 +205,7 @@ export function ProductTour({ initialTab = "attendance" }: ProductTourProps) {
                   Planned: collect fees online (UPI first) with receipts and due reminders.
                 </p>
               </div>
-              <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300">
+              <span className="px-3 py-1 rounded-full text-xs font-bold bg-[var(--color-badge-info-bg)] text-[var(--color-badge-info-text)]">
                 {FEE_DERIVED_PERCENT}% Collected
               </span>
             </div>
@@ -285,7 +285,7 @@ export function ProductTour({ initialTab = "attendance" }: ProductTourProps) {
                   Planned: configurable grading scales and report cards.
                 </p>
               </div>
-              <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300">
+              <span className="px-3 py-1 rounded-full text-xs font-bold bg-[var(--color-badge-info-bg)] text-[var(--color-badge-info-text)]">
                 {EXAM_GRADED_COUNT} / {EXAM_TOTAL_STUDENTS} Graded ({EXAM_DERIVED_PERCENT}%)
               </span>
             </div>
@@ -335,7 +335,7 @@ export function ProductTour({ initialTab = "attendance" }: ProductTourProps) {
                       <span className="text-xs text-[var(--color-text-muted)]">
                         {rec.marks} / {rec.totalMarks}
                       </span>
-                      <span className="px-2 py-0.5 rounded text-xs font-bold bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300">
+                      <span className="px-2 py-0.5 rounded text-xs font-bold bg-[var(--color-badge-info-bg)] text-[var(--color-badge-info-text)]">
                         {rec.grade}
                       </span>
                     </div>

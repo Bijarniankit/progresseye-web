@@ -131,5 +131,41 @@ The application utilizes browser client-side storage for functional user prefere
 | **Final CTA: No Credit Card Required** | `src/components/marketing/cta/cta-section.tsx` | "No credit card required" | Planned commercial signup term (`TODO-REAL-DATA`) | **Yes** | Phase 8 (Commercial Sign-off) |
 | **Final CTA: Cancel Anytime** | `src/components/marketing/cta/cta-section.tsx` | "Cancel anytime" | Planned commercial subscription term (`TODO-REAL-DATA`) | **Yes** | Phase 8 (Commercial Sign-off) |
 
+---
+
+## 9. Phase 7 Gated Flags & Content Review Registry (About, FAQ, Contact)
+
+Phase 7 pages (About, FAQ, Contact) strictly follow Decision D-016 (Zero-Invented-Data Architecture). Quantitative statistics, historical milestones, team rosters, and unverified office contact data are conditionally withheld behind configuration flags defaulting to `false` until real corporate data is verified.
+
+### 9.1 Gated Configuration Flags
+
+| Gated Flag | Config File | Default Value | Purpose / Gated Content | Blocks Public Launch | Target Resolution |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `hasConfiguredStats` | `src/config/about.ts` | `false` | Quantitative school counts, student numbers, uptime SLA claims | **Yes** | Replace with audited tenant metrics when Phase 8 begins. |
+| `hasConfiguredStory` | `src/config/about.ts` | `false` | Detailed founding history, founding date, school origin stories | **Yes** | Verified company history signed off by founders. |
+| `hasConfiguredTeam` | `src/config/about.ts` | `false` | Team member roster, photographs, bios, LinkedIn links | **Yes** | Provide verified leadership directory before launch. |
+| `hasConfiguredEmail` | `src/config/contact.ts` | `false` | Direct support / sales email mailto routing | **Yes** | Configure transactional MX and support desk inboxes. |
+| `hasConfiguredPhone` | `src/config/contact.ts` | `false` | Inbound telephone numbers | **Yes** | Dedicated customer support hotline configuration. |
+| `hasConfiguredOffice` | `src/config/contact.ts` | `false` | Registered physical office address / campus visit directions | **Yes** | Registered corporate legal address. |
+| `hasConfiguredResponseTime` | `src/config/contact.ts` | `false` | Stated support ticket SLA / response turnaround times | **Yes** | Establish customer support tier SLA commitments. |
+
+### 9.2 About Page Content Review Items
+
+| Value / Principle | Config / File | Stated Text / Scope | Status | Blocks Public Launch | Target Review |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Value: Transparency** | `src/config/about.ts` | "We believe in straightforward pricing, honest product roadmaps, and clear communication with schools and guardians." | `DRAFT-CONTENT-REVIEW` | **Yes** | Editorial & leadership review. |
+| **Value: Clarity** | `src/config/about.ts` | "Every screen is designed to reduce noise, prevent accidental mistakes, and keep critical records legible at a glance." | `DRAFT-CONTENT-REVIEW` | **Yes** | Editorial & UX design review. |
+| **Value: Reliability** | `src/config/about.ts` | "School days run on rigid routines. Our goal is steady, dependable performance every morning when attendance and roll calls begin." | `DRAFT-CONTENT-REVIEW` | **Yes** | Editorial & engineering review. |
+| **Value: Child safety** | `src/config/about.ts` | "Student data and emergency contacts require extreme care. We take privacy and access controls seriously." | `DRAFT-CONTENT-REVIEW` | **Yes** | Legal & child data privacy review. |
+
+### 9.3 Contact Page Content Review Items
+
+| Component / Copy | File / Location | Stated Text / Scope | Status | Blocks Public Launch | Target Review |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Submission Notice** | `src/components/marketing/contact/contact-form.tsx` | "This form is not connected yet, so your message was not sent. To reach us, book a free demo." | `DRAFT-CONTENT-REVIEW` | **Yes** | Phase 9 lead capture endpoint integration. |
+| **Privacy Policy Agreement** | `src/components/marketing/contact/contact-form.tsx` | "By sending this you agree to our Privacy Policy" | `DRAFT-NEEDS-LEGAL-REVIEW` | **Yes** | Legal sign-off in Phase 8 (`/privacy`). |
+
+
+
 
 
