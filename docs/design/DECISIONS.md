@@ -194,6 +194,9 @@ This document records architectural, visual, and copy decisions modifying or com
 ### D-022: Font Licensing (SIL Open Font License 1.1)
 - **Decision**: Added official SIL Open Font License 1.1 documentation to `src/assets/fonts/OFL.txt` covering self-hosted `Inter` (The Inter Project Authors) and `Poppins` (Indian Type Foundry) fonts used across marketing pages and Open Graph images.
 
+### D-023: Phase 5+ Branching & Pull Request Model
+- **Policy**: Starting in Phase 5, all feature development, chore tasks, and fixes must be implemented on dedicated topic branches named `phase-NN/<topic>` (e.g. `phase-05/illustrations`, `phase-05/chore-biome-2`) and merged into `main` via pull requests. Direct pushes to `main` are prohibited under enforced repository branch protection rules.
+
 ### D-024: Unified Dark Surface (#020617)
 - **Decision**: Unify hero section, body canvas, and footer dark backgrounds to a single cohesive dark surface token: `--color-surface-hero: #020617` (matching `--color-surface: #020617` and `--color-surface-footer: #020617`).
 - **Rationale**: Eliminates noticeable slate-navy (#0F172A) vs slate-950 (#020617) boundary seams between the fixed navbar, hero, page body, and footer, creating an immersive, unified dark aesthetic across all marketing routes. Elevated cards continue to use `#0F172A` / `#1E293B` for visual hierarchy.

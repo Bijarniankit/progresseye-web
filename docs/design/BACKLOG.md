@@ -73,3 +73,17 @@ The following unverified claims and planned placeholders in `docs/design/PLACEHO
 - **Public FAQ & CTA Claims**:
   - Payment handling, boards alignment, and DPDP privacy notice (`DRAFT-NEEDS-LEGAL-REVIEW`).
   - Commercial terms: "Free Starter tier forever", "No credit card required", "Cancel anytime".
+
+---
+
+## Phase 10: Critical Launch Blockers & Performance Architecture
+
+### 1. Lead Capture Inability (Launch Blocker)
+- **Issue**: Every "Book a free demo" and "Contact our team" path across marketing pages currently routes to stubs (`/demo`) or disconnected client-side form notices (`/contact`). The website currently cannot capture, persist, or notify the sales/support team of inbound school leads.
+- **Resolution Target**: Phase 9 (Inquiry & Lead Capture Integration), where API lead capture endpoints and notification webhooks are wired.
+
+### 2. Shared Layout Bundle Weight & Client Component Splitting
+- **Issue**: Every marketing route ships ~208 kB gzip of shared JavaScript across 13 chunks despite pages having 0 B of route-specific client JS (Server Components).
+- **Action Plan**:
+  - Perform a formal, source-mapped bundle analysis (replacing heuristic/guessed chunk labels with exact package sizes from `@next/bundle-analyzer`).
+  - Evaluate code-splitting and dynamic `next/dynamic` lazy-loading for non-critical shared layout islands, particularly the mobile navigation drawer (`MobileDrawer`) and theme provider hydration, so above-the-fold first paint downloads only critical navigation primitives.

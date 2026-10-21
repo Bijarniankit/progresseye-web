@@ -14,24 +14,15 @@ test.describe("Phase 7 CP2: FAQ Page", () => {
     });
     await expect(h1).toBeVisible();
 
-    // 2. Category headings
+    // 2. Category headings (3 grouped sections)
     await expect(
-      page.getByRole("heading", { level: 3, name: "Fee Collection & Payments" }),
+      page.getByRole("heading", { level: 3, name: "Academics & Fee Collection" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("heading", { level: 3, name: "Academics & Report Cards" }),
+      page.getByRole("heading", { level: 3, name: "Privacy & Platform Access" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("heading", { level: 3, name: "Privacy & Data Protection" }),
-    ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { level: 3, name: "Platform & Device Access" }),
-    ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { level: 3, name: "Roster Migration & Onboarding" }),
-    ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { level: 3, name: "Training & Rollout Support" }),
+      page.getByRole("heading", { level: 3, name: "Onboarding & Rollout Guidance" }),
     ).toBeVisible();
 
     // 3. All 6 details accordions

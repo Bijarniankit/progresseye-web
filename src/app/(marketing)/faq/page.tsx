@@ -18,20 +18,34 @@ export const metadata: Metadata = {
   },
 };
 
-const categoryLabels: Record<FaqItem["category"], string> = {
-  payments: "Fee Collection & Payments",
-  academics: "Academics & Report Cards",
-  privacy: "Privacy & Data Protection",
-  platform: "Platform & Device Access",
-  onboarding: "Roster Migration & Onboarding",
-  training: "Training & Rollout Support",
-};
+interface FaqSection {
+  title: string;
+  categories: FaqItem["category"][];
+}
+
+const faqSections: FaqSection[] = [
+  {
+    title: "Academics & Fee Collection",
+    categories: ["payments", "academics"],
+  },
+  {
+    title: "Privacy & Platform Access",
+    categories: ["privacy", "platform"],
+  },
+  {
+    title: "Onboarding & Rollout Guidance",
+    categories: ["onboarding", "training"],
+  },
+];
 
 export default function FaqPage() {
-  // Extract only categories that have content
-  const activeCategories = Array.from(new Set(landingFaqs.map((faq) => faq.category))).filter(
-    (cat) => landingFaqs.some((faq) => faq.category === cat),
-  );
+  // Only render sections that have matching FAQ items
+  const activeSections = faqSections
+    .map((section) => ({
+      title: section.title,
+      faqs: landingFaqs.filter((faq) => section.categories.includes(faq.category)),
+    }))
+    .filter((section) => section.faqs.length > 0);
 
   return (
     <div className="flex flex-col">
@@ -60,7 +74,7 @@ export default function FaqPage() {
         </div>
       </section>
 
-      {/* 2. Categorized Accordions (Native <details>) */}
+      {/* 2. Grouped Accordions (Native <details>) */}
       <section
         aria-labelledby="faq-categories-title"
         className="relative bg-surface py-12 md:py-16 lg:py-20"
@@ -71,43 +85,39 @@ export default function FaqPage() {
           </h2>
 
           <div className="space-y-12">
-            {activeCategories.map((category) => {
-              const categoryFaqs = landingFaqs.filter((faq) => faq.category === category);
+            {activeSections.map((section) => (
+              <div key={section.title} className="space-y-4">
+                <h3 className="font-display text-xl font-bold tracking-tight text-text border-b border-border-muted pb-2">
+                  {section.title}
+                </h3>
 
-              return (
-                <div key={category} className="space-y-4">
-                  <h3 className="font-display text-xl font-bold tracking-tight text-text border-b border-border-muted pb-2">
-                    {categoryLabels[category]}
-                  </h3>
+                <div className="space-y-3">
+                  {section.faqs.map((faq) => (
+                    <details
+                      key={faq.id}
+                      className="group rounded-xl border border-border bg-surface shadow-xs transition-colors hover:border-brand/40 overflow-hidden"
+                    >
+                      <summary className="flex items-center justify-between gap-4 p-5 cursor-pointer select-none font-display font-semibold text-base sm:text-lg text-text list-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus">
+                        <span>{faq.question}</span>
+                        <ChevronDown
+                          className="h-5 w-5 shrink-0 text-text-muted transition-transform duration-200 group-open:rotate-180"
+                          aria-hidden="true"
+                        />
+                      </summary>
 
-                  <div className="space-y-3">
-                    {categoryFaqs.map((faq) => (
-                      <details
-                        key={faq.id}
-                        className="group rounded-xl border border-border bg-surface shadow-xs transition-colors hover:border-brand/40 overflow-hidden"
-                      >
-                        <summary className="flex items-center justify-between gap-4 p-5 cursor-pointer select-none font-display font-semibold text-base sm:text-lg text-text list-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus">
-                          <span>{faq.question}</span>
-                          <ChevronDown
-                            className="h-5 w-5 shrink-0 text-text-muted transition-transform duration-200 group-open:rotate-180"
-                            aria-hidden="true"
-                          />
-                        </summary>
-
-                        <div className="px-5 pb-5 text-sm sm:text-base text-text-muted leading-relaxed border-t border-border-muted pt-4 space-y-3">
-                          <p>{faq.answer}</p>
-                          <div>
-                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-surface-subtle text-text-muted border border-border">
-                              Planned Feature
-                            </span>
-                          </div>
+                      <div className="px-5 pb-5 text-sm sm:text-base text-text-muted leading-relaxed border-t border-border-muted pt-4 space-y-3">
+                        <p>{faq.answer}</p>
+                        <div>
+                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-surface-subtle text-text-muted border border-border">
+                            Planned Feature
+                          </span>
                         </div>
-                      </details>
-                    ))}
-                  </div>
+                      </div>
+                    </details>
+                  ))}
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
       </section>

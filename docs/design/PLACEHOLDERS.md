@@ -147,6 +147,7 @@ Phase 7 pages (About, FAQ, Contact) strictly follow Decision D-016 (Zero-Invente
 | `hasConfiguredEmail` | `src/config/contact.ts` | `false` | Direct support / sales email mailto routing | **Yes** | Configure transactional MX and support desk inboxes. |
 | `hasConfiguredPhone` | `src/config/contact.ts` | `false` | Inbound telephone numbers | **Yes** | Dedicated customer support hotline configuration. |
 | `hasConfiguredOffice` | `src/config/contact.ts` | `false` | Registered physical office address / campus visit directions | **Yes** | Registered corporate legal address. |
+| `hasConfiguredResponseTime` | `src/config/contact.ts` | `false` | Stated support ticket SLA / response turnaround times | **Yes** | Establish customer support tier SLA commitments. |
 
 ### 9.2 About Page Content Review Items
 
@@ -156,6 +157,14 @@ Phase 7 pages (About, FAQ, Contact) strictly follow Decision D-016 (Zero-Invente
 | **Value: Clarity** | `src/config/about.ts` | "Every screen is designed to reduce noise, prevent accidental mistakes, and keep critical records legible at a glance." | `DRAFT-CONTENT-REVIEW` | **Yes** | Editorial & UX design review. |
 | **Value: Reliability** | `src/config/about.ts` | "School days run on rigid routines. Our goal is steady, dependable performance every morning when attendance and roll calls begin." | `DRAFT-CONTENT-REVIEW` | **Yes** | Editorial & engineering review. |
 | **Value: Child safety** | `src/config/about.ts` | "Student data and emergency contacts require extreme care. We take privacy and access controls seriously." | `DRAFT-CONTENT-REVIEW` | **Yes** | Legal & child data privacy review. |
+
+### 9.3 Contact Page Content Review Items
+
+| Component / Copy | File / Location | Stated Text / Scope | Status | Blocks Public Launch | Target Review |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Submission Notice** | `src/components/marketing/contact/contact-form.tsx` | "This form is not connected yet, so your message was not sent. To reach us, book a free demo." | `DRAFT-CONTENT-REVIEW` | **Yes** | Phase 9 lead capture endpoint integration. |
+| **Privacy Policy Agreement** | `src/components/marketing/contact/contact-form.tsx` | "By sending this you agree to our Privacy Policy" | `DRAFT-NEEDS-LEGAL-REVIEW` | **Yes** | Legal sign-off in Phase 8 (`/privacy`). |
+
 
 
 
