@@ -2,9 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 test.describe("Phase 8 CP2: Careers Page (/careers)", () => {
-  test("renders Hero, single H1, and honest zero-vacancy state card", async ({
-    page,
-  }) => {
+  test("renders Hero, single H1, and honest zero-vacancy state card", async ({ page }) => {
     await page.goto("http://localhost:3000/careers", { waitUntil: "networkidle" });
 
     // 1. Single H1
@@ -24,9 +22,7 @@ test.describe("Phase 8 CP2: Careers Page (/careers)", () => {
     await expect(contactBtn).toContainText("Contact our team");
   });
 
-  test("has zero horizontal overflow across 360, 768, and 1280 viewports", async ({
-    page,
-  }) => {
+  test("has zero horizontal overflow across 360, 768, and 1280 viewports", async ({ page }) => {
     for (const width of [360, 768, 1280]) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto("http://localhost:3000/careers", { waitUntil: "networkidle" });
@@ -58,9 +54,7 @@ test.describe("Phase 8 CP2: Careers Page (/careers)", () => {
     expect(darkResults.violations).toEqual([]);
   });
 
-  test("maintains zero layout shift (CLS <= 0.01) on /careers", async ({
-    page,
-  }) => {
+  test("maintains zero layout shift (CLS <= 0.01) on /careers", async ({ page }) => {
     await page.goto("http://localhost:3000/careers", { waitUntil: "networkidle" });
     const cls = await page.evaluate(() => {
       return new Promise<number>((resolve) => {

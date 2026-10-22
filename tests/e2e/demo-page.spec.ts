@@ -42,9 +42,7 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
 
     // First invalid field: name
     await expect(page.locator("#demo-name-error")).toBeVisible();
-    await expect(page.locator("#demo-name-error")).toContainText(
-      "Please enter your name",
-    );
+    await expect(page.locator("#demo-name-error")).toContainText("Please enter your name");
     await expect(page.locator("#demo-name")).toBeFocused();
 
     // Fill name, submit again -> focus moves to email
@@ -56,9 +54,7 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
     // Invalid email
     await page.fill("#demo-email", "invalid-email");
     await submitBtn.click();
-    await expect(page.locator("#demo-email-error")).toContainText(
-      "Please enter a valid email",
-    );
+    await expect(page.locator("#demo-email-error")).toContainText("Please enter a valid email");
     await expect(page.locator("#demo-email")).toBeFocused();
   });
 
@@ -119,9 +115,7 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
     expect(outgoingRequests).toHaveLength(0);
   });
 
-  test("has zero horizontal overflow across 360, 768, and 1280 viewports", async ({
-    page,
-  }) => {
+  test("has zero horizontal overflow across 360, 768, and 1280 viewports", async ({ page }) => {
     for (const width of [360, 768, 1280]) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto("http://localhost:3000/demo", { waitUntil: "networkidle" });
@@ -133,9 +127,7 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
     }
   });
 
-  test("passes axe-core accessibility audit on /demo in light and dark mode", async ({
-    page,
-  }) => {
+  test("passes axe-core accessibility audit on /demo in light and dark mode", async ({ page }) => {
     await page.goto("http://localhost:3000/demo", { waitUntil: "networkidle" });
 
     // Light mode
@@ -153,9 +145,7 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
     expect(darkResults.violations).toEqual([]);
   });
 
-  test("maintains zero layout shift (CLS <= 0.01) on /demo", async ({
-    page,
-  }) => {
+  test("maintains zero layout shift (CLS <= 0.01) on /demo", async ({ page }) => {
     await page.goto("http://localhost:3000/demo", { waitUntil: "networkidle" });
     const cls = await page.evaluate(() => {
       return new Promise<number>((resolve) => {
