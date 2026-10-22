@@ -57,7 +57,7 @@ export const PRICING_TIERS: Record<"starter" | "school" | "district", PricingTie
     billingPeriodLabel: "/ student / month",
     features: [
       { text: "Daily attendance & alerts", status: "planned" },
-      { text: "Automated fee collection & receipts", status: "planned" },
+      { text: "Planned fee collection & digital receipts", status: "planned" },
       { text: "Exams, grading & report cards", status: "planned" },
       { text: "Staff & teacher accounts", status: "planned" },
       { text: "Parent communication portal", status: "planned" },

@@ -53,6 +53,19 @@ describe("Features Page Configuration & Decision D-032 Governance", () => {
     expect(serialized).not.toContain("competitor");
   });
 
+  it("ensures all highlight titles start with 'Planned ' and contain zero instant/automated claims", () => {
+    for (const mod of featuresConfig.modules) {
+      for (const hl of mod.highlights) {
+        expect(hl.title.startsWith("Planned ")).toBe(true);
+        expect(hl.description.startsWith("Planned ")).toBe(true);
+      }
+    }
+    const serialized = JSON.stringify(featuresConfig).toLowerCase();
+    expect(serialized).not.toContain("instant");
+    expect(serialized).not.toContain("automated");
+    expect(serialized).not.toContain("automatic");
+  });
+
   it("contains zero internal phase numbers in copy", () => {
     const serialized = JSON.stringify(featuresConfig);
     expect(serialized).not.toMatch(/Phase\s+\d+/i);
