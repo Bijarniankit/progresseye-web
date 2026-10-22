@@ -38,7 +38,7 @@ export default function GetStartedPage() {
           <span className="w-2 h-2 rounded-full bg-[var(--color-brand)]" />
           <span>Planned Pricing Matrix</span>
         </div>
-        <h1 className="font-display text-[var(--text-h1)] md:text-[clamp(2.25rem,4vw,3.5rem)] font-extrabold tracking-tight text-[var(--color-text)] leading-[1.15]">
+        <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[var(--color-text)] leading-[1.15] break-words">
           Simple, Transparent School Pricing
         </h1>
         <p className="text-base md:text-lg text-[var(--color-text-muted)] leading-relaxed">
@@ -97,7 +97,7 @@ export default function GetStartedPage() {
       {/* Bottom CTA Card */}
       <section
         aria-label="Contact and demo inquiry"
-        className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-card)] p-8 sm:p-12 shadow-xs text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-6"
+        className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-card)] p-6 sm:p-12 shadow-xs text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden"
       >
         <div className="space-y-2 max-w-xl">
           <h2 className="text-xl sm:text-2xl font-display font-bold text-[var(--color-text)]">

@@ -29,33 +29,35 @@ export function FeaturesList() {
           <article
             key={mod.id}
             data-testid={`feature-module-${mod.id}`}
-            className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-card)] p-6 sm:p-8 shadow-xs flex flex-col justify-between transition-colors hover:border-[var(--color-brand)]/40"
+            className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-card)] p-5 sm:p-8 shadow-xs flex flex-col justify-between transition-colors hover:border-[var(--color-brand)]/40 overflow-hidden"
           >
             <div className="space-y-6">
               {/* Header with Category and Planned Badge */}
-              <div className="flex items-center justify-between gap-4 border-b border-[var(--color-border)]/60 pb-4">
-                <div className="flex items-center gap-3">
-                  <span className="p-2.5 rounded-xl bg-[var(--color-surface-subtle)] text-[var(--color-brand)] border border-[var(--color-border)]">
+              <div className="flex flex-wrap items-start sm:items-center justify-between gap-3 border-b border-[var(--color-border)]/60 pb-4">
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="p-2.5 rounded-xl bg-[var(--color-surface-subtle)] text-[var(--color-brand)] border border-[var(--color-border)] shrink-0">
                     <IconComponent className="h-5 w-5" />
                   </span>
-                  <div>
-                    <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+                  <div className="min-w-0">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)] block">
                       {mod.category}
                     </span>
-                    <h2 className="text-xl font-display font-bold text-[var(--color-text)]">
+                    <h2 className="text-lg sm:text-xl font-display font-bold text-[var(--color-text)] break-words">
                       {mod.name}
                     </h2>
                   </div>
                 </div>
-                <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-[var(--color-badge-info-bg)] text-[var(--color-badge-info-text)] border border-[var(--color-badge-info-border)]">
+                <span className="shrink-0 px-2.5 py-0.5 text-xs font-semibold rounded-full bg-[var(--color-badge-info-bg)] text-[var(--color-badge-info-text)] border border-[var(--color-badge-info-border)]">
                   Planned
                 </span>
               </div>
 
               {/* Tagline & Overview */}
               <div className="space-y-2">
-                <p className="text-sm font-semibold text-[var(--color-text)]">{mod.tagline}</p>
-                <p className="text-sm text-[var(--color-text-muted)] leading-relaxed">
+                <p className="text-sm font-semibold text-[var(--color-text)] break-words">
+                  {mod.tagline}
+                </p>
+                <p className="text-sm text-[var(--color-text-muted)] leading-relaxed break-words">
                   {mod.overview}
                 </p>
               </div>
@@ -72,7 +74,7 @@ export function FeaturesList() {
                       className="flex items-start gap-2.5 text-xs sm:text-sm text-[var(--color-text-muted)]"
                     >
                       <CheckCircle2 className="h-4 w-4 text-[var(--color-brand)] mt-0.5 shrink-0" />
-                      <span>
+                      <span className="break-words min-w-0">
                         <strong className="font-semibold text-[var(--color-text)]">
                           {hl.title}:
                         </strong>{" "}
@@ -85,7 +87,7 @@ export function FeaturesList() {
             </div>
 
             {/* Bottom Status Marker */}
-            <div className="mt-8 pt-4 border-t border-[var(--color-border)]/60 flex items-center justify-between text-xs text-[var(--color-text-muted)]">
+            <div className="mt-8 pt-4 border-t border-[var(--color-border)]/60 flex flex-wrap items-center justify-between gap-2 text-xs text-[var(--color-text-muted)]">
               <span>Status: Planned Architecture</span>
               <span className="font-medium">In Design</span>
             </div>
