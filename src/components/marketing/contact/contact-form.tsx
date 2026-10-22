@@ -253,7 +253,7 @@ export function ContactForm() {
             name="schoolName"
             type="text"
             autoComplete="organization"
-            placeholder="e.g. St. Xavier's High School"
+            placeholder="Your school name"
             value={formData.schoolName}
             onChange={handleChange}
             className="w-full rounded-lg border border-border bg-surface px-3.5 py-2.5 text-sm text-text placeholder:text-text-muted transition-colors hover:border-brand/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
