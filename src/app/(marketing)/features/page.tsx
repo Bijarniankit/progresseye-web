@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import { StubPage } from "@/components/marketing/stub-page";
 
 export const metadata: Metadata = {
-  title: "Features — Engineered for Modern Education",
+  title: "Planned Features — ProgressEye",
   description:
-    "Explore ProgressEye modules: attendance, academics, fees, exams, and parent communications.",
+    "Planned capabilities under development for school operations: attendance tracking, fee collection, academic scheduling, and communications.",
 };
 
 export default function FeaturesPage() {
   return (
     <StubPage
-      title="Engineered for Every School Role"
-      subtitle="Discover attendance tracking, fee management, academic scheduling, and real-time communication modules."
+      title="Planned Capabilities for School Operations"
+      subtitle="An overview of modules planned for future release: attendance tracking, fee collection, academic scheduling, and parent communication."
     />
   );
 }

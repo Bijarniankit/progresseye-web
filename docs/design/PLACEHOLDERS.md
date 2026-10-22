@@ -163,7 +163,7 @@ Phase 7 pages (About, FAQ, Contact) strictly follow Decision D-016 (Zero-Invente
 | Component / Copy | File / Location | Stated Text / Scope | Status | Blocks Public Launch | Target Review |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Submission Notice** | `src/components/marketing/contact/contact-form.tsx` | "This form is not connected yet, so your message was not sent. To reach us, book a free demo." | `DRAFT-CONTENT-REVIEW` | **Yes** | Phase 9 lead capture endpoint integration. |
-| **Privacy Policy Agreement** | `src/components/marketing/contact/contact-form.tsx` | "By sending this you agree to our Privacy Policy" | `DRAFT-NEEDS-LEGAL-REVIEW` | **Yes** | Legal sign-off in Phase 8 (`/privacy`). |
+| **Privacy Policy Agreement** | `src/components/marketing/contact/contact-form.tsx` | "By sending this you agree to our Privacy Policy" | `DRAFT-NEEDS-LEGAL-REVIEW` | **Yes** | Legal review required before launch; `/privacy` is currently a stub page and the form sends nothing. Blocks launch until full DPDP/privacy notice and lead intake backend are wired. |
 
 
 
