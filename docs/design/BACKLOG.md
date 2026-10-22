@@ -88,7 +88,11 @@ The following unverified claims and planned placeholders in `docs/design/PLACEHO
   - Perform a formal, source-mapped bundle analysis (replacing heuristic/guessed chunk labels with exact package sizes from `@next/bundle-analyzer`).
   - Evaluate code-splitting and dynamic `next/dynamic` lazy-loading for non-critical shared layout islands, particularly the mobile navigation drawer (`MobileDrawer`) and theme provider hydration, so above-the-fold first paint downloads only critical navigation primitives.
 
-### 3. Shared Chunk Analysis: `05cxy9p-13hw1.js` (Turbopack Client Boundary Manifest)
-- **Module Identity**: Contains the Turbopack dynamic import wrapper and runtime client manifest emitted when `ContactFormIsland` was converted into a client-side dynamic boundary (`import("@/components/marketing/contact/contact-form")`).
-- **Module Importer**: Imported and registered by the Next.js App Router client runtime (`globalThis.TURBOPACK`) for the marketing route segment.
-- **Why It Loads on `/about` and `/faq`**: Even though `/about` and `/faq` contain 0 B of route-specific client JS, Next.js / Turbopack generates a shared client router entry manifest across all routes sharing the `(marketing)/layout.tsx` boundary. Because `ContactFormIsland` is a client component inside the marketing layout group, Turbopack registers its dynamic loader manifest (`05cxy9p-13hw1.js`, 2,889 B raw / 860 B gzip) in the shared script tags of all sibling routes. The actual island code (`1bgt61xj1asfv.js`, 8,760 B raw / 2,420 B gzip) remains strictly isolated and is only downloaded when navigating to `/contact`.
+### 3. Shared Chunk Analysis: `05cxy9p-13hw1.js` (hypothesis, verify with the bundle analyzer in Phase 10)
+- **Working Hypothesis**: Emitted by Turbopack as the dynamic import wrapper and runtime client router manifest for `ContactFormIsland` (`import("@/components/marketing/contact/contact-form")`).
+- **Importer / Shared Scope**: Presumed imported and registered by the Next.js App Router client runtime manifest across the shared `(marketing)` layout group, causing the dynamic loader wrapper (~860 B gzip) to load on sibling routes `/about` and `/faq` while the actual form island (`1bgt61xj1asfv.js`, ~2.4 kB gzip) remains strictly isolated to `/contact`.
+- **Phase 10 Verification Requirement**: Confirm or refute this attribution in Phase 10 using `@next/bundle-analyzer` and source-mapped production output rather than heuristic chunk inspection.
+
+### 4. Client Dynamic Island Screenshot Verification (Hydration Timing Note)
+- **Observation**: Contact screenshots previously exhibited identical byte sizes across re-captures despite placeholder copy changes because headless browser capture ran before dynamic island hydration completed, capturing the static loading skeleton rather than the mounted form inputs.
+- **Verification Requirement**: Ensure all automated screenshot routines explicitly wait for client-hydrated form elements (e.g. `#contact-school`) to reach the visible state before taking screenshots, rather than relying solely on `networkidle`.

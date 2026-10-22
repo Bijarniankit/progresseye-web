@@ -351,4 +351,47 @@ This document records architectural, visual, and copy decisions modifying or com
   - Product principles are formulated strictly as plain intentions ("We aim to...") rather than measured operational commitments.
   - Editorial review tags (`DRAFT-CONTENT-REVIEW`) belong in code comments and `docs/design/PLACEHOLDERS.md`; they are hidden by default from the public DOM via `showDraftBadges: false`.
 
+### D-032: Phase 8 Public Pages Architecture & Features "Planned" Grounding
+- **Context & Problem**: Phase 8 delivers the remaining public marketing routes (`/features`, `/get-started`, `/demo`, `/careers`, `/privacy`, `/terms`, `/cookies`, `/gdpr`, `/login`). Public pages must not assert present-tense product features, unbuilt integrations, or unverified claims.
+- **Decision & Architecture**:
+  - The Features page (`/features`) is driven by structured capability items aligned with `src/config/landing-claims.ts`.
+  - Every feature module is explicitly marked with a `"Planned"` badge and phrased with intention language ("Planned capabilities under development...").
+  - Absolute prohibitions: zero present-tense claims, zero quantitative claims, zero competitor claims, zero specific examination board names, zero WhatsApp branding, and zero delivery timing promises.
+
+### D-033: Get-Started Commercial Truth & Pricing Source of Truth
+- **Context & Problem**: The onboarding and get-started funnel (`/get-started`) requires pricing cards without inventing commercial terms.
+- **Decision & Architecture**:
+  - Plan data is imported strictly from `src/config/pricing.ts` (Starter, School, District).
+  - Commercial terms must not use "Free trial" wording. Tiers are clearly presented as planned commercial structures.
+  - CTAs route to honest demo booking inquiries (`/demo`) rather than fake self-serve checkout flows.
+
+### D-034: Reusable Inquiry Form Island Architecture (`/contact` & `/demo`)
+- **Context & Problem**: Creating a separate form for `/demo` duplicates validation logic and risks inflating client bundle weight beyond the 5 kB gzip budget.
+- **Decision & Architecture**:
+  - The form component is structured as a reusable `InquiryForm` island supporting `mode: "contact" | "demo"`.
+  - Both forms share the exact same lazy dynamic client island chunk, adding 0 B of new client JS chunks.
+  - The demo page displays an honest "not connected yet" alert before user typing begins.
+  - On submit, client validation executes with zero network requests dispatched.
+
+### D-035: Cookie & Storage Disclosure with Gated Banner
+- **Context & Problem**: ProgressEye currently employs zero third-party telemetry, tracking cookies, or advertising scripts. Storage consists strictly of functional preferences (`pe_theme` in localStorage, `pe_hero_played` in sessionStorage).
+- **Decision & Architecture**:
+  - Functional storage keys are transparently itemized and explained on `/cookies`.
+  - They are classified as "likely strictly necessary; DRAFT-NEEDS-LEGAL-REVIEW".
+  - A `CookieBanner` component is provided for future extensibility but strictly gated off by default via `siteConfig.hasConsentBanner: false` (rendering 0 B DOM in production until non-essential cookies/analytics exist).
+
+### D-036: Careers Gating & Honest Zero-Vacancy State
+- **Context & Problem**: No job positions currently exist. Fake job postings violate Decision D-016.
+- **Decision & Architecture**:
+  - `/careers` evaluates `siteConfig.hasOpenRoles` (defaulting to `false`).
+  - When `false`, renders an honest, calm "No open roles right now" card with an invitation to check back as school rollout progresses.
+
+### D-037: Bespoke Truthful Legal Drafts Architecture
+- **Context & Problem**: Legal policy routes (`/privacy`, `/terms`, `/cookies`, `/gdpr`) cannot copy generic templates that assert false third-party tools, corporate entities, or international data sales.
+- **Decision & Architecture**:
+  - Legal pages are pure static Server Components describing *only* true current operations (two functional storage items, forms sending nothing, zero third-party telemetry).
+  - Target system design (PostgreSQL Row-Level Security, planned data retention, planned data processors, grievance officer) is described strictly as "planned design".
+  - All missing entity information is flagged with `DRAFT-NEEDS-LEGAL-REVIEW` and tracked as launch-blocking `TODO-REAL-DATA` placeholders in `docs/design/PLACEHOLDERS.md`.
+
+
 
