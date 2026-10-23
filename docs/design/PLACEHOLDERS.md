@@ -13,6 +13,7 @@
 | **Production Domain** | `src/config/site.ts` (`siteConfig.url`), `docs/design/public-pages-spec.md` | `progresseye.in` (spec) vs `progresseye.com` (code) | **OPEN DECISION** (`TODO-REAL-DATA`) | **Yes** | Project owner to decide canonical domain (`progresseye.in` vs `progresseye.com`) and configure DNS / SSL certificates. |
 | **Support Email** | `src/config/site.ts` (`siteConfig.supportEmail`) | `"support@progresseye.com"` | **Invented Placeholder** (`TODO-REAL-DATA`) | **Yes** | Set up real support email inbox, MX records, and helpdesk integration. |
 | **Origin Claim / Tagline** | `messages/en.json` (`footer.copyright`), `docs/design/public-pages-spec.md` | `"© {year} ProgressEye Technologies Pvt. Ltd. · Made with care in India."` | Spec editorial default | **No** (Brand copy) | Retained as editorial footer brand tagline once legal entity name is confirmed. |
+| **Footer Entity Name** | `messages/en.json` (`footer.copyright`) | `"ProgressEye Technologies Pvt. Ltd."` in footer copyright | **Placeholder (Phase 10 Sweep)** | **Yes** | Phase 10 placeholder sweep to replace placeholder entity name in footer copyright with official registered legal entity once confirmed. |
 | **Social Profiles** | `src/config/site.ts` (`siteConfig.social.{twitter,linkedin,github}`) | `""` (Empty string; icons conditionally hidden) | Omitted from UI via `hasConfiguredSocial: false` | **No** (Optional) | Populate only when official corporate profiles exist. |
 
 ---
@@ -174,6 +175,7 @@ Phase 7 pages (About, FAQ, Contact) strictly follow Decision D-016 (Zero-Invente
 | **"Free forever"** | `src/config/pricing.ts` (`starter.customPriceLabel`) | `"Free forever"` | Planned commercial pricing model (`TODO-REAL-DATA`) | **Yes** | Commercial leadership & business model sign-off. |
 | **"Up to 100 students"** | `src/config/pricing.ts` (`starter.studentLimit`), `src/components/marketing/get-started/pricing-matrix.tsx` | `"Up to 100 students (Planned limit)"` | Invented threshold cap for free Starter tier (`TODO-REAL-DATA`) | **Yes** | Product capacity & infrastructure unit economics sign-off. |
 | **"No credit card required"** | `src/components/marketing/cta/cta-section.tsx`, `src/app/(marketing)/get-started/page.tsx` | `"No credit card required"` | Commercial onboarding terms (`TODO-REAL-DATA`) | **Yes** | Billing gateway integration & trial terms sign-off. |
+| **Student Data & AI/Ad Policy Claim** | `docs/design/PLACEHOLDERS.md` (removed from `/gdpr`) | `"We plan never to sell student data, use pupil records for advertising, or train public AI models on private institution records."` | `DRAFT-NEEDS-LEGAL-REVIEW` | **Yes** | Legal counsel review and sign-off on commercial/privacy commitments prior to launch. |
 
 
 

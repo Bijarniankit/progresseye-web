@@ -2,10 +2,9 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 
 export default function robots(): MetadataRoute.Robots {
-  const isStaging =
-    process.env.VERCEL_ENV === "preview" || process.env.NEXT_PUBLIC_APP_ENV === "staging";
+  const isProduction = process.env.NEXT_PUBLIC_APP_ENV === "production";
 
-  if (isStaging) {
+  if (!isProduction) {
     return {
       rules: {
         userAgent: "*",

@@ -111,3 +111,7 @@ The following unverified claims and planned placeholders in `docs/design/PLACEHO
 ### 7. /careers LCP 2.35 s Investigation (Phase 10)
 - **Problem**: `/careers` is a 100% Server Component with 0 B route-specific client JS, yet exhibits mobile LCP around ~2.35 s under mobile throttling.
 - **Root Cause & Action Plan**: Telemetry identifies the LCP element as the zero-vacancy empty-state paragraph (`<p class="text-sm text-text-muted leading-relaxed max-w-md mx-auto">`) with an Element Render Delay of ~2,355 ms waiting for font swapping (`font-display: swap`) and render-blocking CSS layout. In Phase 10 staging, benchmark critical path CSS inlining and font subset preloading to reduce throttled render delay.
+
+### 8. Phase 10 Automated Launch-Readiness CI Build Check & Domain Verification
+- **Build Guard**: Implement an automated build/CI check that fails the build if rendered HTML contains `"TODO-REAL-DATA"` or the legal draft banner (`LegalDraftBanner` / `DRAFT-NEEDS-LEGAL-REVIEW`) while a launch flag is active (e.g. `NEXT_PUBLIC_LAUNCH_READY=true`).
+- **Domain Constant**: Re-verify that the canonical domain constant in `src/config/site.ts` (`siteConfig.url`) is final (`progresseye.in` vs `progresseye.com`) and that all metadata, OpenGraph, sitemap, and robots configurations resolve to the final production URL.

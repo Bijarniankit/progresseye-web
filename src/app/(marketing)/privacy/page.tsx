@@ -18,7 +18,7 @@ export default function PrivacyPage() {
       <section className="space-y-4">
         <h2 className="text-xl font-bold font-display text-text">1. Scope &amp; Legal Status</h2>
         <p className="text-sm text-text-muted leading-relaxed">
-          ProgressEye Technologies Pvt. Ltd. (Corporate name placeholder:{" "}
+          ProgressEye (legal entity to be provided) (Corporate name placeholder:{" "}
           <code className="text-xs">TODO-REAL-DATA</code>) is currently developing a modern school
           operations management platform. This Privacy Policy outlines the privacy practices of our
           public marketing website today, as well as the planned data architecture governing
@@ -125,15 +125,14 @@ export default function PrivacyPage() {
         </p>
         <div className="rounded-xl border border-border bg-surface-subtle p-4 text-xs sm:text-sm font-mono text-text space-y-1">
           <p>
-            <strong>Designation:</strong> Data Protection Officer (
+            <strong>Designation:</strong> Grievance Officer (
             <code className="text-xs">TODO-REAL-DATA</code>)
           </p>
           <p>
-            <strong>Email:</strong> privacy@progresseye.com (
-            <code className="text-xs">TODO-REAL-DATA</code>)
+            <strong>Email:</strong> To be provided (<code className="text-xs">TODO-REAL-DATA</code>)
           </p>
           <p>
-            <strong>Address:</strong> Registered Office, Bengaluru, Karnataka, India (
+            <strong>Address:</strong> To be provided (
             <code className="text-xs">TODO-REAL-DATA</code>)
           </p>
         </div>

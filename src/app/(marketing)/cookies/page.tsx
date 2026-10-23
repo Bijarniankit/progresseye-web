@@ -20,9 +20,8 @@ export default function CookiesPage() {
           1. Summary of Storage Practices
         </h2>
         <p className="text-sm text-text-muted leading-relaxed">
-          ProgressEye prioritizes privacy by design and data minimization. We do not use advertising
-          cookies, cross-site trackers, behavioral tracking pixels, or third-party telemetry
-          scripts.
+          We do not use advertising cookies, cross-site trackers, behavioral tracking pixels, or
+          third-party telemetry scripts.
         </p>
         <p className="text-sm text-text-muted leading-relaxed">
           An empirical audit across all public routes confirms that ProgressEye sets{" "}
@@ -142,7 +141,7 @@ export default function CookiesPage() {
         </p>
         <p className="text-sm text-text-muted leading-relaxed">
           Should optional analytics or third-party integrations be evaluated in future product
-          updates, explicit opt-in consent mechanisms will be implemented prior to activation.
+          updates, we would ask for consent before enabling them.
         </p>
       </section>
 

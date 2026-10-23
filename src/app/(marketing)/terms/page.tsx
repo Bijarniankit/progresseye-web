@@ -21,15 +21,14 @@ export default function TermsPage() {
         </h2>
         <p className="text-sm text-text-muted leading-relaxed">
           Welcome to ProgressEye. The ProgressEye platform is currently in active pre-launch
-          development by ProgressEye Technologies Pvt. Ltd. (Corporate name placeholder:{" "}
+          development by ProgressEye (legal entity to be provided) (Corporate name placeholder:{" "}
           <code className="text-xs">TODO-REAL-DATA</code>).
         </p>
         <p className="text-sm text-text-muted leading-relaxed">
-          All public web pages, interactive demos, calculators, and feature walkthroughs are made
-          available strictly as{" "}
-          <strong className="text-text">educational previews and prototypes</strong>. No commercial
-          contracts are executed through this website today, and preview access does not establish a
-          paid service relationship.
+          All public web pages, interactive demos, and feature walkthroughs are made available
+          strictly as <strong className="text-text">educational previews and prototypes</strong>. No
+          commercial contracts are executed through this website today, and preview access does not
+          establish a paid service relationship.
         </p>
       </section>
 
@@ -49,7 +48,7 @@ export default function TermsPage() {
         </h2>
         <p className="text-sm text-text-muted leading-relaxed">
           All interface designs, branding, documentation, interactive tour components, and vector
-          illustrations are the intellectual property of ProgressEye Technologies Pvt. Ltd.
+          illustrations are the intellectual property of ProgressEye (legal entity to be provided).
         </p>
         <div className="space-y-2 rounded-xl border border-border bg-surface-card p-4 text-sm text-text-muted">
           <h3 className="font-semibold text-text">Users agree not to:</h3>
@@ -88,8 +87,7 @@ export default function TermsPage() {
         <p className="text-sm text-text-muted leading-relaxed">
           These preview terms shall be governed by and construed in accordance with the laws of
           India. Any disputes arising out of or relating to these terms shall be subject to the
-          exclusive jurisdiction of the courts of Bengaluru, Karnataka, India (
-          <code className="text-xs">TODO-REAL-DATA</code>).
+          exclusive jurisdiction to be provided (<code className="text-xs">TODO-REAL-DATA</code>).
         </p>
       </section>
     </LegalLayout>

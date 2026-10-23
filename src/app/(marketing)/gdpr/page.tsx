@@ -55,8 +55,7 @@ export default function GdprPage() {
             <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
               ProgressEye intends to operate educational software solely on behalf of and under the
               documented instructions of the school (<code className="text-xs">TODO-REAL-DATA</code>
-              ). We plan never to sell student data, use pupil records for advertising, or train
-              public AI models on private institution records.
+              ).
             </p>
           </div>
         </div>
@@ -73,10 +72,10 @@ export default function GdprPage() {
             <code className="text-xs">TODO-REAL-DATA</code>).
           </li>
           <li>
-            <strong className="text-text">Planned Consent for Minors (Planned Design):</strong> In
-            accordance with statutory DPDP goals, processing personal data of minors is intended to
-            require verifiable parental or guardian consent before communication workflows are
-            activated (<code className="text-xs">TODO-REAL-DATA</code>).
+            <strong className="text-text">Planned Consent for Minors (Planned Design):</strong>{" "}
+            Aiming to support DPDP requirements for minors, processing personal data of minors is
+            intended to require verifiable parental or guardian consent before communication
+            workflows are activated (<code className="text-xs">TODO-REAL-DATA</code>).
           </li>
           <li>
             <strong className="text-text">Planned Data Minimization (Planned Design):</strong>{" "}
@@ -110,9 +109,6 @@ export default function GdprPage() {
                   Right
                 </th>
                 <th scope="col" className="px-4 py-3">
-                  Statutory Focus
-                </th>
-                <th scope="col" className="px-4 py-3">
                   Planned Implementation Mechanism
                 </th>
               </tr>
@@ -120,21 +116,18 @@ export default function GdprPage() {
             <tbody className="divide-y divide-border bg-surface text-text-muted">
               <tr>
                 <td className="px-4 py-3 font-semibold text-text">Right of Access</td>
-                <td className="px-4 py-3">DPDP §11 / GDPR Art. 15</td>
                 <td className="px-4 py-3">
                   Planned guardian portal self-service view and structured report export.
                 </td>
               </tr>
               <tr>
                 <td className="px-4 py-3 font-semibold text-text">Right of Correction</td>
-                <td className="px-4 py-3">DPDP §12 / GDPR Art. 16</td>
                 <td className="px-4 py-3">
                   Planned administrative request workflow through the school office.
                 </td>
               </tr>
               <tr>
                 <td className="px-4 py-3 font-semibold text-text">Right of Erasure</td>
-                <td className="px-4 py-3">DPDP §12 / GDPR Art. 17</td>
                 <td className="px-4 py-3">
                   Planned deletion workflows honoring applicable academic record requirements (
                   <code className="text-xs">TODO-REAL-DATA</code>).
@@ -142,7 +135,6 @@ export default function GdprPage() {
               </tr>
               <tr>
                 <td className="px-4 py-3 font-semibold text-text">Grievance Redressal</td>
-                <td className="px-4 py-3">DPDP §13 / GDPR Art. 77</td>
                 <td className="px-4 py-3">
                   Planned contact pathways with designated school grievance officers and platform
                   contacts.
