@@ -6,15 +6,13 @@ import { careersConfig } from "@/config/careers";
 
 export const metadata: Metadata = {
   title: "Careers — ProgressEye",
-  description:
-    "Explore career opportunities and learn about our engineering culture at ProgressEye.",
+  description: "Explore career opportunities at ProgressEye.",
   alternates: {
     canonical: "/careers",
   },
   openGraph: {
     title: "Careers | ProgressEye",
-    description:
-      "Explore career opportunities and learn about our engineering culture at ProgressEye.",
+    description: "Explore career opportunities at ProgressEye.",
     url: "/careers",
   },
 };

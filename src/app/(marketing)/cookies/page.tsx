@@ -12,7 +12,7 @@ export default function CookiesPage() {
     <LegalLayout
       title="Cookie & Storage Disclosure"
       subtitle="Transparent accounting of all cookies, local storage, and session storage utilized by ProgressEye."
-      lastUpdated="October 2026"
+      effectiveDate="TODO-REAL-DATA"
       activePath="/cookies"
     >
       <section className="space-y-4">
@@ -95,10 +95,18 @@ export default function CookiesPage() {
                 <td className="px-4 py-3 font-mono text-xs font-semibold text-text">
                   sessionStorage
                 </td>
-                <td className="px-4 py-3 font-mono text-xs italic text-text-muted">None</td>
-                <td className="px-4 py-3">No session storage keys are currently active.</td>
-                <td className="px-4 py-3">—</td>
-                <td className="px-4 py-3">None</td>
+                <td className="px-4 py-3 font-mono text-xs text-brand">pe_hero_played</td>
+                <td className="px-4 py-3">
+                  Records whether the hero visual completed its 9-transition animation limit or was
+                  manually replayed in the current browser tab session, preventing repetitive
+                  auto-rotation motion on return visits.
+                </td>
+                <td className="px-4 py-3">Browser tab session (cleared on tab close)</td>
+                <td className="px-4 py-3">
+                  <span className="inline-flex items-center rounded-full bg-badge-info-bg px-2.5 py-0.5 text-xs font-medium text-badge-info-text border border-badge-info-border">
+                    likely strictly necessary; DRAFT-NEEDS-LEGAL-REVIEW
+                  </span>
+                </td>
               </tr>
             </tbody>
           </table>

@@ -12,7 +12,7 @@ export default function TermsPage() {
     <LegalLayout
       title="Terms of Service"
       subtitle="Operational principles and terms governing public previews and upcoming institutional access."
-      lastUpdated="October 2026"
+      effectiveDate="TODO-REAL-DATA"
       activePath="/terms"
     >
       <section className="space-y-4">

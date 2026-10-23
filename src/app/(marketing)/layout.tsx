@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type React from "react";
+import { CookieBanner } from "@/components/marketing/cookies/cookie-banner";
 import { Footer } from "@/components/marketing/footer";
 import { HashScrollHandler } from "@/components/marketing/hash-scroll-handler";
 import { PublicNavbar } from "@/components/marketing/navbar";
@@ -60,6 +61,9 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
 
       {/* Marketing Footer */}
       <Footer />
+
+      {/* Cookie Consent Banner (Gated off by default: renders null when hasConsentBanner is false) */}
+      <CookieBanner />
     </div>
   );
 }

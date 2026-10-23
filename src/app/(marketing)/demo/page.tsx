@@ -1,4 +1,4 @@
-import { ArrowRight, Calendar, CheckCircle2, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, Calendar, CheckCircle2, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { DemoFormIsland } from "@/components/marketing/contact/contact-form-island";
@@ -21,8 +21,7 @@ export const metadata: Metadata = {
 const walkthroughPoints = [
   {
     title: "Personalized Workflow Walkthrough",
-    description:
-      "A focused 30-minute demonstration of attendance, fee management, and academic grading.",
+    description: "A focused demonstration of attendance, fee management, and academic grading.",
   },
   {
     title: "Institutional Fit & Onboarding",
@@ -30,8 +29,7 @@ const walkthroughPoints = [
   },
   {
     title: "Data Privacy & Governance",
-    description:
-      "Review our tenant isolation model, role-based controls, and DPDP compliance architecture.",
+    description: "Questions about data privacy and access controls.",
   },
 ];
 
@@ -86,8 +84,8 @@ export default function DemoPage() {
                     A calm, comprehensive tour of the platform
                   </h3>
                   <p className="text-sm text-text-muted leading-relaxed">
-                    We walk through real administrative workflows with sample school data, showing
-                    how ProgressEye simplifies campus administration.
+                    We walk through planned workflows shown with sample data, showing how
+                    ProgressEye simplifies campus administration.
                   </p>
                 </div>
 
@@ -106,13 +104,6 @@ export default function DemoPage() {
                       </div>
                     </div>
                   ))}
-                </div>
-
-                <div className="border-t border-border pt-6 space-y-3">
-                  <div className="flex items-center gap-2.5 text-xs font-medium text-text-muted">
-                    <ShieldCheck className="h-4 w-4 text-brand shrink-0" aria-hidden="true" />
-                    <span>No commercial pressure or commitments required</span>
-                  </div>
                 </div>
 
                 {/* Direct Contact Alternative */}

@@ -103,3 +103,11 @@ The following unverified claims and planned placeholders in `docs/design/PLACEHO
   - Following the school pilot launch, migrate marketing copy from `src/config/*.ts` into namespaced `next-intl` message bundles (`messages/en.json`, `messages/hi.json`).
   - Enforce compile-time type safety over translation keys via `next-intl` type generation.
   - Retain typed configs for structural metadata (routes, icon keys, numeric pricing constants) while delegating user-facing text to message catalogs.
+
+### 6. Demo Form Data Minimisation Review (Pre-Wiring / Phase 9)
+- **Problem**: The prototype demo form (`/demo`) currently accepts 7 inputs: name, email, phone number, school name, city/state, student capacity, and preferred time.
+- **Action Plan**: Prior to wiring backend API lead capture endpoints in Phase 9, perform a statutory data minimisation review under DPDP guidelines. Determine whether phone, city/state, capacity, and timing selections can be pruned or deferred to post-inquiry communication, reducing initial collection scope to essential contact data.
+
+### 7. /careers LCP 2.35 s Investigation (Phase 10)
+- **Problem**: `/careers` is a 100% Server Component with 0 B route-specific client JS, yet exhibits mobile LCP around ~2.35 s under mobile throttling.
+- **Root Cause & Action Plan**: Telemetry identifies the LCP element as the zero-vacancy empty-state paragraph (`<p class="text-sm text-text-muted leading-relaxed max-w-md mx-auto">`) with an Element Render Delay of ~2,355 ms waiting for font swapping (`font-display: swap`) and render-blocking CSS layout. In Phase 10 staging, benchmark critical path CSS inlining and font subset preloading to reduce throttled render delay.

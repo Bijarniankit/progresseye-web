@@ -5,7 +5,7 @@ const legalPages = [
   { path: "/privacy", heading: "Privacy Policy" },
   { path: "/terms", heading: "Terms of Service" },
   { path: "/cookies", heading: "Cookie & Storage Disclosure" },
-  { path: "/gdpr", heading: "GDPR & DPDP Compliance" },
+  { path: "/gdpr", heading: "GDPR & DPDP Overview (Planned)" },
 ] as const;
 
 test.describe("Phase 8 CP3: Legal Pages & Login Stub", () => {
@@ -20,12 +20,14 @@ test.describe("Phase 8 CP3: Legal Pages & Login Stub", () => {
       await expect(h1).toHaveCount(1);
       await expect(h1).toHaveText(pageInfo.heading);
 
-      // 2. Draft notice badge
+      // 2. Draft notice badge and banner
       const draftBadge = page.locator("text=DRAFT-NEEDS-LEGAL-REVIEW").first();
       await expect(draftBadge).toBeVisible();
+      const draftBanner = page.locator("text=DRAFT — PENDING LEGAL REVIEW").first();
+      await expect(draftBanner).toBeVisible();
 
-      // 3. Last updated date
-      await expect(page.locator("text=Last Updated: October 2026")).toBeVisible();
+      // 3. Effective date
+      await expect(page.locator("text=Effective Date: TODO-REAL-DATA")).toBeVisible();
 
       // 4. Sidebar navigation with active link
       const activeLink = page.locator(
@@ -97,5 +99,13 @@ test.describe("Phase 8 CP3: Legal Pages & Login Stub", () => {
       const darkResults = await new AxeBuilder({ page }).include("main").analyze();
       expect(darkResults.violations).toEqual([]);
     }
+  });
+
+  test("verifies cookie banner component renders 0 B DOM when siteConfig.hasConsentBanner is false", async ({
+    page,
+  }) => {
+    await page.goto("http://localhost:3000/cookies", { waitUntil: "networkidle" });
+    const banner = page.locator('[data-testid="cookie-banner"]');
+    await expect(banner).toHaveCount(0);
   });
 });

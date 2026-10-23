@@ -12,7 +12,7 @@ export default function PrivacyPage() {
     <LegalLayout
       title="Privacy Policy"
       subtitle="Factual transparency regarding public website operations and planned student data governance."
-      lastUpdated="October 2026"
+      effectiveDate="TODO-REAL-DATA"
       activePath="/privacy"
     >
       <section className="space-y-4">

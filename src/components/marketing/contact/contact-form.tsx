@@ -196,18 +196,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
         </h2>
         <p className="text-sm text-text-muted">
           {isDemo ? (
-            <>
-              This demo request form is not connected yet, so submissions are not stored. To reach
-              us directly,{" "}
-              <Link
-                href="/contact"
-                prefetch={false}
-                className="font-semibold text-brand underline hover:text-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
-              >
-                visit our contact page
-              </Link>
-              .
-            </>
+            "This form is not connected yet, so requests are not sent."
           ) : (
             <>
               This form is not connected yet, so messages are not sent. To reach us,{" "}
@@ -235,18 +224,9 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
           <div className="flex items-start gap-3">
             <AlertCircle className="h-5 w-5 shrink-0 text-brand mt-0.5" aria-hidden="true" />
             <div className="space-y-1.5">
-              <p className="font-semibold text-text">Demo requests are not connected yet</p>
+              <p className="font-semibold text-text">Demo requests not connected</p>
               <p className="text-text-muted leading-relaxed">
-                This form is a preview of our planned demo booking workflow. Submissions are not
-                sent or stored. To reach our team directly, you can{" "}
-                <Link
-                  href="/contact"
-                  prefetch={false}
-                  className="font-semibold text-brand underline hover:text-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
-                >
-                  visit our contact page
-                </Link>
-                .
+                This form is not connected yet, so requests are not sent.
               </p>
             </div>
           </div>
@@ -281,7 +261,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
         </div>
       )}
 
-      {/* Submission Success Notice (Demo) */}
+      {/* Submission Notice (Demo) */}
       {isDemo && submittedNotice && (
         <div
           role="status"
@@ -292,10 +272,9 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
           <div className="flex items-start gap-3">
             <AlertCircle className="h-5 w-5 shrink-0 text-brand mt-0.5" aria-hidden="true" />
             <div className="space-y-1.5">
-              <p className="font-semibold text-text">Demo request received (Preview)</p>
+              <p className="font-semibold text-text">Not sent</p>
               <p className="text-text-muted leading-relaxed">
-                Thank you for your interest in ProgressEye. This preview form is not connected to a
-                live booking system yet, so no notification has been dispatched.
+                This form is not connected yet, so your request was not sent.
               </p>
             </div>
           </div>
@@ -340,7 +319,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
             type="text"
             required
             autoComplete="name"
-            placeholder="e.g. Ramesh Sharma"
+            placeholder="Your name"
             value={formData.name}
             onChange={handleChange}
             aria-invalid={!!errors.name}
@@ -372,7 +351,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
             type="email"
             required
             autoComplete="email"
-            placeholder={isDemo ? "principal@school.edu.in" : "e.g. principal@school.edu.in"}
+            placeholder={isDemo ? "name@yourschool.example" : "e.g. principal@school.edu.in"}
             value={formData.email}
             onChange={handleChange}
             aria-invalid={!!errors.email}
@@ -471,7 +450,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
               name="city"
               type="text"
               required
-              placeholder="e.g. Jaipur, Rajasthan"
+              placeholder="City, State"
               value={formData.city}
               onChange={handleChange}
               aria-invalid={!!errors.city}
@@ -653,7 +632,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
             type="submit"
             className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-brand-foreground shadow-xs transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus sm:w-auto"
           >
-            <span>{isDemo ? "Book a free demo" : "Send message"}</span>
+            <span>{isDemo ? "Request a demo" : "Send message"}</span>
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>

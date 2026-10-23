@@ -15,7 +15,9 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
     // 2. Pre-typing honest notice
     const preNotice = page.locator('[data-testid="demo-pre-typing-notice"]');
     await expect(preNotice).toBeVisible();
-    await expect(preNotice).toContainText("Demo requests are not connected yet");
+    await expect(preNotice).toContainText(
+      "This form is not connected yet, so requests are not sent.",
+    );
 
     // 3. Form elements present
     await expect(page.locator("#demo-name")).toBeVisible();
@@ -27,7 +29,7 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
     await expect(page.locator("#demo-preferred-time")).toBeVisible();
 
     // 4. Submit button
-    const submitBtn = page.getByRole("button", { name: "Book a free demo" });
+    const submitBtn = page.getByRole("button", { name: "Request a demo" });
     await expect(submitBtn).toBeVisible();
   });
 
@@ -35,7 +37,7 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
     page,
   }) => {
     await page.goto("http://localhost:3000/demo", { waitUntil: "networkidle" });
-    const submitBtn = page.getByRole("button", { name: "Book a free demo" });
+    const submitBtn = page.getByRole("button", { name: "Request a demo" });
 
     // Submit empty form
     await submitBtn.click();
@@ -70,7 +72,7 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
     const cityInput = page.locator("#demo-city");
     const studentCountSelect = page.locator("#demo-student-count");
     const preferredTimeSelect = page.locator("#demo-preferred-time");
-    const submitBtn = page.getByRole("button", { name: "Book a free demo" });
+    const submitBtn = page.getByRole("button", { name: "Request a demo" });
 
     // Fill all required fields
     await nameInput.fill("Principal Sharma");
@@ -100,7 +102,10 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
     // Honest submission notice rendered
     const notice = page.locator('[data-testid="demo-submission-notice"]');
     await expect(notice).toBeVisible();
-    await expect(notice).toContainText("Demo request received (Preview)");
+    await expect(notice).toContainText("Not sent");
+    await expect(notice).toContainText(
+      "This form is not connected yet, so your request was not sent.",
+    );
 
     // Field values preserved
     await expect(nameInput).toHaveValue("Principal Sharma");
