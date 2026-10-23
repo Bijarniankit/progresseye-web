@@ -31,31 +31,32 @@ export default function GdprPage() {
           campuses serving international student communities.
         </p>
         <p className="text-sm text-text-muted leading-relaxed">
-          This document outlines what we intend to build and what technical controls are planned. It
-          does not constitute a formal certification or warranty of compliance prior to commercial
-          launch.
+          This document outlines architecture intentions and planned designs. It does not constitute
+          a binding legal agreement (<code className="text-xs">TODO-REAL-DATA</code>).
         </p>
       </section>
 
       <section className="space-y-4 pt-6 border-t border-border">
         <h2 className="text-xl font-bold font-display text-text">
-          2. Intended Roles: Fiduciary &amp; Processor
+          2. Intended Roles: Institutional Governance (Planned Design)
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="rounded-xl border border-border bg-surface-card p-5 space-y-2">
             <h3 className="text-base font-bold text-text">The School: Planned Data Fiduciary</h3>
             <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
               In our planned product model, the educational institution determines the purpose and
-              lawful basis for collecting student, staff, and guardian records. The school maintains
-              direct ownership of student data and defines access permissions for staff.
+              lawful basis for collecting student, staff, and guardian records (
+              <code className="text-xs">TODO-REAL-DATA</code>). The school maintains direct
+              ownership of student data and defines access permissions for staff.
             </p>
           </div>
           <div className="rounded-xl border border-border bg-surface-card p-5 space-y-2">
-            <h3 className="text-base font-bold text-text">ProgressEye: Planned Data Processor</h3>
+            <h3 className="text-base font-bold text-text">ProgressEye: Planned Service Provider</h3>
             <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
-              ProgressEye intends to process educational records solely on behalf of and under the
-              documented instructions of the school. We plan never to sell student data, use pupil
-              records for advertising, or train public AI models on private institution records.
+              ProgressEye intends to operate educational software solely on behalf of and under the
+              documented instructions of the school (<code className="text-xs">TODO-REAL-DATA</code>
+              ). We plan never to sell student data, use pupil records for advertising, or train
+              public AI models on private institution records.
             </p>
           </div>
         </div>
@@ -63,27 +64,29 @@ export default function GdprPage() {
 
       <section className="space-y-4 pt-6 border-t border-border">
         <h2 className="text-xl font-bold font-display text-text">
-          3. Planned Technical Safeguards
+          3. Planned Technical Architecture Concepts
         </h2>
         <ul className="list-disc pl-5 space-y-2 text-sm text-text-muted">
           <li>
-            <strong className="text-text">Planned Multi-Tenant Isolation:</strong> PostgreSQL
-            Row-Level Security (RLS) is planned to enforce cryptographic and logical separation
-            between distinct school entities.
+            <strong className="text-text">Planned Multi-Tenant Separation (Planned Design):</strong>{" "}
+            PostgreSQL Row-Level Security (RLS) is intended to separate distinct school entities (
+            <code className="text-xs">TODO-REAL-DATA</code>).
           </li>
           <li>
-            <strong className="text-text">Planned Consent for Minors:</strong> In accordance with
-            statutory DPDP goals, processing personal data of minors is intended to require
-            verifiable parental or guardian consent before communication workflows are activated.
+            <strong className="text-text">Planned Consent for Minors (Planned Design):</strong> In
+            accordance with statutory DPDP goals, processing personal data of minors is intended to
+            require verifiable parental or guardian consent before communication workflows are
+            activated (<code className="text-xs">TODO-REAL-DATA</code>).
           </li>
           <li>
-            <strong className="text-text">Planned Data Minimization:</strong> Workflows are designed
-            to collect only data strictly necessary for attendance, grading, roll calls, and fee
-            records.
+            <strong className="text-text">Planned Data Minimization (Planned Design):</strong>{" "}
+            Workflows are designed with the intention of collecting only data needed for attendance,
+            grading, roll calls, and fee records (<code className="text-xs">TODO-REAL-DATA</code>).
           </li>
           <li>
-            <strong className="text-text">Planned Audit Logging:</strong> Immutable audit logs are
-            planned to track administrative access, grade modifications, and record exports.
+            <strong className="text-text">Planned Administrative Logging (Planned Design):</strong>{" "}
+            Activity logs are planned to record administrative access and record updates (
+            <code className="text-xs">TODO-REAL-DATA</code>).
           </li>
         </ul>
       </section>
@@ -95,7 +98,11 @@ export default function GdprPage() {
         <p className="text-sm text-text-muted leading-relaxed">
           We are designing the platform to facilitate statutory data principal requests:
         </p>
-        <div className="overflow-x-auto rounded-xl border border-border">
+        <section
+          tabIndex={0}
+          aria-label="Planned data principal rights table"
+          className="overflow-x-auto rounded-xl border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
+        >
           <table className="min-w-full divide-y divide-border text-left text-xs sm:text-sm">
             <thead className="bg-surface-subtle text-text font-semibold">
               <tr>
@@ -129,7 +136,8 @@ export default function GdprPage() {
                 <td className="px-4 py-3 font-semibold text-text">Right of Erasure</td>
                 <td className="px-4 py-3">DPDP §12 / GDPR Art. 17</td>
                 <td className="px-4 py-3">
-                  Planned coordinated deletion workflows honoring academic record retention laws.
+                  Planned deletion workflows honoring applicable academic record requirements (
+                  <code className="text-xs">TODO-REAL-DATA</code>).
                 </td>
               </tr>
               <tr>
@@ -137,23 +145,23 @@ export default function GdprPage() {
                 <td className="px-4 py-3">DPDP §13 / GDPR Art. 77</td>
                 <td className="px-4 py-3">
                   Planned contact pathways with designated school grievance officers and platform
-                  DPO.
+                  contacts.
                 </td>
               </tr>
             </tbody>
           </table>
-        </div>
+        </section>
       </section>
 
       <section className="space-y-4 pt-6 border-t border-border">
         <h2 className="text-xl font-bold font-display text-text">
-          5. Planned Cross-Border Transfers
+          5. Planned Data Location (Planned Design)
         </h2>
         <p className="text-sm text-text-muted leading-relaxed">
-          For educational institutions in India, all primary database instances and backups are
-          planned to reside within data centers in India. For institutions operating under GDPR
-          jurisdiction, standard contractual clauses (SCCs) and adequacy assessments will be
-          evaluated prior to commercial tenancy.
+          For educational institutions in India, database instances and backups are planned to
+          reside within data centers in India (<code className="text-xs">TODO-REAL-DATA</code>).
+          International institutional requirements will be evaluated before commercial deployment (
+          <code className="text-xs">TODO-REAL-DATA</code>).
         </p>
       </section>
     </LegalLayout>

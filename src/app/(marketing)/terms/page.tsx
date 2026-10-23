@@ -35,28 +35,12 @@ export default function TermsPage() {
 
       <section className="space-y-4 pt-6 border-t border-border">
         <h2 className="text-xl font-bold font-display text-text">
-          2. Institutional Service Agreements (Planned)
+          2. Commercial Use Terms (Planned)
         </h2>
         <p className="text-sm text-text-muted leading-relaxed">
-          Prior to onboarding student rosters or school financial operations, schools will enter
-          into formal, binding institutional contracts comprising:
+          Terms for commercial use will be published before launch (
+          <code className="text-xs">TODO-REAL-DATA</code>).
         </p>
-        <ul className="list-disc pl-5 space-y-2 text-sm text-text-muted">
-          <li>
-            <strong className="text-text">Master Services Agreement (MSA):</strong> Defining billing
-            schedules, per-student licensing, and subscription terms.
-          </li>
-          <li>
-            <strong className="text-text">Service Level Agreement (SLA):</strong> Documenting
-            availability targets, scheduled maintenance windows, and support escalation tiers
-            (uptime claims such as 99.9% SLA remain placeholders pending final infrastructure
-            audit).
-          </li>
-          <li>
-            <strong className="text-text">Data Processing Addendum (DPA):</strong> Specifying
-            statutory obligations under the Digital Personal Data Protection Act 2023.
-          </li>
-        </ul>
       </section>
 
       <section className="space-y-4 pt-6 border-t border-border">

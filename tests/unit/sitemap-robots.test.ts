@@ -47,6 +47,16 @@ describe("Sitemap & Robots Verification", () => {
       });
     });
 
+    it("disallows all crawler traffic when NEXT_PUBLIC_APP_ENV is staging", () => {
+      vi.stubEnv("NEXT_PUBLIC_APP_ENV", "staging");
+      const config = robots();
+      expect(config.rules).toEqual({
+        userAgent: "*",
+        disallow: "/",
+      });
+      expect(config.sitemap).toBe(`${siteConfig.url}/sitemap.xml`);
+    });
+
     it("allows indexing of public routes while blocking internal /dev/ and /api/ in production", () => {
       vi.stubEnv("VERCEL_ENV", "");
       vi.stubEnv("NEXT_PUBLIC_APP_ENV", "production");

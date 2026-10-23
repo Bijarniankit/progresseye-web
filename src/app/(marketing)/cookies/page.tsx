@@ -40,7 +40,11 @@ export default function CookiesPage() {
           public website:
         </p>
 
-        <div className="overflow-x-auto rounded-xl border border-border">
+        <section
+          tabIndex={0}
+          aria-label="Browser storage inventory table"
+          className="overflow-x-auto rounded-xl border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
+        >
           <table className="min-w-full divide-y divide-border text-left text-xs sm:text-sm">
             <thead className="bg-surface-subtle text-text font-semibold">
               <tr>
@@ -110,7 +114,7 @@ export default function CookiesPage() {
               </tr>
             </tbody>
           </table>
-        </div>
+        </section>
       </section>
 
       <section className="space-y-4 pt-6 border-t border-border">
@@ -138,7 +142,7 @@ export default function CookiesPage() {
         </p>
         <p className="text-sm text-text-muted leading-relaxed">
           Should optional analytics or third-party integrations be evaluated in future product
-          phases, explicit opt-in consent mechanisms will be implemented prior to activation.
+          updates, explicit opt-in consent mechanisms will be implemented prior to activation.
         </p>
       </section>
 
@@ -149,8 +153,8 @@ export default function CookiesPage() {
         </p>
         <ul className="list-disc pl-5 space-y-1.5 text-sm text-text-muted">
           <li>
-            <strong>Chrome / Edge:</strong> Settings &gt; Privacy and security &gt; Site settings
-            &gt; Cookies and site data.
+            <strong>Chrome / Edge:</strong> Settings &gt; Privacy &gt; Site settings &gt; Cookies
+            and site data.
           </li>
           <li>
             <strong>Firefox:</strong> Settings &gt; Privacy &amp; Security &gt; Cookies and Site

@@ -21,7 +21,7 @@ export default function PrivacyPage() {
           ProgressEye Technologies Pvt. Ltd. (Corporate name placeholder:{" "}
           <code className="text-xs">TODO-REAL-DATA</code>) is currently developing a modern school
           operations management platform. This Privacy Policy outlines the privacy practices of our
-          public marketing website today, as well as the planned security architecture governing
+          public marketing website today, as well as the planned data architecture governing
           upcoming school operational modules.
         </p>
         <p className="text-sm text-text-muted leading-relaxed">
@@ -56,46 +56,50 @@ export default function PrivacyPage() {
             database.
           </li>
           <li>
-            <strong className="text-text">Browser Storage:</strong> Only a single functional
-            preference (<code className="text-xs">localStorage.theme</code>) is stored to preserve
-            light/dark mode preferences.
+            <strong className="text-text">Browser Storage:</strong> Functional preferences (
+            <code className="text-xs">localStorage.theme</code> and{" "}
+            <code className="text-xs">sessionStorage.pe_hero_played</code>) are utilized to maintain
+            user interface state.
           </li>
         </ul>
       </section>
 
       <section className="space-y-4 pt-6 border-t border-border">
         <h2 className="text-xl font-bold font-display text-text">
-          3. Planned Product Architecture (School Data Protection)
+          3. Planned Product Architecture (School Data Handling)
         </h2>
         <p className="text-sm text-text-muted leading-relaxed">
-          For educational institutions adopting ProgressEye in upcoming phases, data protection is
-          grounded in India&apos;s Digital Personal Data Protection Act (DPDP Act 2023) and
-          multi-tenant isolation:
+          For educational institutions evaluating ProgressEye for future deployment, data handling
+          is intended to be designed around India&apos;s Digital Personal Data Protection Act (DPDP
+          Act 2023) and multi-tenant separation:
         </p>
         <div className="space-y-3 rounded-xl border border-border bg-surface-card p-4 text-sm text-text-muted">
-          <h3 className="font-semibold text-text">Architectural Guarantees (Planned Design):</h3>
+          <h3 className="font-semibold text-text">
+            Planned Product Design (Architecture Concepts):
+          </h3>
           <ul className="list-disc pl-5 space-y-1.5">
             <li>
               <strong className="text-text">PostgreSQL Row-Level Security (RLS):</strong> Every
-              tenant school&apos;s records (students, guardians, staff, grades, fees) are isolated
-              at the database engine level via tenant identification keys, preventing cross-tenant
-              data exposure.
+              tenant school&apos;s records (students, guardians, staff, grades, fees) are planned to
+              be separated at the database engine level via tenant identification keys (
+              <code className="text-xs">TODO-REAL-DATA</code>).
             </li>
             <li>
               <strong className="text-text">Child &amp; Student Data Safeguards:</strong> Under DPDP
               guidelines, student records are categorized as sensitive educational data. Guardian
-              consent, access logging, and restricted role-based access controls (RBAC) are designed
-              into core workflows.
+              consent and restricted role-based access controls are planned in core workflows (
+              <code className="text-xs">TODO-REAL-DATA</code>).
             </li>
             <li>
-              <strong className="text-text">Data Residency:</strong> All school database instances,
-              backups, and operational logs are planned to be hosted exclusively within secure data
-              center regions in India.
+              <strong className="text-text">Data Residency:</strong> School database instances and
+              backups are planned to reside within data center regions in India (
+              <code className="text-xs">TODO-REAL-DATA</code>).
             </li>
             <li>
-              <strong className="text-text">Defined Retention Limits:</strong> Roster and financial
-              records will adhere to statutory retention schedules defined with partner schools,
-              with automated purge mechanisms for graduated cohorts.
+              <strong className="text-text">Data Lifecycle (Planned Design):</strong> Policies
+              regarding data lifecycle and disposal schedules will be established with institutional
+              partners before production deployment (<code className="text-xs">TODO-REAL-DATA</code>
+              ).
             </li>
           </ul>
         </div>
@@ -103,13 +107,11 @@ export default function PrivacyPage() {
 
       <section className="space-y-4 pt-6 border-t border-border">
         <h2 className="text-xl font-bold font-display text-text">
-          4. Planned Sub-Processors &amp; Infrastructure
+          4. Infrastructure &amp; Third-Party Services (Planned Design)
         </h2>
         <p className="text-sm text-text-muted leading-relaxed">
-          Production infrastructure will leverage SOC 2 / ISO 27001 certified cloud providers. A
-          complete list of third-party sub-processors (such as transactional SMS/WhatsApp gateways
-          and UPI payment aggregators) will be published alongside Data Processing Agreements (DPAs)
-          before commercial launch.
+          External cloud infrastructure providers and third-party service integrations will be
+          evaluated and published before launch (<code className="text-xs">TODO-REAL-DATA</code>).
         </p>
       </section>
 
@@ -118,8 +120,8 @@ export default function PrivacyPage() {
           5. Grievance Officer &amp; Inquiries
         </h2>
         <p className="text-sm text-text-muted leading-relaxed">
-          In compliance with DPDP requirements, a designated Data Protection / Grievance Officer
-          will be appointed prior to commercial operations:
+          A designated Grievance Officer contact will be published prior to launch (
+          <code className="text-xs">TODO-REAL-DATA</code>):
         </p>
         <div className="rounded-xl border border-border bg-surface-subtle p-4 text-xs sm:text-sm font-mono text-text space-y-1">
           <p>
