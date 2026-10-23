@@ -30,14 +30,14 @@ export default function LoginPage() {
           </h1>
           <p className="text-sm text-[var(--color-text-muted)] leading-relaxed">
             Administrative, teacher, and parent portal authentication will be enabled as part of our
-            upcoming operational security and session rollout.
+            upcoming operational authentication and session rollout.
           </p>
         </div>
 
         <div className="p-4 rounded-[var(--radius-md)] bg-[var(--color-surface-subtle)] text-xs text-[var(--color-text-muted)] leading-relaxed text-left space-y-1 border border-[var(--color-border)]">
-          <div className="font-semibold text-[var(--color-text)]">
+          <h2 className="font-semibold text-[var(--color-text)]">
             Looking to evaluate ProgressEye?
-          </div>
+          </h2>
           <div>
             Book a guided demonstration with our team or return to our public features tour.
           </div>
@@ -50,7 +50,7 @@ export default function LoginPage() {
           >
             <Link href="/demo">
               <Calendar className="h-4 w-4" />
-              <span>Book a Product Demo</span>
+              <span>Book a free demo</span>
             </Link>
           </Button>
 

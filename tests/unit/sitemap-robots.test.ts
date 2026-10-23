@@ -38,17 +38,37 @@ describe("Sitemap & Robots Verification", () => {
   });
 
   describe("Robots Policy", () => {
-    it("disallows all crawler traffic on preview/staging environments", () => {
-      vi.stubEnv("VERCEL_ENV", "preview");
+    it("disallows all crawler traffic when NEXT_PUBLIC_APP_ENV is unset", () => {
+      vi.stubEnv("NEXT_PUBLIC_APP_ENV", "");
       const config = robots();
       expect(config.rules).toEqual({
         userAgent: "*",
         disallow: "/",
       });
+      expect(config.sitemap).toBe(`${siteConfig.url}/sitemap.xml`);
     });
 
-    it("allows indexing of public routes while blocking internal /dev/ and /api/ in production", () => {
-      vi.stubEnv("VERCEL_ENV", "");
+    it("disallows all crawler traffic when NEXT_PUBLIC_APP_ENV is staging", () => {
+      vi.stubEnv("NEXT_PUBLIC_APP_ENV", "staging");
+      const config = robots();
+      expect(config.rules).toEqual({
+        userAgent: "*",
+        disallow: "/",
+      });
+      expect(config.sitemap).toBe(`${siteConfig.url}/sitemap.xml`);
+    });
+
+    it("disallows all crawler traffic when NEXT_PUBLIC_APP_ENV is preview or other non-production value", () => {
+      vi.stubEnv("NEXT_PUBLIC_APP_ENV", "preview");
+      const config = robots();
+      expect(config.rules).toEqual({
+        userAgent: "*",
+        disallow: "/",
+      });
+      expect(config.sitemap).toBe(`${siteConfig.url}/sitemap.xml`);
+    });
+
+    it("allows indexing of public routes while blocking internal /dev/ and /api/ only when NEXT_PUBLIC_APP_ENV is explicitly production", () => {
       vi.stubEnv("NEXT_PUBLIC_APP_ENV", "production");
       const config = robots();
       expect(config.rules).toEqual({
@@ -56,6 +76,7 @@ describe("Sitemap & Robots Verification", () => {
         allow: "/",
         disallow: ["/dev/", "/api/"],
       });
+      expect(config.sitemap).toBe(`${siteConfig.url}/sitemap.xml`);
     });
   });
 });

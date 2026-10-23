@@ -88,7 +88,30 @@ The following unverified claims and planned placeholders in `docs/design/PLACEHO
   - Perform a formal, source-mapped bundle analysis (replacing heuristic/guessed chunk labels with exact package sizes from `@next/bundle-analyzer`).
   - Evaluate code-splitting and dynamic `next/dynamic` lazy-loading for non-critical shared layout islands, particularly the mobile navigation drawer (`MobileDrawer`) and theme provider hydration, so above-the-fold first paint downloads only critical navigation primitives.
 
-### 3. Shared Chunk Analysis: `05cxy9p-13hw1.js` (Turbopack Client Boundary Manifest)
-- **Module Identity**: Contains the Turbopack dynamic import wrapper and runtime client manifest emitted when `ContactFormIsland` was converted into a client-side dynamic boundary (`import("@/components/marketing/contact/contact-form")`).
-- **Module Importer**: Imported and registered by the Next.js App Router client runtime (`globalThis.TURBOPACK`) for the marketing route segment.
-- **Why It Loads on `/about` and `/faq`**: Even though `/about` and `/faq` contain 0 B of route-specific client JS, Next.js / Turbopack generates a shared client router entry manifest across all routes sharing the `(marketing)/layout.tsx` boundary. Because `ContactFormIsland` is a client component inside the marketing layout group, Turbopack registers its dynamic loader manifest (`05cxy9p-13hw1.js`, 2,889 B raw / 860 B gzip) in the shared script tags of all sibling routes. The actual island code (`1bgt61xj1asfv.js`, 8,760 B raw / 2,420 B gzip) remains strictly isolated and is only downloaded when navigating to `/contact`.
+### 3. Shared Chunk Analysis: `05cxy9p-13hw1.js` (hypothesis, verify with the bundle analyzer in Phase 10)
+- **Working Hypothesis**: Emitted by Turbopack as the dynamic import wrapper and runtime client router manifest for `ContactFormIsland` (`import("@/components/marketing/contact/contact-form")`).
+- **Importer / Shared Scope**: Presumed imported and registered by the Next.js App Router client runtime manifest across the shared `(marketing)` layout group, causing the dynamic loader wrapper (~860 B gzip) to load on sibling routes `/about` and `/faq` while the actual form island (`1bgt61xj1asfv.js`, ~2.4 kB gzip) remains strictly isolated to `/contact`.
+- **Phase 10 Verification Requirement**: Confirm or refute this attribution in Phase 10 using `@next/bundle-analyzer` and source-mapped production output rather than heuristic chunk inspection. The exact identity and module breakdown of that chunk (and its variant `2l7vuh3_s87_z.js`, ~859 B gzip) remains unresolved pending formal Phase 10 bundle analysis.
+
+### 4. Client Dynamic Island Screenshot Verification (Hydration Timing Note)
+- **Observation**: Contact screenshots previously exhibited identical byte sizes across re-captures despite placeholder copy changes because headless browser capture ran before dynamic island hydration completed, capturing the static loading skeleton rather than the mounted form inputs.
+- **Verification Requirement**: Ensure all automated screenshot routines explicitly wait for client-hydrated form elements (e.g. `#contact-school`) to reach the visible state before taking screenshots, rather than relying solely on `networkidle`.
+
+### 5. Post-Pilot i18n Migration (Hindi / Vernacular Languages)
+- **Problem & Blocker**: Public marketing pages (`/features`, `/get-started`, `/demo`, `/careers`, `/about`, `/faq`, `/contact`, and legal routes) define their copy inside typed TypeScript configuration files (`src/config/*.ts`) and server component templates rather than `messages/en.json`. While `messages/en.json` contains shared shell, navigation, and footer strings, the core marketing copy is not in translation files. This architectural choice blocks adding Hindi (`hi`) or regional Indian languages until a structured migration is executed.
+- **Action Plan**:
+  - Following the school pilot launch, migrate marketing copy from `src/config/*.ts` into namespaced `next-intl` message bundles (`messages/en.json`, `messages/hi.json`).
+  - Enforce compile-time type safety over translation keys via `next-intl` type generation.
+  - Retain typed configs for structural metadata (routes, icon keys, numeric pricing constants) while delegating user-facing text to message catalogs.
+
+### 6. Demo Form Data Minimisation Review (Pre-Wiring / Phase 9)
+- **Problem**: The prototype demo form (`/demo`) currently accepts 7 inputs: name, email, phone number, school name, city/state, student capacity, and preferred time.
+- **Action Plan**: Prior to wiring backend API lead capture endpoints in Phase 9, perform a statutory data minimisation review under DPDP guidelines. Determine whether phone, city/state, capacity, and timing selections can be pruned or deferred to post-inquiry communication, reducing initial collection scope to essential contact data.
+
+### 7. /careers LCP 2.35 s Investigation (Phase 10)
+- **Problem**: `/careers` is a 100% Server Component with 0 B route-specific client JS, yet exhibits mobile LCP around ~2.35 s under mobile throttling.
+- **Root Cause & Action Plan**: Telemetry identifies the LCP element as the zero-vacancy empty-state paragraph (`<p class="text-sm text-text-muted leading-relaxed max-w-md mx-auto">`) with an Element Render Delay of ~2,355 ms waiting for font swapping (`font-display: swap`) and render-blocking CSS layout. In Phase 10 staging, benchmark critical path CSS inlining and font subset preloading to reduce throttled render delay.
+
+### 8. Phase 10 Automated Launch-Readiness CI Build Check & Domain Verification
+- **Build Guard**: Implement an automated build/CI check that fails the build if rendered HTML contains `"TODO-REAL-DATA"` or the legal draft banner (`LegalDraftBanner` / `DRAFT-NEEDS-LEGAL-REVIEW`) while a launch flag is active (e.g. `NEXT_PUBLIC_LAUNCH_READY=true`).
+- **Domain Constant**: Re-verify that the canonical domain constant in `src/config/site.ts` (`siteConfig.url`) is final (`progresseye.in` vs `progresseye.com`) and that all metadata, OpenGraph, sitemap, and robots configurations resolve to the final production URL.

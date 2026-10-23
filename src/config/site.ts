@@ -11,6 +11,8 @@ export const siteConfig = {
   hasCustomerLogos: false, // Show customer logos trust strip only when real logos exist (default: false)
   mockDomain: "yourschool.example", // Internal mock hostname for product tour browser chrome
   hasOpenRoles: false, // Show "We're hiring" badge only when open positions exist (default: false)
+  hasLegalDraftNotice: true, // Display DRAFT-NEEDS-LEGAL-REVIEW notice banner on legal pages (default: true; set to false after legal sign-off)
+  hasConsentBanner: false, // Cookie consent banner (default: false; rendered only when non-essential cookies exist)
   hasConfiguredSocial: Boolean(
     process.env.NEXT_PUBLIC_TWITTER_URL ||
       process.env.NEXT_PUBLIC_LINKEDIN_URL ||
