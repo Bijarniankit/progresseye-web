@@ -50,14 +50,14 @@ export const PRICING_TIERS: Record<"starter" | "school" | "district", PricingTie
     id: "school",
     name: "School",
     tagline: "The complete operating system for modern campuses.",
-    badge: "MOST POPULAR",
+    badge: "Suggested",
     isPopular: true,
     monthlyPricePerStudent: 30, // TODO-REAL-DATA: ₹30/student/month. Blocks public launch = Yes.
     annualPricePerStudent: 25, // TODO-REAL-DATA: ₹25/student/month billed annually. Blocks public launch = Yes.
     billingPeriodLabel: "/ student / month",
     features: [
       { text: "Daily attendance & alerts", status: "planned" },
-      { text: "Planned fee collection & digital receipts", status: "planned" },
+      { text: "Fee collection & digital receipts", status: "planned" },
       { text: "Exams, grading & report cards", status: "planned" },
       { text: "Staff & teacher accounts", status: "planned" },
       { text: "Parent communication portal", status: "planned" },
@@ -70,7 +70,7 @@ export const PRICING_TIERS: Record<"starter" | "school" | "district", PricingTie
     name: "District",
     tagline: "For multi-school chains and educational trusts.",
     customPriceLabel: "Custom tailored",
-    billingPeriodLabel: "tailored to scale",
+    billingPeriodLabel: "",
     features: [
       { text: "Multi-campus aggregated analytics", status: "planned" },
       { text: "Centralized group finance & fee roll-up", status: "planned" },

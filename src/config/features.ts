@@ -46,7 +46,7 @@ export const featuresConfig: FeaturesConfig = {
   modules: [
     {
       id: "attendance",
-      name: "Attendance & Absence Engine",
+      name: "Attendance & Absence Tracking",
       category: "Operations",
       tagline: "Planned roll call workflows with guardian absence alerts.",
       overview:
@@ -89,7 +89,7 @@ export const featuresConfig: FeaturesConfig = {
         },
         {
           title: "Planned digital receipts",
-          description: "Planned receipt generation with verifiable transaction records.",
+          description: "Planned receipt generation with transaction records.",
           status: "planned",
         },
         {

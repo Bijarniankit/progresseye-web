@@ -165,6 +165,17 @@ Phase 7 pages (About, FAQ, Contact) strictly follow Decision D-016 (Zero-Invente
 | **Submission Notice** | `src/components/marketing/contact/contact-form.tsx` | "This form is not connected yet, so your message was not sent. To reach us, book a free demo." | `DRAFT-CONTENT-REVIEW` | **Yes** | Phase 9 lead capture endpoint integration. |
 | **Privacy Policy Agreement** | `src/components/marketing/contact/contact-form.tsx` | "By sending this you agree to our Privacy Policy" | `DRAFT-NEEDS-LEGAL-REVIEW` | **Yes** | Legal review required before launch; `/privacy` is currently a stub page and the form sends nothing. Blocks launch until full DPDP/privacy notice and lead intake backend are wired. |
 
+---
+
+## 10. Phase 8 Commercial & Tier Claims
+
+| Item / Claim | Config / File Location | Stated Text / Current Value | Status / Classification | Blocks Public Launch | Target Resolution |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **"Free forever"** | `src/config/pricing.ts` (`starter.customPriceLabel`) | `"Free forever"` | Planned commercial pricing model (`TODO-REAL-DATA`) | **Yes** | Commercial leadership & business model sign-off. |
+| **"Up to 100 students"** | `src/config/pricing.ts` (`starter.studentLimit`), `src/components/marketing/get-started/pricing-matrix.tsx` | `"Up to 100 students (Planned limit)"` | Invented threshold cap for free Starter tier (`TODO-REAL-DATA`) | **Yes** | Product capacity & infrastructure unit economics sign-off. |
+| **"No credit card required"** | `src/components/marketing/cta/cta-section.tsx`, `src/app/(marketing)/get-started/page.tsx` | `"No credit card required"` | Commercial onboarding terms (`TODO-REAL-DATA`) | **Yes** | Billing gateway integration & trial terms sign-off. |
+
+
 
 
 

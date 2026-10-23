@@ -28,7 +28,7 @@ test.describe("Phase 8 CP1: Get Started Page (/get-started)", () => {
 
     // School tier popular badge
     const schoolCard = page.locator('[data-testid="pricing-tier-school"]');
-    await expect(schoolCard.locator("text=MOST POPULAR")).toBeVisible();
+    await expect(schoolCard.locator("text=Suggested")).toBeVisible();
 
     // Prohibited words assertions on public DOM
     const bodyText = (await page.locator("main").innerText()).toLowerCase();

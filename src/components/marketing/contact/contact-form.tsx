@@ -140,7 +140,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
       }
 
       if (!formData.preferredTime.trim()) {
-        newErrors.preferredTime = "Please select a preferred walkthrough time.";
+        newErrors.preferredTime = "Please select a preferred time.";
       }
     } else {
       if (!formData.topic.trim()) {
@@ -530,7 +530,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
         {isDemo && (
           <div className="space-y-1.5">
             <label htmlFor="demo-preferred-time" className="block text-sm font-medium text-text">
-              Preferred Walkthrough Time <span className="text-brand">*</span>
+              Preferred Time <span className="text-brand">*</span>
             </label>
             <select
               ref={preferredTimeRef}
@@ -653,7 +653,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
             type="submit"
             className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-brand-foreground shadow-xs transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus sm:w-auto"
           >
-            <span>{isDemo ? "Request preview demo" : "Send message"}</span>
+            <span>{isDemo ? "Book a free demo" : "Send message"}</span>
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>

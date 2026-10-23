@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const commonQuestions = [
   {
     q: "Is ProgressEye available for purchase today?",
-    a: "ProgressEye is currently in active development. We are onboarding early partner schools in phases. You can book a preview demo to see our design approach and follow our progress.",
+    a: "ProgressEye is currently in active development. You can book a free demo to explore our product direction and follow our progress.",
   },
   {
     q: "Are the displayed prices final?",
@@ -104,14 +104,13 @@ export default function GetStartedPage() {
             Have questions about pricing or multi-campus scale?
           </h2>
           <p className="text-sm text-[var(--color-text-muted)] leading-relaxed">
-            We are glad to talk through your school&apos;s operational needs or schedule a live
-            preview walkthrough.
+            We are glad to talk through your school&apos;s operational needs or book a free demo.
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto shrink-0">
           <Button asChild size="lg" className="rounded-full gap-2 w-full sm:w-auto">
             <Link href="/demo">
-              <span>Book a preview demo</span>
+              <span>Book a free demo</span>
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </Button>

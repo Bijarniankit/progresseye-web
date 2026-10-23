@@ -393,5 +393,13 @@ This document records architectural, visual, and copy decisions modifying or com
   - Target system design (PostgreSQL Row-Level Security, planned data retention, planned data processors, grievance officer) is described strictly as "planned design".
   - All missing entity information is flagged with `DRAFT-NEEDS-LEGAL-REVIEW` and tracked as launch-blocking `TODO-REAL-DATA` placeholders in `docs/design/PLACEHOLDERS.md`.
 
+### D-038: Public Marketing Copy Architecture & Post-Pilot i18n Strategy
+- **Context & Problem**: Public marketing pages (`/about`, `/faq`, `/contact`, `/features`, `/get-started`, `/demo`, `/careers`, and legal routes) author their copy in TypeScript configuration modules (`src/config/*.ts`) and server components rather than `messages/en.json`. Earlier statements that said copy was in `messages/en.json` were inaccurate.
+- **Decision & Architecture**:
+  - Typed TypeScript configuration objects (`featuresConfig`, `PRICING_TIERS`, `contactConfig`, `faqConfig`, `aboutConfig`, `careersConfig`, `siteConfig`) serve as the single source of truth for public marketing copy, providing compile-time type checking, structural validation, and feature status tags (`planned` vs `available`).
+  - **Hindi / Multilingual Blocking**: Because public marketing copy resides in `.ts` configs rather than `messages/en.json` (which holds shared navigation, shell, and footer strings), full multilingual localization into Hindi (`hi`) or regional Indian languages is blocked until a dedicated migration occurs.
+  - Public marketing copy remains English-only for Phase 8. A post-pilot i18n migration is scheduled in `docs/design/BACKLOG.md` to extract these typed configs into namespaced message catalogs before vernacular rollout.
+
+
 
 

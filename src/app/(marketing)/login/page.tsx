@@ -50,7 +50,7 @@ export default function LoginPage() {
           >
             <Link href="/demo">
               <Calendar className="h-4 w-4" />
-              <span>Book a Product Demo</span>
+              <span>Book a free demo</span>
             </Link>
           </Button>
 

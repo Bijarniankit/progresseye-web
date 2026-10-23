@@ -10,7 +10,7 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
     // 1. Single H1
     const h1 = page.locator("h1");
     await expect(h1).toHaveCount(1);
-    await expect(h1).toHaveText("Schedule a Guided Product Walkthrough");
+    await expect(h1).toHaveText("Book a Free Demo");
 
     // 2. Pre-typing honest notice
     const preNotice = page.locator('[data-testid="demo-pre-typing-notice"]');
@@ -27,7 +27,7 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
     await expect(page.locator("#demo-preferred-time")).toBeVisible();
 
     // 4. Submit button
-    const submitBtn = page.getByRole("button", { name: "Request preview demo" });
+    const submitBtn = page.getByRole("button", { name: "Book a free demo" });
     await expect(submitBtn).toBeVisible();
   });
 
@@ -35,7 +35,7 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
     page,
   }) => {
     await page.goto("http://localhost:3000/demo", { waitUntil: "networkidle" });
-    const submitBtn = page.getByRole("button", { name: "Request preview demo" });
+    const submitBtn = page.getByRole("button", { name: "Book a free demo" });
 
     // Submit empty form
     await submitBtn.click();
@@ -70,7 +70,7 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
     const cityInput = page.locator("#demo-city");
     const studentCountSelect = page.locator("#demo-student-count");
     const preferredTimeSelect = page.locator("#demo-preferred-time");
-    const submitBtn = page.getByRole("button", { name: "Request preview demo" });
+    const submitBtn = page.getByRole("button", { name: "Book a free demo" });
 
     // Fill all required fields
     await nameInput.fill("Principal Sharma");

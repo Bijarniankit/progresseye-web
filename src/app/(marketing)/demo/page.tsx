@@ -46,14 +46,14 @@ export default function DemoPage() {
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-surface-subtle px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-text-muted">
             <Calendar className="h-3.5 w-3.5 text-brand" aria-hidden="true" />
-            <span>Interactive Product Walkthrough</span>
+            <span>Product Walkthrough</span>
           </div>
 
           <h1
             id="demo-hero-heading"
             className="font-display text-3xl font-extrabold tracking-tight text-text sm:text-4xl md:text-5xl"
           >
-            Schedule a Guided Product Walkthrough
+            Book a Free Demo
           </h1>
 
           <p className="mx-auto mt-4 max-w-2xl text-base text-text-muted sm:text-lg">

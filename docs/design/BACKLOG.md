@@ -96,3 +96,10 @@ The following unverified claims and planned placeholders in `docs/design/PLACEHO
 ### 4. Client Dynamic Island Screenshot Verification (Hydration Timing Note)
 - **Observation**: Contact screenshots previously exhibited identical byte sizes across re-captures despite placeholder copy changes because headless browser capture ran before dynamic island hydration completed, capturing the static loading skeleton rather than the mounted form inputs.
 - **Verification Requirement**: Ensure all automated screenshot routines explicitly wait for client-hydrated form elements (e.g. `#contact-school`) to reach the visible state before taking screenshots, rather than relying solely on `networkidle`.
+
+### 5. Post-Pilot i18n Migration (Hindi / Vernacular Languages)
+- **Problem & Blocker**: Public marketing pages (`/features`, `/get-started`, `/demo`, `/careers`, `/about`, `/faq`, `/contact`, and legal routes) define their copy inside typed TypeScript configuration files (`src/config/*.ts`) and server component templates rather than `messages/en.json`. While `messages/en.json` contains shared shell, navigation, and footer strings, the core marketing copy is not in translation files. This architectural choice blocks adding Hindi (`hi`) or regional Indian languages until a structured migration is executed.
+- **Action Plan**:
+  - Following the school pilot launch, migrate marketing copy from `src/config/*.ts` into namespaced `next-intl` message bundles (`messages/en.json`, `messages/hi.json`).
+  - Enforce compile-time type safety over translation keys via `next-intl` type generation.
+  - Retain typed configs for structural metadata (routes, icon keys, numeric pricing constants) while delegating user-facing text to message catalogs.

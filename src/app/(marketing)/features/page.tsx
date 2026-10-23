@@ -54,14 +54,14 @@ export default function FeaturesPage() {
             Interested in learning more about our roadmap?
           </h2>
           <p className="text-sm text-[var(--color-text-muted)] leading-relaxed">
-            We are building ProgressEye step by step. Book a preview demo to see our design approach
-            or contact our team directly.
+            We are building ProgressEye step by step. Book a free demo to see our design approach or
+            contact our team directly.
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto shrink-0">
           <Button asChild size="lg" className="rounded-full gap-2 w-full sm:w-auto">
             <Link href="/demo">
-              <span>Book a preview demo</span>
+              <span>Book a free demo</span>
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </Button>
