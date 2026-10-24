@@ -1,10 +1,9 @@
 "use client";
 
 import defaultMessages from "@messages/en.json";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "next-themes";
-import * as React from "react";
+import type * as React from "react";
 import { Toaster } from "@/components/ui/sonner";
 
 // Only pass namespaces used by client components (nav and footer)
@@ -24,27 +23,12 @@ export function RootProvider({
   locale = "en",
   messages = clientMessages as unknown as AbstractIntlMessages,
 }: RootProviderProps) {
-  const [queryClient] = React.useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            staleTime: 60 * 1000,
-            retry: 1,
-            refetchOnWindowFocus: false,
-          },
-        },
-      }),
-  );
-
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-      <QueryClientProvider client={queryClient}>
-        <NextIntlClientProvider locale={locale} messages={messages} timeZone="Asia/Kolkata">
-          {children}
-          <Toaster />
-        </NextIntlClientProvider>
-      </QueryClientProvider>
+      <NextIntlClientProvider locale={locale} messages={messages} timeZone="Asia/Kolkata">
+        {children}
+        <Toaster />
+      </NextIntlClientProvider>
     </ThemeProvider>
   );
 }
