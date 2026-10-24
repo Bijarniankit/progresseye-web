@@ -10,6 +10,51 @@ validateProductionTurnstileConfig({
 
 const baseConfig: NextConfig = {
   reactStrictMode: true,
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Content-Security-Policy-Report-Only",
+            value: [
+              "default-src 'self'",
+              "base-uri 'self'",
+              "font-src 'self' https://fonts.gstatic.com data:",
+              "form-action 'self'",
+              "frame-ancestors 'self'",
+              "img-src 'self' data: https:",
+              "object-src 'none'",
+              "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
+              "frame-src https://challenges.cloudflare.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "connect-src 'self' https://challenges.cloudflare.com",
+            ].join("; "),
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=86400",
+          },
+          {
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+          },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       {

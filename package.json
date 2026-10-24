@@ -19,6 +19,7 @@
     "test:contract-drift": "orval && git diff --exit-code src/lib/api/generated",
     "test:no-hex": "node scripts/no-hex-check.mjs",
     "test:case-sensitivity": "node scripts/check-case-sensitivity.mjs",
+    "test:readiness": "node scripts/check-launch-readiness.mjs",
     "gen:api": "orval"
   },
   "dependencies": {

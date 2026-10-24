@@ -1,0 +1,128 @@
+#!/usr/bin/env node
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const ROOT_DIR = path.resolve(__dirname, "..");
+
+export const FORBIDDEN_STRINGS = ["TODO-REAL-DATA", "DRAFT-NEEDS-LEGAL-REVIEW", "To be provided"];
+
+const SCAN_EXTENSIONS = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".json", ".html", ".md"]);
+
+const IGNORED_DIRS = new Set([
+  "node_modules",
+  ".git",
+  ".gemini",
+  "artifacts",
+  "docs", // Docs contain historical registers and PLACEHOLDERS.md
+  "scripts", // Exclude scripts from self-scanning
+  "tests",
+]);
+
+/**
+ * Recursively find files with target extensions
+ */
+export function collectFiles(dir, collected = []) {
+  if (!fs.existsSync(dir)) return collected;
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    if (IGNORED_DIRS.has(entry.name)) continue;
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      collectFiles(fullPath, collected);
+    } else if (entry.isFile() && SCAN_EXTENSIONS.has(path.extname(entry.name))) {
+      collected.push(fullPath);
+    }
+  }
+  return collected;
+}
+
+/**
+ * Core readiness validation logic
+ */
+export function checkLaunchReadiness(options = {}) {
+  const env = options.env || process.env;
+  const isLaunchReady = env.NEXT_PUBLIC_LAUNCH_READY === "true";
+  const scanDirs = options.scanDirs || [path.join(ROOT_DIR, "src")];
+
+  const violations = [];
+
+  // 1. Env variable validation
+  if (isLaunchReady) {
+    if (env.NEXT_PUBLIC_APP_ENV !== "production") {
+      violations.push({
+        type: "ENV_MISCONFIGURATION",
+        message: `NEXT_PUBLIC_APP_ENV must be "production" when NEXT_PUBLIC_LAUNCH_READY=true (got "${env.NEXT_PUBLIC_APP_ENV || ""}")`,
+      });
+    }
+
+    if (env.NEXT_PUBLIC_HAS_LEAD_BACKEND === "true") {
+      const siteKey = env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
+      if (
+        !siteKey ||
+        siteKey.startsWith("1x000000") ||
+        siteKey.startsWith("2x000000") ||
+        siteKey.startsWith("3x000000")
+      ) {
+        violations.push({
+          type: "ENV_MISCONFIGURATION",
+          message: `Production Turnstile site key must be a valid Cloudflare site key, not test/placeholder key (got "${siteKey}")`,
+        });
+      }
+    }
+  }
+
+  // 2. Scan source and build files for placeholder tokens
+  for (const dir of scanDirs) {
+    const files = collectFiles(dir);
+    for (const file of files) {
+      const content = fs.readFileSync(file, "utf8");
+      for (const token of FORBIDDEN_STRINGS) {
+        if (content.includes(token)) {
+          violations.push({
+            type: "FORBIDDEN_TOKEN",
+            file: path.relative(ROOT_DIR, file),
+            token,
+          });
+        }
+      }
+    }
+  }
+
+  return {
+    isLaunchReady,
+    violations,
+    passed: !isLaunchReady || violations.length === 0,
+  };
+}
+
+// CLI runner
+if (process.argv[1] === __filename) {
+  const result = checkLaunchReadiness();
+
+  if (!result.isLaunchReady) {
+    console.log(
+      `[INFO] Launch readiness check: NEXT_PUBLIC_LAUNCH_READY is false/unset. Scan informational only. Found ${result.violations.length} placeholder occurrences.`,
+    );
+    process.exit(0);
+  }
+
+  if (!result.passed) {
+    console.error(
+      `[ERROR] Launch readiness check failed! Found ${result.violations.length} launch-blocking violation(s):`,
+    );
+    for (const v of result.violations) {
+      if (v.type === "ENV_MISCONFIGURATION") {
+        console.error(`  - [ENV] ${v.message}`);
+      } else {
+        console.error(`  - [TOKEN] "${v.token}" in ${v.file}`);
+      }
+    }
+    process.exit(1);
+  }
+
+  console.log("[SUCCESS] Launch readiness check passed: all launch-blocking checks satisfied.");
+  process.exit(0);
+}
