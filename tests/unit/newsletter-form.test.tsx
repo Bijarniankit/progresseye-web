@@ -79,6 +79,17 @@ describe("Footer & Newsletter Form Unit Tests", () => {
       window.history.replaceState({}, "", "/");
     });
 
+    it("renders honeypot field with name 'website_url' matching API schema exactly", () => {
+      const { container } = renderFooter();
+      const honeypotInput = container.querySelector(
+        'input[name="website_url"]',
+      ) as HTMLInputElement;
+
+      expect(honeypotInput).toBeInTheDocument();
+      expect(honeypotInput.name).toBe("website_url");
+      expect(honeypotInput.tabIndex).toBe(-1);
+    });
+
     it("sends Idempotency-Key UUID header and expected JSON payload", async () => {
       let capturedUrl = "";
       let capturedHeaders: Record<string, string> = {};

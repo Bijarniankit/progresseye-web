@@ -11,6 +11,9 @@ dist/
 .env.*.local
 !.env.example
 
+# Next.js types
+next-env.d.ts
+
 # Logs
 npm-debug.log*
 yarn-debug.log*
