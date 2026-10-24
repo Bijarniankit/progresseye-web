@@ -55,9 +55,14 @@ export default function PrivacyPage() {
               <strong className="text-text">Inquiry &amp; Demonstration Intake:</strong> When you
               submit a contact, demonstration, or newsletter inquiry, we process the provided
               information (such as your name, institutional email address, school name, and message)
-              solely to communicate with your institution regarding ProgressEye. Inquiries are
-              protected by privacy-preserving anti-abuse tooling (Cloudflare Turnstile token
-              validation without transmitting client IP addresses) and rate limiting.
+              solely for the purpose of communicating with your institution and scheduling product
+              demonstrations. The recipient of submitted inquiries is the ProgressEye team. Inquiry
+              records are retained under a scheduled data retention policy (
+              <code className="text-xs">TODO-REAL-DATA</code>). Inquiries are protected by
+              anti-abuse verification via Cloudflare Turnstile (the browser connects to Cloudflare
+              directly, so Cloudflare receives the visitor IP address as an external processor,
+              while our server-side token verification check omits client IP addresses) and rate
+              limiting.
             </li>
           ) : (
             <li>

@@ -1,3 +1,13 @@
+import { validateProductionTurnstileConfig } from "./turnstile-env";
+
+if (typeof window === "undefined") {
+  validateProductionTurnstileConfig({
+    appEnv: process.env.NEXT_PUBLIC_APP_ENV,
+    hasLeadBackend: process.env.NEXT_PUBLIC_HAS_LEAD_BACKEND,
+    siteKey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+  });
+}
+
 export const siteConfig = {
   // Configured via environment variables; defaults marked TODO-REAL-DATA
   name: process.env.NEXT_PUBLIC_COMPANY_NAME || "ProgressEye Technologies Pvt. Ltd.", // TODO-REAL-DATA: Confirm legal company name

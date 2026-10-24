@@ -125,9 +125,10 @@ export default function CookiesPage() {
           {siteConfig.hasLeadBackend ? (
             <>
               Network verification across public marketing pages confirms that ProgressEye initiates
-              zero third-party advertising or tracking requests. When submitting public lead forms,
-              privacy-preserving anti-abuse verification is executed via Cloudflare Turnstile
-              without transmitting client IP addresses or setting behavioral tracking cookies.
+              zero third-party advertising or telemetry requests. When submitting public lead forms,
+              anti-abuse verification is executed via Cloudflare as an external processor (the
+              browser connects to Cloudflare directly, so Cloudflare receives the visitor IP
+              address, while our server-side token verification check omits client IP addresses).
             </>
           ) : (
             <>

@@ -409,6 +409,19 @@ This document records architectural, visual, and copy decisions modifying or com
   - **Cloudflare Turnstile**: `TurnstileWidget` is lazy-loaded only on form pages when `hasLeadBackend` is active and `NEXT_PUBLIC_TURNSTILE_SITE_KEY` is configured, preventing third-party script loading on static informational pages.
   - **RFC 9457 Error Mapping**: `ApiProblemError` parses Problem Details payloads, mapping 400 `invalidParams` directly to inline field errors, 429 to retry-after notices, and 422 to key regeneration while strictly preserving user inputs and logging zero PII.
 
+### D-040: Phase 9 Bundle Size Analysis, Chunk Splitting & Recorded Deviation
+- **Context & Audit**: In Phase 9, connecting the lead forms and integrating conditional legal disclosures resulted in route bundle shifts. The target limit for static route growth was <= 1 kB gzip over Phase 8 baseline (`7df3cab`: 209,359 B gzip across 14 chunks).
+- **Chunk Investigation**:
+  - Turbopack build analysis identified that the addition of runtime dynamic import manifests and conditional rendering split shared chunks into two additional files:
+    1. Turbopack dynamic chunk loader / manifest (`3i5o9k61wa6tf.js` / `3bchc6citkgy9.js` ~199 B - 3.9 kB raw / 199 B - 3.9 kB gzip).
+    2. Shared i18n & layout message chunk splitting (`2y47m2-m78uqi.js` / `0e632mh7ioflb.js` ~6.9 kB gzip).
+  - Attempted lazy optimization: Extracted the footer newsletter interactive form into `FooterNewsletter` (`src/components/marketing/footer-newsletter.tsx`) loaded via `next/dynamic`.
+  - **Results**:
+    - Legal routes (`/privacy`, `/terms`, `/cookies`, `/gdpr`) load 16 chunks with 211,563 B gzip (a net delta of +2,204 B gzip over Phase 8 baseline 209,359 B).
+    - Informational marketing routes load 17 chunks with 213,217 B gzip.
+    - Form routes (`/contact`, `/demo`) load 18 chunks with 218,572 B gzip (+5,355 B gzip over static baseline for the interactive form island).
+- **Recorded Deviation**: Static route bundle size grew by ~2.2 kB gzip (exceeding the 1 kB budget). This deviation is caused by Next.js / Turbopack's compiler splitting runtime chunks and dynamic import boundaries rather than leaked API client code (the generated API client and TanStack Query code are completely excluded from initial shared chunks). Accepted and recorded for further optimization in Phase 10.
+
 
 
 
