@@ -1,23 +1,13 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import type * as React from "react";
+import * as React from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { siteConfig } from "@/config/site";
-
-const FooterNewsletter = dynamic(
-  () => import("./footer-newsletter").then((mod) => mod.FooterNewsletter),
-  {
-    loading: () => (
-      <div className="space-y-2 pt-2">
-        <div className="h-4 w-32 bg-[var(--color-surface-subtle)] rounded animate-pulse" />
-        <div className="h-10 max-w-md bg-[var(--color-surface-subtle)] rounded-full animate-pulse" />
-      </div>
-    ),
-  },
-);
 
 export interface FooterProps {
   hideNewsletter?: boolean;
@@ -35,6 +25,45 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
     pathname.startsWith("/gdpr");
 
   const hideNewsletter = forcedHide ?? isLegalRoute;
+
+  const [email, setEmail] = React.useState("");
+  const [submitted, setSubmitted] = React.useState(false);
+  const [error, setError] = React.useState("");
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email?.includes("@")) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    setError("");
+
+    if (!siteConfig.hasLeadBackend) {
+      setSubmitted(true);
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch("/api/v1/public/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) {
+        const problem = (await res.json().catch(() => null)) as { detail?: string } | null;
+        setError(problem?.detail || "Subscription failed. Please try again.");
+        return;
+      }
+      setSubmitted(true);
+    } catch {
+      setError("Network error. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const currentYear = new Date().getFullYear();
 
   return (
@@ -86,13 +115,53 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
 
             {/* Newsletter Subscription Block (Hidden on legal routes) */}
             {!hideNewsletter && (
-              <FooterNewsletter
-                eyebrow={tFooter("newsletterEyebrow")}
-                placeholder={tFooter("newsletterPlaceholder")}
-                buttonText={tFooter("newsletterButton")}
-                notice={tFooter("newsletterNotice")}
-                privacy={tFooter("newsletterPrivacy")}
-              />
+              <div className="space-y-2 pt-2">
+                <div className="text-xs font-semibold tracking-wider uppercase text-[var(--color-terracotta)]">
+                  {tFooter("newsletterEyebrow")}
+                </div>
+                <form
+                  onSubmit={handleNewsletterSubmit}
+                  className="max-w-md flex flex-col sm:flex-row gap-2"
+                >
+                  <div className="relative flex-1">
+                    <label htmlFor="footer-newsletter-email" className="sr-only">
+                      {tFooter("newsletterPlaceholder")}
+                    </label>
+                    <Input
+                      id="footer-newsletter-email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder={tFooter("newsletterPlaceholder")}
+                      className="rounded-full bg-[var(--color-surface)]/80 backdrop-blur-sm border-[var(--color-border)] px-4 py-2 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-subtle)] focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] transition-shadow"
+                      aria-label={tFooter("newsletterPlaceholder")}
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    variant="default"
+                    disabled={isSubmitting}
+                    className="rounded-full px-5 py-2 font-medium shrink-0 flex items-center justify-center gap-2 shadow-sm hover:shadow transition-all"
+                  >
+                    <span>{isSubmitting ? "..." : tFooter("newsletterButton")}</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </form>
+
+                {error && <p className="text-xs text-[var(--color-error)]">{error}</p>}
+
+                {submitted && !error && (
+                  <p className="text-xs text-[var(--color-sage-deep)] font-medium">
+                    {siteConfig.hasLeadBackend
+                      ? "Thank you for subscribing to ProgressEye updates."
+                      : tFooter("newsletterNotice")}
+                  </p>
+                )}
+
+                <p className="text-xs text-[var(--color-text-subtle)] leading-normal pt-1">
+                  {tFooter("newsletterPrivacy")}
+                </p>
+              </div>
             )}
           </div>
 
@@ -142,7 +211,7 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
             </div>
 
             {/* Legal Column */}
-            <div className="space-y-4">
+            <div className="space-y-4 col-span-2 sm:col-span-1">
               <h3 className="font-semibold text-xs uppercase tracking-wider text-[var(--color-text)]">
                 {tFooter("legalColumn")}
               </h3>
