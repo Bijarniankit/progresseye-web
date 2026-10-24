@@ -5,9 +5,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import * as React from "react";
+import { TurnstileWidget } from "@/components/marketing/contact/turnstile-widget";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { siteConfig } from "@/config/site";
+import { ApiProblemError } from "@/lib/api/client";
+import { publicControllerSubmitNewsletter } from "@/lib/api/generated/endpoints/public/public";
 
 export interface FooterProps {
   hideNewsletter?: boolean;
@@ -42,6 +45,8 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
   const [submitted, setSubmitted] = React.useState(false);
   const [error, setError] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [turnstileToken, setTurnstileToken] = React.useState("");
+  const [isTurnstileActive, setIsTurnstileActive] = React.useState(false);
   const idempotencyKeyRef = React.useRef(generateUuid());
   const [hasBackend] = React.useState<boolean>(() => {
     if (typeof window !== "undefined") {
@@ -74,80 +79,45 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
 
     setIsSubmitting(true);
     try {
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-        "Idempotency-Key": idempotencyKeyRef.current,
-      };
-
-      const payload: Record<string, unknown> = {
-        email: email.trim().toLowerCase(),
-        consentGiven: true,
-      };
-
-      if (honeypot.trim().length > 0) {
-        payload.website_url = honeypot.trim();
-      }
-
-      if (
-        typeof window !== "undefined" &&
-        (window as unknown as { turnstile?: { getResponse?: () => string } }).turnstile?.getResponse
-      ) {
-        const token = (
-          window as unknown as { turnstile: { getResponse: () => string } }
-        ).turnstile.getResponse();
-        if (token) payload.turnstileToken = token;
-      }
-
-      const res = await fetch("/api/v1/public/newsletter", {
-        method: "POST",
-        headers,
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        let errJson: {
-          invalidParams?: Array<{ name: string; reason: string }>;
-          detail?: string;
-        } | null = null;
-        try {
-          errJson = await res.json();
-        } catch {
-          // Response body was not JSON
-        }
-
-        if (res.status === 400) {
-          const emailErr = errJson?.invalidParams?.find((p) => p.name === "email");
+      await publicControllerSubmitNewsletter(
+        {
+          email: email.trim().toLowerCase(),
+          consentGiven: true,
+          website_url: honeypot.trim() || undefined,
+          turnstileToken: turnstileToken || undefined,
+        },
+        {
+          headers: {
+            "Idempotency-Key": idempotencyKeyRef.current,
+          },
+        },
+      );
+      setSubmitted(true);
+    } catch (err: unknown) {
+      if (err instanceof ApiProblemError) {
+        if (err.status === 400 && err.problem.invalidParams) {
+          const emailErr = err.problem.invalidParams.find((p) => p.name === "email");
           if (emailErr?.reason) {
             setError(emailErr.reason);
-          } else if (errJson?.detail) {
-            setError(errJson.detail);
           } else {
-            setError("Please enter a valid email address.");
+            setError(err.message || "Please enter a valid email address.");
           }
-        } else if (res.status === 422) {
+        } else if (err.status === 422) {
           idempotencyKeyRef.current = generateUuid();
           setError("Subscription session expired. Please review your details and submit again.");
-        } else if (res.status === 429) {
-          const retryHeader = res.headers.get("Retry-After");
-          if (retryHeader) {
-            const seconds = parseInt(retryHeader, 10);
-            if (!Number.isNaN(seconds) && seconds > 0) {
-              setError(
-                `Too many requests. Please try again in ${Math.ceil(seconds / 60)} minutes.`,
-              );
-              return;
-            }
+        } else if (err.status === 429) {
+          const seconds = err.retryAfter;
+          if (seconds && seconds > 0) {
+            setError(`Too many requests. Please try again in ${Math.ceil(seconds / 60)} minutes.`);
+          } else {
+            setError("Too many requests. Please try again in a few minutes.");
           }
-          setError("Too many requests. Please try again in a few minutes.");
         } else {
           setError("Unable to subscribe. Please try again later.");
         }
-        return;
+      } else {
+        setError("Network error. Please try again.");
       }
-
-      setSubmitted(true);
-    } catch {
-      setError("Network error. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -239,6 +209,11 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
                       id="footer-newsletter-email"
                       type="email"
                       value={email}
+                      onFocus={() => {
+                        if (hasBackend && siteConfig.turnstileSiteKey) {
+                          setIsTurnstileActive(true);
+                        }
+                      }}
                       onChange={(e) => {
                         setEmail(e.target.value);
                         idempotencyKeyRef.current = generateUuid();
@@ -259,6 +234,17 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                 </form>
+
+                {isTurnstileActive && hasBackend && siteConfig.turnstileSiteKey && (
+                  <div className="pt-2">
+                    <TurnstileWidget
+                      onVerify={(token) => setTurnstileToken(token)}
+                      onExpire={() => setTurnstileToken("")}
+                      onError={() => setTurnstileToken("")}
+                      hasBackend={hasBackend}
+                    />
+                  </div>
+                )}
 
                 {error && <p className="text-xs text-[var(--color-danger)]">{error}</p>}
 
