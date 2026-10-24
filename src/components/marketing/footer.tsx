@@ -8,8 +8,6 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { siteConfig } from "@/config/site";
-import { ApiProblemError } from "@/lib/api/client";
-import { publicControllerSubmitNewsletter } from "@/lib/api/generated/endpoints/public/public";
 
 export interface FooterProps {
   hideNewsletter?: boolean;
@@ -55,12 +53,16 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
 
     setIsSubmitting(true);
     try {
+      const { publicControllerSubmitNewsletter } = await import(
+        "@/lib/api/generated/endpoints/public/public"
+      );
       await publicControllerSubmitNewsletter({
         email: email.trim().toLowerCase(),
         consentGiven: true,
       });
       setSubmitted(true);
     } catch (err: unknown) {
+      const { ApiProblemError } = await import("@/lib/api/client");
       if (err instanceof ApiProblemError) {
         if (err.status === 429) {
           setError("Too many requests. Please try again later.");
