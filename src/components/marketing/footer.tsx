@@ -8,6 +8,8 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { siteConfig } from "@/config/site";
+import { ApiProblemError } from "@/lib/api/client";
+import { publicControllerSubmitNewsletter } from "@/lib/api/generated/endpoints/public/public";
 
 export interface FooterProps {
   hideNewsletter?: boolean;
@@ -29,15 +31,50 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
   const [email, setEmail] = React.useState("");
   const [submitted, setSubmitted] = React.useState(false);
   const [error, setError] = React.useState("");
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [hasBackend] = React.useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.get("backend") === "true") return true;
+    }
+    return siteConfig.hasLeadBackend;
+  });
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email?.includes("@")) {
       setError("Please enter a valid email address.");
       return;
     }
     setError("");
-    setSubmitted(true);
+
+    if (!hasBackend) {
+      setSubmitted(true);
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await publicControllerSubmitNewsletter({
+        email: email.trim().toLowerCase(),
+        consentGiven: true,
+      });
+      setSubmitted(true);
+    } catch (err: unknown) {
+      if (err instanceof ApiProblemError) {
+        if (err.status === 429) {
+          setError("Too many requests. Please try again later.");
+        } else if (err.status === 400) {
+          setError("Please enter a valid email address.");
+        } else {
+          setError("Unable to subscribe. Please try again later.");
+        }
+      } else {
+        setError("Network error. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const currentYear = new Date().getFullYear();
@@ -114,19 +151,22 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
                   </div>
                   <Button
                     type="submit"
-                    className="rounded-full bg-[var(--color-brand)] text-[var(--color-brand-foreground)] hover:bg-[var(--color-brand-hover)] font-semibold px-5 text-sm gap-2"
+                    disabled={isSubmitting}
+                    className="rounded-full bg-[var(--color-brand)] text-[var(--color-brand-foreground)] hover:bg-[var(--color-brand-hover)] font-semibold px-5 text-sm gap-2 disabled:opacity-60"
                   >
-                    <span>{tFooter("newsletterButton")}</span>
+                    <span>{isSubmitting ? "..." : tFooter("newsletterButton")}</span>
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                 </form>
 
                 {error && <p className="text-xs text-[var(--color-danger)]">{error}</p>}
 
-                {/* Not-connected state notice (Zero fake success) */}
+                {/* Not-connected state notice (Zero fake success) or live subscribed confirmation */}
                 {submitted && (
                   <output className="block text-xs font-medium text-[var(--color-brand)] bg-[var(--color-surface-subtle)] p-2.5 rounded-[var(--radius-md)] border border-[var(--color-border)]">
-                    {tFooter("newsletterNotice")}
+                    {hasBackend
+                      ? "Subscribed! Thank you for staying updated."
+                      : tFooter("newsletterNotice")}
                   </output>
                 )}
 

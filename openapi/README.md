@@ -4,12 +4,14 @@ This directory holds the pinned, committed OpenAPI contract exported from `progr
 
 ## Provenance
 - **Source Repository**: `progresseye-api`
-- **Source Git Tag**: `phase-02-approved`
-- **Source Git Commit**: `5bdf148`
-- **Export Date**: October 2026
+- **Source Git Commit**: `d645087` (`d64508764bf36ef2e121cbebc993f5427bb8ef52`)
+- **Export Date**: October 2026 (Phase 9)
 - **Endpoints Defined**:
   - `GET /api/v1/health/live` (Liveness probe)
   - `GET /api/v1/health/ready` (Readiness probe)
+  - `POST /api/v1/public/contact` (Contact lead intake)
+  - `POST /api/v1/public/demo` (Demo request intake)
+  - `POST /api/v1/public/newsletter` (Newsletter subscription intake)
 
 ## Contract Drift Policy
 Web builds never query the live API during compilation. CI verifies contract synchronization via `pnpm test:contract-drift`:

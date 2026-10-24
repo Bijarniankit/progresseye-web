@@ -400,6 +400,16 @@ This document records architectural, visual, and copy decisions modifying or com
   - **Hindi / Multilingual Blocking**: Because public marketing copy resides in `.ts` configs rather than `messages/en.json` (which holds shared navigation, shell, and footer strings), full multilingual localization into Hindi (`hi`) or regional Indian languages is blocked until a dedicated migration occurs.
   - Public marketing copy remains English-only for Phase 8. A post-pilot i18n migration is scheduled in `docs/design/BACKLOG.md` to extract these typed configs into namespaced message catalogs before vernacular rollout.
 
+### D-039: Public Lead Intake Wiring, Idempotency & Turnstile Anti-Abuse
+- **Context & Problem**: Phase 9 connects public forms (`/contact`, `/demo`, footer newsletter) to the live API foundation while maintaining zero-network preview behavior when backend connectivity is disabled.
+- **Decision & Architecture**:
+  - **Feature Flag Gating**: `siteConfig.hasLeadBackend` is driven by `NEXT_PUBLIC_HAS_LEAD_BACKEND === "true"` (strictly defaulting to `false`). When `false`, forms execute client-side validation only, render honest not-connected notices, and dispatch zero network requests.
+  - **Form Schema Pruning**: The demo form is pruned of unverified fields (`phone`, `city/state`, `capacity`, `timing`) to align strictly with the API contract (`name`, `email`, `schoolName`, optional `notes`, `consentGiven: true`, honeypot `website_url`, optional `turnstileToken`).
+  - **Idempotency**: Generates a standard UUID v4 `Idempotency-Key` header on initial typing/mount. The key is preserved across retries of the identical payload to guarantee safe network replays. Any field modification regenerates a fresh UUID.
+  - **Cloudflare Turnstile**: `TurnstileWidget` is lazy-loaded only on form pages when `hasLeadBackend` is active and `NEXT_PUBLIC_TURNSTILE_SITE_KEY` is configured, preventing third-party script loading on static informational pages.
+  - **RFC 9457 Error Mapping**: `ApiProblemError` parses Problem Details payloads, mapping 400 `invalidParams` directly to inline field errors, 429 to retry-after notices, and 422 to key regeneration while strictly preserving user inputs and logging zero PII.
+
+
 
 
 

@@ -7,6 +7,41 @@ export interface RequestConfig {
   headers?: HeadersInit;
 }
 
+export interface ProblemInvalidParam {
+  name: string;
+  reason: string;
+}
+
+export interface ProblemDetailsPayload {
+  type?: string;
+  title?: string;
+  status?: number;
+  detail?: string;
+  instance?: string;
+  code?: string;
+  invalidParams?: ProblemInvalidParam[];
+  [key: string]: unknown;
+}
+
+export class ApiProblemError extends Error {
+  public readonly status: number;
+  public readonly problem: ProblemDetailsPayload;
+  public readonly retryAfter?: number;
+
+  constructor(status: number, problem: ProblemDetailsPayload = {}, retryAfter?: number) {
+    const message =
+      problem.detail ||
+      (typeof problem.message === "string" ? problem.message : undefined) ||
+      problem.title ||
+      `API error: ${status}`;
+    super(message);
+    this.name = "ApiProblemError";
+    this.status = status;
+    this.problem = problem;
+    this.retryAfter = retryAfter;
+  }
+}
+
 export const customFetchInstance = async <T>(
   config: RequestConfig,
   options: RequestInit = {},
@@ -54,9 +89,13 @@ export const customFetchInstance = async <T>(
   });
 
   if (!response.ok) {
-    const errorBody = await response.json().catch(() => ({}));
-    throw new Error(
-      (errorBody as { message?: string }).message || `API error: ${response.statusText}`,
+    const errorBody = (await response.json().catch(() => ({}))) as ProblemDetailsPayload;
+    const retryAfterHeader = response.headers.get("Retry-After");
+    const retryAfter = retryAfterHeader ? Number.parseInt(retryAfterHeader, 10) : undefined;
+    throw new ApiProblemError(
+      response.status,
+      errorBody,
+      Number.isNaN(retryAfter) ? undefined : retryAfter,
     );
   }
 

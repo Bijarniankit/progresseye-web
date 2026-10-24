@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LegalLayout } from "@/components/marketing/legal/legal-layout";
+import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "Privacy Policy (Draft)",
@@ -49,12 +50,23 @@ export default function PrivacyPage() {
             <strong className="text-text">Self-Hosted Assets:</strong> All fonts, icons, scripts,
             and stylesheets are delivered directly from our origin server.
           </li>
-          <li>
-            <strong className="text-text">Inquiry Forms Disconnected:</strong> Contact and demo
-            request forms on this website currently function as client-side interactive previews.
-            Submitting these forms does not transmit data over the network or persist records in a
-            database.
-          </li>
+          {siteConfig.hasLeadBackend ? (
+            <li>
+              <strong className="text-text">Inquiry &amp; Demonstration Intake:</strong> When you
+              submit a contact, demonstration, or newsletter inquiry, we process the provided
+              information (such as your name, institutional email address, school name, and message)
+              solely to communicate with your institution regarding ProgressEye. Inquiries are
+              protected by privacy-preserving anti-abuse tooling (Cloudflare Turnstile token
+              validation without transmitting client IP addresses) and rate limiting.
+            </li>
+          ) : (
+            <li>
+              <strong className="text-text">Inquiry Forms Disconnected:</strong> Contact and demo
+              request forms on this website currently function as client-side interactive previews.
+              Submitting these forms does not transmit data over the network or persist records in a
+              database.
+            </li>
+          )}
           <li>
             <strong className="text-text">Browser Storage:</strong> Functional preferences (
             <code className="text-xs">localStorage.theme</code> and{" "}

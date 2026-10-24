@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LegalLayout } from "@/components/marketing/legal/legal-layout";
+import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "Cookie & Storage Disclosure",
@@ -121,10 +122,21 @@ export default function CookiesPage() {
           3. Third-Party Requests & Telemetry
         </h2>
         <p className="text-sm text-text-muted leading-relaxed">
-          Network verification across all public marketing pages confirms that ProgressEye initiates{" "}
-          <strong className="text-text">zero third-party network requests</strong>. All fonts,
-          stylesheets, images, and application bundles are served directly from our origin domain
-          without reliance on external CDNs, trackers, or foreign web services.
+          {siteConfig.hasLeadBackend ? (
+            <>
+              Network verification across public marketing pages confirms that ProgressEye initiates
+              zero third-party advertising or tracking requests. When submitting public lead forms,
+              privacy-preserving anti-abuse verification is executed via Cloudflare Turnstile
+              without transmitting client IP addresses or setting behavioral tracking cookies.
+            </>
+          ) : (
+            <>
+              Network verification across all public marketing pages confirms that ProgressEye
+              initiates <strong className="text-text">zero third-party network requests</strong>.
+              All fonts, stylesheets, images, and application bundles are served directly from our
+              origin domain without reliance on external CDNs, trackers, or foreign web services.
+            </>
+          )}
         </p>
       </section>
 

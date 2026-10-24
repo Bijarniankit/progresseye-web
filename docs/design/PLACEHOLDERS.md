@@ -178,6 +178,16 @@ Phase 7 pages (About, FAQ, Contact) strictly follow Decision D-016 (Zero-Invente
 | **Student Data & AI/Ad Policy Claim** | `docs/design/PLACEHOLDERS.md` (removed from `/gdpr`) | `"We plan never to sell student data, use pupil records for advertising, or train public AI models on private institution records."` | `DRAFT-NEEDS-LEGAL-REVIEW` | **Yes** | Legal counsel review and sign-off on commercial/privacy commitments prior to launch. |
 | **India Data Center Residency Claim** | `src/app/(marketing)/privacy/page.tsx`, `src/app/(marketing)/gdpr/page.tsx` | `"For educational institutions in India, database instances and backups are planned to reside within data centers in India"` | `DRAFT-NEEDS-LEGAL-REVIEW` (`TODO-REAL-DATA`) | **Yes** | Hosting provider selection, cloud region verification (e.g. AWS ap-south-1 / GCP asia-south1), and legal review prior to commercial launch. |
 
+---
+
+## 11. Phase 9 Public Lead Intake & Anti-Abuse Configuration
+
+| Item / Claim | Config / File Location | Stated Text / Current Value | Status / Classification | Blocks Public Launch | Target Resolution |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Cloudflare Turnstile Production Site Key** | `src/config/site.ts`, `.env.example` | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (`"1x00000000000000000000AA"` test default) | `TODO-REAL-DATA` (Anti-abuse configuration) | **Yes** | Register production site domain on Cloudflare Turnstile dashboard and configure secret/site keys. |
+| **Lead Backend Production Activation Flag** | `src/config/site.ts`, `.env.example` | `NEXT_PUBLIC_HAS_LEAD_BACKEND` (`false` default) | Environment Feature Flag | **Yes** | Set to `"true"` in production deployment environment once API service and Mailpit/SMTP credentials are fully provisioned. |
+
+
 
 
 

@@ -1,9 +1,17 @@
 "use client";
 
-import { AlertCircle, ArrowRight } from "lucide-react";
+import { AlertCircle, ArrowRight, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { type FormEvent, useRef, useState } from "react";
 import { contactConfig } from "@/config/contact";
+import { siteConfig } from "@/config/site";
+import { ApiProblemError } from "@/lib/api/client";
+import {
+  publicControllerSubmitContact,
+  publicControllerSubmitDemo,
+} from "@/lib/api/generated/endpoints/public/public";
+import type { PublicLeadResponseDto } from "@/lib/api/generated/model";
+import { TurnstileWidget } from "./turnstile-widget";
 
 export interface InquiryFormProps {
   mode?: "contact" | "demo";
@@ -15,23 +23,18 @@ interface FormState {
   schoolName: string;
   topic: string;
   message: string;
-  phone: string;
-  city: string;
-  studentCount: string;
-  preferredTime: string;
+  notes: string;
   website: string; // Honeypot field
 }
 
 interface FormErrors {
   name?: string;
   email?: string;
+  schoolName?: string;
   topic?: string;
   message?: string;
-  phone?: string;
-  schoolName?: string;
-  city?: string;
-  studentCount?: string;
-  preferredTime?: string;
+  notes?: string;
+  general?: string;
 }
 
 const initialFormState: FormState = {
@@ -40,70 +43,72 @@ const initialFormState: FormState = {
   schoolName: "",
   topic: "",
   message: "",
-  phone: "",
-  city: "",
-  studentCount: "",
-  preferredTime: "",
+  notes: "",
   website: "",
 };
 
-export const STUDENT_COUNT_OPTIONS = [
-  { value: "under-250", label: "Under 250 students" },
-  { value: "250-500", label: "250 - 500 students" },
-  { value: "500-1000", label: "500 - 1,000 students" },
-  { value: "1000-plus", label: "1,000+ students" },
-];
-
-export const PREFERRED_TIME_OPTIONS = [
-  { value: "morning", label: "Morning (9:00 AM – 12:00 PM)" },
-  { value: "afternoon", label: "Afternoon (12:00 PM – 3:00 PM)" },
-  { value: "late-afternoon", label: "Late Afternoon (3:00 PM – 6:00 PM)" },
-];
-
-// Hand-written lightweight email validator (zero external dependency, 0 bytes Zod)
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-// Hand-written lightweight phone validator
-function isValidPhone(phone: string): boolean {
-  const digits = phone.replace(/\D/g, "");
-  return digits.length >= 10;
+function generateUuid(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
 }
 
 export function ContactForm({ mode = "contact" }: InquiryFormProps) {
   const isDemo = mode === "demo";
+  const prefix = isDemo ? "demo" : "contact";
+  const [hasBackend] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.get("backend") === "true") return true;
+    }
+    return siteConfig.hasLeadBackend;
+  });
+
   const [formData, setFormData] = useState<FormState>(initialFormState);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submittedNotice, setSubmittedNotice] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [turnstileToken, setTurnstileToken] = useState<string>("");
+  const [receipt, setReceipt] = useState<PublicLeadResponseDto | null>(null);
+
+  // Idempotency key per submission intent; regenerated on field edit
+  const idempotencyKeyRef = useRef<string>(generateUuid());
 
   // Field refs for focus shifting
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
-  const phoneRef = useRef<HTMLInputElement>(null);
   const schoolRef = useRef<HTMLInputElement>(null);
-  const cityRef = useRef<HTMLInputElement>(null);
-  const studentCountRef = useRef<HTMLSelectElement>(null);
-  const preferredTimeRef = useRef<HTMLSelectElement>(null);
   const topicRef = useRef<HTMLSelectElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
+  const notesRef = useRef<HTMLTextAreaElement>(null);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
   ) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    // Generate new idempotency key when user edits fields
+    idempotencyKeyRef.current = generateUuid();
     // Clear field-specific error as user types
-    if (errors[name as keyof FormErrors]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
+    if (errors[name as keyof FormErrors] || errors.general) {
+      setErrors((prev) => ({ ...prev, [name]: undefined, general: undefined }));
     }
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    // 1. Honeypot check: silent return if filled by bots
-    if (formData.website.trim().length > 0) {
+    // 1. Honeypot check for offline preview mode
+    if (!hasBackend && formData.website.trim().length > 0) {
       return;
     }
 
@@ -121,26 +126,8 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
     }
 
     if (isDemo) {
-      if (!formData.phone.trim()) {
-        newErrors.phone = "Please enter your phone number.";
-      } else if (!isValidPhone(formData.phone.trim())) {
-        newErrors.phone = "Please enter a valid phone number (at least 10 digits).";
-      }
-
       if (!formData.schoolName.trim() || formData.schoolName.trim().length < 2) {
         newErrors.schoolName = "Please enter your school or institution name.";
-      }
-
-      if (!formData.city.trim() || formData.city.trim().length < 2) {
-        newErrors.city = "Please enter your city.";
-      }
-
-      if (!formData.studentCount.trim()) {
-        newErrors.studentCount = "Please select estimated student count.";
-      }
-
-      if (!formData.preferredTime.trim()) {
-        newErrors.preferredTime = "Please select a preferred time.";
       }
     } else {
       if (!formData.topic.trim()) {
@@ -161,16 +148,8 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
         nameRef.current?.focus();
       } else if (newErrors.email) {
         emailRef.current?.focus();
-      } else if (isDemo && newErrors.phone) {
-        phoneRef.current?.focus();
       } else if (isDemo && newErrors.schoolName) {
         schoolRef.current?.focus();
-      } else if (isDemo && newErrors.city) {
-        cityRef.current?.focus();
-      } else if (isDemo && newErrors.studentCount) {
-        studentCountRef.current?.focus();
-      } else if (isDemo && newErrors.preferredTime) {
-        preferredTimeRef.current?.focus();
       } else if (!isDemo && newErrors.topic) {
         topicRef.current?.focus();
       } else if (!isDemo && newErrors.message) {
@@ -179,14 +158,137 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
       return;
     }
 
-    // 4. Validation passed: show honest submission notice
-    // NO network request made (zero fetch, zero telemetry)
-    // Field values preserved (do not clear user input on submit)
+    // 4. Offline mode: show honest submission notice with zero network requests
+    if (!hasBackend) {
+      setErrors({});
+      setSubmittedNotice(true);
+      return;
+    }
+
+    // 5. Backend mode: wire to live API with idempotency header
+    setIsSubmitting(true);
     setErrors({});
-    setSubmittedNotice(true);
+
+    try {
+      const headers = {
+        "Idempotency-Key": idempotencyKeyRef.current,
+      };
+
+      if (isDemo) {
+        const res = await publicControllerSubmitDemo(
+          {
+            name: formData.name.trim(),
+            email: formData.email.trim().toLowerCase(),
+            schoolName: formData.schoolName.trim(),
+            notes: formData.notes.trim() || undefined,
+            consentGiven: true,
+            website_url: formData.website.trim() || undefined,
+            turnstileToken: turnstileToken || undefined,
+          },
+          { headers },
+        );
+        setReceipt(res);
+      } else {
+        const res = await publicControllerSubmitContact(
+          {
+            name: formData.name.trim(),
+            email: formData.email.trim().toLowerCase(),
+            schoolName: formData.schoolName.trim() || undefined,
+            topic: formData.topic.trim() || undefined,
+            message: formData.message.trim(),
+            consentGiven: true,
+            website_url: formData.website.trim() || undefined,
+            turnstileToken: turnstileToken || undefined,
+          },
+          { headers },
+        );
+        setReceipt(res);
+      }
+    } catch (err: unknown) {
+      if (err instanceof ApiProblemError) {
+        if (err.status === 400 && err.problem.invalidParams) {
+          const fieldErrors: FormErrors = {};
+          for (const param of err.problem.invalidParams) {
+            fieldErrors[param.name as keyof FormErrors] = param.reason;
+          }
+          setErrors(fieldErrors);
+        } else if (err.status === 429) {
+          const retryMsg = err.retryAfter
+            ? `Too many requests. Please try again in ${Math.ceil(err.retryAfter / 60)} minutes.`
+            : "Too many requests. Please try again in a few minutes.";
+          setErrors({ general: retryMsg });
+        } else if (err.status === 422) {
+          // Idempotency payload mismatch; regenerate key and request retry
+          idempotencyKeyRef.current = generateUuid();
+          setErrors({
+            general: "Submission session expired. Please review your details and submit again.",
+          });
+        } else {
+          setErrors({
+            general: "Unable to process inquiry. Please check your information and try again.",
+          });
+        }
+      } else {
+        setErrors({
+          general: "A network error occurred. Please check your connection and try again.",
+        });
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
-  const prefix = isDemo ? "demo" : "contact";
+  function handleReset() {
+    setFormData(initialFormState);
+    setErrors({});
+    setSubmittedNotice(false);
+    setReceipt(null);
+    idempotencyKeyRef.current = generateUuid();
+  }
+
+  // 6. Connected Mode: Opaque Receipt Display
+  if (hasBackend && receipt) {
+    return (
+      <div
+        role="status"
+        aria-live="polite"
+        data-testid={isDemo ? "demo-receipt" : "contact-receipt"}
+        className="rounded-2xl border border-border bg-surface p-6 sm:p-8 lg:p-10 shadow-xs space-y-6"
+      >
+        <div className="flex items-start gap-4">
+          <div className="rounded-full bg-brand/10 p-3 text-brand">
+            <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
+          </div>
+          <div className="space-y-1">
+            <h2 className="font-display text-2xl font-bold tracking-tight text-text">
+              {isDemo ? "Demo Request Received" : "Inquiry Received"}
+            </h2>
+            <p className="text-sm text-text-muted">
+              Reference Code:{" "}
+              <code className="rounded bg-surface-subtle px-1.5 py-0.5 font-mono text-xs font-semibold text-brand">
+                Ref: {receipt.id.slice(0, 8)}
+              </code>
+            </p>
+          </div>
+        </div>
+
+        <p className="text-sm text-text-muted leading-relaxed">
+          Thank you for reaching out. Your inquiry has been logged securely and our team will review
+          it shortly.
+        </p>
+
+        <div>
+          <button
+            type="button"
+            onClick={handleReset}
+            className="inline-flex items-center justify-center rounded-full border border-border bg-surface px-5 py-2.5 text-sm font-semibold text-text hover:bg-surface-subtle transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
+          >
+            {isDemo ? "Request another demo" : "Send another message"}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-2xl border border-border bg-surface p-6 sm:p-8 lg:p-10 shadow-xs">
@@ -195,26 +297,32 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
           {isDemo ? "Schedule a Product Demo" : "Send us a message"}
         </h2>
         <p className="text-sm text-text-muted">
-          {isDemo ? (
-            "This form is not connected yet, so requests are not sent."
+          {!hasBackend ? (
+            isDemo ? (
+              "This form is not connected yet, so requests are not sent."
+            ) : (
+              <>
+                This form is not connected yet, so messages are not sent. To reach us,{" "}
+                <Link
+                  href="/demo"
+                  prefetch={false}
+                  className="font-semibold text-brand underline hover:text-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
+                >
+                  book a free demo
+                </Link>
+                .
+              </>
+            )
+          ) : isDemo ? (
+            "Explore planned ProgressEye workflows tailored to your school."
           ) : (
-            <>
-              This form is not connected yet, so messages are not sent. To reach us,{" "}
-              <Link
-                href="/demo"
-                prefetch={false}
-                className="font-semibold text-brand underline hover:text-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
-              >
-                book a free demo
-              </Link>
-              .
-            </>
+            "Have questions about features or deployment? Reach our team."
           )}
         </p>
       </div>
 
-      {/* Honest notice shown before typing on Demo page */}
-      {isDemo && !submittedNotice && (
+      {/* Honest notice shown before typing on Demo page (Offline mode only) */}
+      {!hasBackend && isDemo && !submittedNotice && (
         <div
           role="status"
           aria-live="polite"
@@ -233,8 +341,8 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
         </div>
       )}
 
-      {/* Submission Success Notice (Contact) */}
-      {!isDemo && submittedNotice && (
+      {/* Submission Success Notice (Contact Offline Mode) */}
+      {!hasBackend && !isDemo && submittedNotice && (
         <div
           role="status"
           aria-live="polite"
@@ -261,8 +369,8 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
         </div>
       )}
 
-      {/* Submission Notice (Demo) */}
-      {isDemo && submittedNotice && (
+      {/* Submission Notice (Demo Offline Mode) */}
+      {!hasBackend && isDemo && submittedNotice && (
         <div
           role="status"
           aria-live="polite"
@@ -277,6 +385,20 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
                 This form is not connected yet, so your request was not sent.
               </p>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* General Submission Error (Backend Mode) */}
+      {hasBackend && errors.general && (
+        <div
+          role="alert"
+          data-testid={`${prefix}-error-alert`}
+          className="mb-6 rounded-xl border border-brand bg-surface-subtle p-4 text-sm text-text"
+        >
+          <div className="flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 shrink-0 text-brand mt-0.5" aria-hidden="true" />
+            <p className="font-medium text-brand">{errors.general}</p>
           </div>
         </div>
       )}
@@ -322,7 +444,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
             placeholder="Your name"
             value={formData.name}
             onChange={handleChange}
-            aria-invalid={!!errors.name}
+            aria-invalid={errors.name ? "true" : "false"}
             aria-describedby={errors.name ? `${prefix}-name-error` : undefined}
             className={`w-full rounded-lg border bg-surface px-3.5 py-2.5 text-sm text-text placeholder:text-text-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus ${
               errors.name ? "border-brand" : "border-border hover:border-brand/40"
@@ -354,7 +476,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
             placeholder={isDemo ? "name@yourschool.example" : "e.g. principal@school.edu.in"}
             value={formData.email}
             onChange={handleChange}
-            aria-invalid={!!errors.email}
+            aria-invalid={errors.email ? "true" : "false"}
             aria-describedby={errors.email ? `${prefix}-email-error` : undefined}
             className={`w-full rounded-lg border bg-surface px-3.5 py-2.5 text-sm text-text placeholder:text-text-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus ${
               errors.email ? "border-brand" : "border-border hover:border-brand/40"
@@ -371,37 +493,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
           )}
         </div>
 
-        {/* Phone Field (Demo only) */}
-        {isDemo && (
-          <div className="space-y-1.5">
-            <label htmlFor="demo-phone" className="block text-sm font-medium text-text">
-              Phone number <span className="text-brand">*</span>
-            </label>
-            <input
-              ref={phoneRef}
-              id="demo-phone"
-              name="phone"
-              type="tel"
-              required
-              autoComplete="tel"
-              placeholder="+91 98765 43210"
-              value={formData.phone}
-              onChange={handleChange}
-              aria-invalid={!!errors.phone}
-              aria-describedby={errors.phone ? "demo-phone-error" : undefined}
-              className={`w-full rounded-lg border bg-surface px-3.5 py-2.5 text-sm text-text placeholder:text-text-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus ${
-                errors.phone ? "border-brand" : "border-border hover:border-brand/40"
-              }`}
-            />
-            {errors.phone && (
-              <p id="demo-phone-error" role="alert" className="text-xs font-medium text-brand mt-1">
-                {errors.phone}
-              </p>
-            )}
-          </div>
-        )}
-
-        {/* School Name */}
+        {/* School Name Field */}
         <div className="space-y-1.5">
           <label htmlFor={`${prefix}-school`} className="block text-sm font-medium text-text">
             School / Institution Name{" "}
@@ -412,7 +504,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
             )}
           </label>
           <input
-            ref={isDemo ? schoolRef : undefined}
+            ref={schoolRef}
             id={`${prefix}-school`}
             name="schoolName"
             type="text"
@@ -421,7 +513,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
             placeholder="Your school name"
             value={formData.schoolName}
             onChange={handleChange}
-            aria-invalid={!!errors.schoolName}
+            aria-invalid={errors.schoolName ? "true" : "false"}
             aria-describedby={errors.schoolName ? `${prefix}-school-error` : undefined}
             className={`w-full rounded-lg border bg-surface px-3.5 py-2.5 text-sm text-text placeholder:text-text-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus ${
               errors.schoolName ? "border-brand" : "border-border hover:border-brand/40"
@@ -438,111 +530,6 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
           )}
         </div>
 
-        {/* City (Demo only) */}
-        {isDemo && (
-          <div className="space-y-1.5">
-            <label htmlFor="demo-city" className="block text-sm font-medium text-text">
-              City / State <span className="text-brand">*</span>
-            </label>
-            <input
-              ref={cityRef}
-              id="demo-city"
-              name="city"
-              type="text"
-              required
-              placeholder="City, State"
-              value={formData.city}
-              onChange={handleChange}
-              aria-invalid={!!errors.city}
-              aria-describedby={errors.city ? "demo-city-error" : undefined}
-              className={`w-full rounded-lg border bg-surface px-3.5 py-2.5 text-sm text-text placeholder:text-text-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus ${
-                errors.city ? "border-brand" : "border-border hover:border-brand/40"
-              }`}
-            />
-            {errors.city && (
-              <p id="demo-city-error" role="alert" className="text-xs font-medium text-brand mt-1">
-                {errors.city}
-              </p>
-            )}
-          </div>
-        )}
-
-        {/* Student Count (Demo only) */}
-        {isDemo && (
-          <div className="space-y-1.5">
-            <label htmlFor="demo-student-count" className="block text-sm font-medium text-text">
-              Estimated Student Count <span className="text-brand">*</span>
-            </label>
-            <select
-              ref={studentCountRef}
-              id="demo-student-count"
-              name="studentCount"
-              required
-              value={formData.studentCount}
-              onChange={handleChange}
-              aria-invalid={!!errors.studentCount}
-              aria-describedby={errors.studentCount ? "demo-student-count-error" : undefined}
-              className={`w-full rounded-lg border bg-surface px-3.5 py-2.5 text-sm text-text transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus ${
-                errors.studentCount ? "border-brand" : "border-border hover:border-brand/40"
-              }`}
-            >
-              <option value="">Select student count...</option>
-              {STUDENT_COUNT_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-            {errors.studentCount && (
-              <p
-                id="demo-student-count-error"
-                role="alert"
-                className="text-xs font-medium text-brand mt-1"
-              >
-                {errors.studentCount}
-              </p>
-            )}
-          </div>
-        )}
-
-        {/* Preferred Time (Demo only) */}
-        {isDemo && (
-          <div className="space-y-1.5">
-            <label htmlFor="demo-preferred-time" className="block text-sm font-medium text-text">
-              Preferred Time <span className="text-brand">*</span>
-            </label>
-            <select
-              ref={preferredTimeRef}
-              id="demo-preferred-time"
-              name="preferredTime"
-              required
-              value={formData.preferredTime}
-              onChange={handleChange}
-              aria-invalid={!!errors.preferredTime}
-              aria-describedby={errors.preferredTime ? "demo-preferred-time-error" : undefined}
-              className={`w-full rounded-lg border bg-surface px-3.5 py-2.5 text-sm text-text transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus ${
-                errors.preferredTime ? "border-brand" : "border-border hover:border-brand/40"
-              }`}
-            >
-              <option value="">Select preferred time...</option>
-              {PREFERRED_TIME_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-            {errors.preferredTime && (
-              <p
-                id="demo-preferred-time-error"
-                role="alert"
-                className="text-xs font-medium text-brand mt-1"
-              >
-                {errors.preferredTime}
-              </p>
-            )}
-          </div>
-        )}
-
         {/* Topic Selector (Contact only) */}
         {!isDemo && (
           <div className="space-y-1.5">
@@ -556,7 +543,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
               required
               value={formData.topic}
               onChange={handleChange}
-              aria-invalid={!!errors.topic}
+              aria-invalid={errors.topic ? "true" : "false"}
               aria-describedby={errors.topic ? "contact-topic-error" : undefined}
               className={`w-full rounded-lg border bg-surface px-3.5 py-2.5 text-sm text-text transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus ${
                 errors.topic ? "border-brand" : "border-border hover:border-brand/40"
@@ -596,7 +583,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
               placeholder="How can we help your institution?"
               value={formData.message}
               onChange={handleChange}
-              aria-invalid={!!errors.message}
+              aria-invalid={errors.message ? "true" : "false"}
               aria-describedby={errors.message ? "contact-message-error" : undefined}
               className={`w-full rounded-lg border bg-surface px-3.5 py-2.5 text-sm text-text placeholder:text-text-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus ${
                 errors.message ? "border-brand" : "border-border hover:border-brand/40"
@@ -612,6 +599,44 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
               </p>
             )}
           </div>
+        )}
+
+        {/* Notes Field (Demo only) */}
+        {isDemo && (
+          <div className="space-y-1.5">
+            <label htmlFor="demo-notes" className="block text-sm font-medium text-text">
+              Notes or specific questions{" "}
+              <span className="text-xs font-normal text-text-muted">(Optional)</span>
+            </label>
+            <textarea
+              ref={notesRef}
+              id="demo-notes"
+              name="notes"
+              rows={3}
+              placeholder="Any specific areas of interest or questions?"
+              value={formData.notes}
+              onChange={handleChange}
+              aria-invalid={errors.notes ? "true" : "false"}
+              aria-describedby={errors.notes ? "demo-notes-error" : undefined}
+              className={`w-full rounded-lg border bg-surface px-3.5 py-2.5 text-sm text-text placeholder:text-text-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus ${
+                errors.notes ? "border-brand" : "border-border hover:border-brand/40"
+              }`}
+            />
+            {errors.notes && (
+              <p id="demo-notes-error" role="alert" className="text-xs font-medium text-brand mt-1">
+                {errors.notes}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Turnstile Anti-Abuse Widget (Backend Mode Only) */}
+        {hasBackend && (
+          <TurnstileWidget
+            hasBackend={hasBackend}
+            onVerify={(token) => setTurnstileToken(token)}
+            onExpire={() => setTurnstileToken("")}
+          />
         )}
 
         {/* Privacy Agreement Line */}
@@ -630,9 +655,12 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
         <div>
           <button
             type="submit"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-brand-foreground shadow-xs transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus sm:w-auto"
+            disabled={isSubmitting}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-brand-foreground shadow-xs transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus disabled:opacity-60 disabled:cursor-not-allowed sm:w-auto"
           >
-            <span>{isDemo ? "Request a demo" : "Send message"}</span>
+            <span>
+              {isSubmitting ? "Submitting..." : isDemo ? "Request a demo" : "Send message"}
+            </span>
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>

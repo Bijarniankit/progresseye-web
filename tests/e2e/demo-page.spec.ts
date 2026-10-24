@@ -22,11 +22,8 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
     // 3. Form elements present
     await expect(page.locator("#demo-name")).toBeVisible();
     await expect(page.locator("#demo-email")).toBeVisible();
-    await expect(page.locator("#demo-phone")).toBeVisible();
     await expect(page.locator("#demo-school")).toBeVisible();
-    await expect(page.locator("#demo-city")).toBeVisible();
-    await expect(page.locator("#demo-student-count")).toBeVisible();
-    await expect(page.locator("#demo-preferred-time")).toBeVisible();
+    await expect(page.locator("#demo-notes")).toBeVisible();
 
     // 4. Submit button
     const submitBtn = page.getByRole("button", { name: "Request a demo" });
@@ -58,6 +55,12 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
     await submitBtn.click();
     await expect(page.locator("#demo-email-error")).toContainText("Please enter a valid email");
     await expect(page.locator("#demo-email")).toBeFocused();
+
+    // Valid email, empty school -> focus moves to school
+    await page.fill("#demo-email", "principal@cityschool.edu.in");
+    await submitBtn.click();
+    await expect(page.locator("#demo-school-error")).toBeVisible();
+    await expect(page.locator("#demo-school")).toBeFocused();
   });
 
   test("submits honestly without clearing input and makes zero network requests", async ({
@@ -67,21 +70,15 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
 
     const nameInput = page.locator("#demo-name");
     const emailInput = page.locator("#demo-email");
-    const phoneInput = page.locator("#demo-phone");
     const schoolInput = page.locator("#demo-school");
-    const cityInput = page.locator("#demo-city");
-    const studentCountSelect = page.locator("#demo-student-count");
-    const preferredTimeSelect = page.locator("#demo-preferred-time");
+    const notesInput = page.locator("#demo-notes");
     const submitBtn = page.getByRole("button", { name: "Request a demo" });
 
     // Fill all required fields
     await nameInput.fill("Principal Sharma");
     await emailInput.fill("principal@cityschool.edu.in");
-    await phoneInput.fill("+91 98765 43210");
     await schoolInput.fill("City International School");
-    await cityInput.fill("Bengaluru, Karnataka");
-    await studentCountSelect.selectOption("500-1000");
-    await preferredTimeSelect.selectOption("morning");
+    await notesInput.fill("We would like a walkthrough of attendance and grading modules.");
 
     // Wait for any link prefetching to settle
     await page.waitForLoadState("networkidle");
@@ -110,11 +107,10 @@ test.describe("Phase 8 CP2: Demo Page (/demo)", () => {
     // Field values preserved
     await expect(nameInput).toHaveValue("Principal Sharma");
     await expect(emailInput).toHaveValue("principal@cityschool.edu.in");
-    await expect(phoneInput).toHaveValue("+91 98765 43210");
     await expect(schoolInput).toHaveValue("City International School");
-    await expect(cityInput).toHaveValue("Bengaluru, Karnataka");
-    await expect(studentCountSelect).toHaveValue("500-1000");
-    await expect(preferredTimeSelect).toHaveValue("morning");
+    await expect(notesInput).toHaveValue(
+      "We would like a walkthrough of attendance and grading modules.",
+    );
 
     // Zero API/telemetry requests dispatched
     expect(outgoingRequests).toHaveLength(0);
