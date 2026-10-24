@@ -115,3 +115,18 @@ The following unverified claims and planned placeholders in `docs/design/PLACEHO
 ### 8. Phase 10 Automated Launch-Readiness CI Build Check & Domain Verification
 - **Build Guard**: Implement an automated build/CI check that fails the build if rendered HTML contains `"TODO-REAL-DATA"` or the legal draft banner (`LegalDraftBanner` / `DRAFT-NEEDS-LEGAL-REVIEW`) while a launch flag is active (e.g. `NEXT_PUBLIC_LAUNCH_READY=true`).
 - **Domain Constant**: Re-verify that the canonical domain constant in `src/config/site.ts` (`siteConfig.url`) is final (`progresseye.in` vs `progresseye.com`) and that all metadata, OpenGraph, sitemap, and robots configurations resolve to the final production URL.
+
+### 9. NEXT_PUBLIC_APP_ENV Build-Time Inlining
+- **Problem**: `NEXT_PUBLIC_APP_ENV` is evaluated and inlined by the Next.js compiler at BUILD time. If omitted or not set to `"production"` during `next build`, `robots.txt` defaults to closed (`Disallow: /`).
+- **Action Plan**: Ensure build pipelines and container definitions explicitly set `NEXT_PUBLIC_APP_ENV="production"` at `next build` time in production environments.
+
+### 10. CI Duration Growth Investigation (5 min -> 13 min)
+- **Problem**: CI duration grew from ~5 min to ~13 min on the Phase 8 PR head.
+- **Action Plan**: Profile workflow steps (dependency caching, test sharding, headless browser runtimes, Lighthouse steps) to identify bottlenecks and restore target execution time (~5 min).
+
+### 11. Legal Copy Cleanups (Double Parenthetical & Terms Jurisdiction)
+- **Problem**:
+  1. `/privacy` and `/terms` contain double parentheticals: `(legal entity to be provided) (Corporate name placeholder: TODO-REAL-DATA)`.
+  2. `/terms` jurisdiction sentence: `subject to the exclusive jurisdiction to be provided (TODO-REAL-DATA)`.
+- **Action Plan**: Tidy the double parenthetical into a single clean draft notice and refine jurisdiction sentence wording once corporate registration is finalized.
+
