@@ -13,6 +13,17 @@ export interface FooterProps {
   hideNewsletter?: boolean;
 }
 
+function generateUuid(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
   const tFooter = useTranslations("footer");
   const pathname = usePathname();
@@ -27,9 +38,11 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
   const hideNewsletter = forcedHide ?? isLegalRoute;
 
   const [email, setEmail] = React.useState("");
+  const [honeypot, setHoneypot] = React.useState("");
   const [submitted, setSubmitted] = React.useState(false);
   const [error, setError] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const idempotencyKeyRef = React.useRef(generateUuid());
   const [hasBackend] = React.useState<boolean>(() => {
     if (typeof window !== "undefined") {
       const searchParams = new URLSearchParams(window.location.search);
@@ -46,6 +59,14 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
     }
     setError("");
 
+    // Honeypot check
+    if (honeypot.trim().length > 0) {
+      if (!hasBackend) {
+        setSubmitted(true);
+      }
+      return;
+    }
+
     if (!hasBackend) {
       setSubmitted(true);
       return;
@@ -53,24 +74,77 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
 
     setIsSubmitting(true);
     try {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "Idempotency-Key": idempotencyKeyRef.current,
+      };
+
+      const payload: Record<string, unknown> = {
+        email: email.trim().toLowerCase(),
+        consentGiven: true,
+      };
+
+      if (honeypot.trim().length > 0) {
+        payload.website_url = honeypot.trim();
+      }
+
+      if (
+        typeof window !== "undefined" &&
+        (window as unknown as { turnstile?: { getResponse?: () => string } }).turnstile?.getResponse
+      ) {
+        const token = (
+          window as unknown as { turnstile: { getResponse: () => string } }
+        ).turnstile.getResponse();
+        if (token) payload.turnstileToken = token;
+      }
+
       const res = await fetch("/api/v1/public/newsletter", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email.trim().toLowerCase(),
-          consentGiven: true,
-        }),
+        headers,
+        body: JSON.stringify(payload),
       });
+
       if (!res.ok) {
-        if (res.status === 429) {
-          setError("Too many requests. Please try again later.");
-        } else if (res.status === 400) {
-          setError("Please enter a valid email address.");
+        let errJson: {
+          invalidParams?: Array<{ name: string; reason: string }>;
+          detail?: string;
+        } | null = null;
+        try {
+          errJson = await res.json();
+        } catch {
+          // Response body was not JSON
+        }
+
+        if (res.status === 400) {
+          const emailErr = errJson?.invalidParams?.find((p) => p.name === "email");
+          if (emailErr?.reason) {
+            setError(emailErr.reason);
+          } else if (errJson?.detail) {
+            setError(errJson.detail);
+          } else {
+            setError("Please enter a valid email address.");
+          }
+        } else if (res.status === 422) {
+          idempotencyKeyRef.current = generateUuid();
+          setError("Subscription session expired. Please review your details and submit again.");
+        } else if (res.status === 429) {
+          const retryHeader = res.headers.get("Retry-After");
+          if (retryHeader) {
+            const seconds = parseInt(retryHeader, 10);
+            if (!Number.isNaN(seconds) && seconds > 0) {
+              setError(
+                `Too many requests. Please try again in ${Math.ceil(seconds / 60)} minutes.`,
+              );
+              return;
+            }
+          }
+          setError("Too many requests. Please try again in a few minutes.");
         } else {
           setError("Unable to subscribe. Please try again later.");
         }
         return;
       }
+
       setSubmitted(true);
     } catch {
       setError("Network error. Please try again.");
@@ -138,6 +212,25 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
                   onSubmit={handleNewsletterSubmit}
                   className="max-w-md flex flex-col sm:flex-row gap-2"
                 >
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: "-9999px",
+                      opacity: 0,
+                      height: 0,
+                      width: 0,
+                    }}
+                    aria-hidden="true"
+                  >
+                    <input
+                      type="text"
+                      name="website_url"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={honeypot}
+                      onChange={(e) => setHoneypot(e.target.value)}
+                    />
+                  </div>
                   <div className="relative flex-1">
                     <label htmlFor="footer-newsletter-email" className="sr-only">
                       {tFooter("newsletterPlaceholder")}
@@ -146,7 +239,11 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
                       id="footer-newsletter-email"
                       type="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        idempotencyKeyRef.current = generateUuid();
+                        if (error) setError("");
+                      }}
                       placeholder={tFooter("newsletterPlaceholder")}
                       className="rounded-full bg-[var(--color-surface)]/80 backdrop-blur-sm border-[var(--color-border)] px-4 py-2 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-subtle)] focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] transition-shadow"
                       aria-label={tFooter("newsletterPlaceholder")}
@@ -165,13 +262,16 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
 
                 {error && <p className="text-xs text-[var(--color-danger)]">{error}</p>}
 
-                {submitted && (
-                  <output className="block text-xs font-medium text-[var(--color-brand)] bg-[var(--color-surface-subtle)] p-2.5 rounded-[var(--radius-md)] border border-[var(--color-border)]">
-                    {hasBackend
-                      ? "Subscribed! Thank you for staying updated."
-                      : tFooter("newsletterNotice")}
-                  </output>
-                )}
+                {submitted &&
+                  (hasBackend ? (
+                    <output className="block text-xs font-medium text-[var(--color-brand)] bg-[var(--color-surface-subtle)] p-2.5 rounded-[var(--radius-md)] border border-[var(--color-border)]">
+                      Subscribed! Thank you for staying updated.
+                    </output>
+                  ) : (
+                    <p className="text-xs font-medium text-[var(--color-brand)] bg-[var(--color-surface-subtle)] p-2.5 rounded-[var(--radius-md)] border border-[var(--color-border)]">
+                      {tFooter("newsletterNotice")}
+                    </p>
+                  ))}
 
                 <p className="text-xs text-[var(--color-text-subtle)] leading-normal pt-1">
                   {tFooter("newsletterPrivacy")}

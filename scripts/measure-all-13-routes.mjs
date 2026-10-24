@@ -1,7 +1,12 @@
 import { spawn } from "node:child_process";
 import http from "node:http";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import zlib from "node:zlib";
 import { chromium } from "@playwright/test";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const WEB_ROOT = path.resolve(__dirname, "..");
 
 const ROUTES = [
   "/",
@@ -20,7 +25,7 @@ const ROUTES = [
 ];
 
 const PHASE8_BASELINE = {
-  "/": { chunks: 14, gzip: 209359 },
+  "/": { chunks: 15, gzip: 219484 },
   "/about": { chunks: 14, gzip: 209359 },
   "/features": { chunks: 14, gzip: 209359 },
   "/demo": { chunks: 15, gzip: 212748 },
@@ -29,8 +34,8 @@ const PHASE8_BASELINE = {
   "/faq": { chunks: 14, gzip: 209359 },
   "/contact": { chunks: 15, gzip: 212748 },
   "/login": { chunks: 14, gzip: 209359 },
-  "/privacy": { chunks: 14, gzip: 209359 },
-  "/terms": { chunks: 14, gzip: 209359 },
+  "/privacy": { chunks: 14, gzip: 208413 },
+  "/terms": { chunks: 14, gzip: 208413 },
   "/cookies": { chunks: 14, gzip: 209359 },
   "/gdpr": { chunks: 14, gzip: 209359 },
 };
@@ -61,7 +66,7 @@ async function main() {
   const server = spawn("pnpm", ["next", "start", "-p", String(port)], {
     shell: true,
     stdio: "inherit",
-    cwd: process.cwd(),
+    cwd: WEB_ROOT,
   });
 
   try {
