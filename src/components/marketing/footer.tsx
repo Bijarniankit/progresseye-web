@@ -30,6 +30,13 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
   const [submitted, setSubmitted] = React.useState(false);
   const [error, setError] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [hasBackend] = React.useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.get("backend") === "true") return true;
+    }
+    return siteConfig.hasLeadBackend;
+  });
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +46,7 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
     }
     setError("");
 
-    if (!siteConfig.hasLeadBackend) {
+    if (!hasBackend) {
       setSubmitted(true);
       return;
     }
@@ -49,16 +56,24 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
       const res = await fetch("/api/v1/public/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          consentGiven: true,
+        }),
       });
       if (!res.ok) {
-        const problem = (await res.json().catch(() => null)) as { detail?: string } | null;
-        setError(problem?.detail || "Subscription failed. Please try again.");
+        if (res.status === 429) {
+          setError("Too many requests. Please try again later.");
+        } else if (res.status === 400) {
+          setError("Please enter a valid email address.");
+        } else {
+          setError("Unable to subscribe. Please try again later.");
+        }
         return;
       }
       setSubmitted(true);
     } catch {
-      setError("Network error. Please try again later.");
+      setError("Network error. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -148,14 +163,14 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
                   </Button>
                 </form>
 
-                {error && <p className="text-xs text-[var(--color-error)]">{error}</p>}
+                {error && <p className="text-xs text-[var(--color-danger)]">{error}</p>}
 
-                {submitted && !error && (
-                  <p className="text-xs text-[var(--color-sage-deep)] font-medium">
-                    {siteConfig.hasLeadBackend
-                      ? "Thank you for subscribing to ProgressEye updates."
+                {submitted && (
+                  <output className="block text-xs font-medium text-[var(--color-brand)] bg-[var(--color-surface-subtle)] p-2.5 rounded-[var(--radius-md)] border border-[var(--color-border)]">
+                    {hasBackend
+                      ? "Subscribed! Thank you for staying updated."
                       : tFooter("newsletterNotice")}
-                  </p>
+                  </output>
                 )}
 
                 <p className="text-xs text-[var(--color-text-subtle)] leading-normal pt-1">
