@@ -29,7 +29,6 @@ const baseConfig: NextConfig = {
               "frame-src https://challenges.cloudflare.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "connect-src 'self' https://challenges.cloudflare.com",
-              "upgrade-insecure-requests",
             ].join("; "),
           },
           {
