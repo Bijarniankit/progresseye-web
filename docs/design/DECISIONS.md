@@ -409,18 +409,16 @@ This document records architectural, visual, and copy decisions modifying or com
   - **Cloudflare Turnstile**: `TurnstileWidget` is lazy-loaded only on form pages when `hasLeadBackend` is active and `NEXT_PUBLIC_TURNSTILE_SITE_KEY` is configured, preventing third-party script loading on static informational pages.
   - **RFC 9457 Error Mapping**: `ApiProblemError` parses Problem Details payloads, mapping 400 `invalidParams` directly to inline field errors, 429 to retry-after notices, and 422 to key regeneration while strictly preserving user inputs and logging zero PII.
 
-### D-040: Phase 9 Bundle Size Analysis, Chunk Splitting & Recorded Deviation
+### D-040: Phase 9/10 Bundle Size Analysis, Chunk Splitting & Open Regression Gate
 - **Context & Audit**: In Phase 9, connecting the lead forms and integrating conditional legal disclosures resulted in route bundle shifts. The target limit for static route growth was <= 1 kB gzip over Phase 8 baseline (`7df3cab`: 209,359 B gzip across 14 chunks).
-- **Chunk Investigation**:
-  - Turbopack build analysis identified that the addition of runtime dynamic import manifests and conditional rendering split shared chunks into two additional files:
-    1. Turbopack dynamic chunk loader / manifest (`3i5o9k61wa6tf.js` / `3bchc6citkgy9.js` ~199 B - 3.9 kB raw / 199 B - 3.9 kB gzip).
-    2. Shared i18n & layout message chunk splitting (`2y47m2-m78uqi.js` / `0e632mh7ioflb.js` ~6.9 kB gzip).
-  - Attempted lazy optimization: Extracted the footer newsletter interactive form into `FooterNewsletter` (`src/components/marketing/footer-newsletter.tsx`) loaded via `next/dynamic`.
-  - **Results**:
-    - Legal routes (`/privacy`, `/terms`, `/cookies`, `/gdpr`) load 16 chunks with 211,563 B gzip (a net delta of +2,204 B gzip over Phase 8 baseline 209,359 B).
-    - Informational marketing routes load 17 chunks with 213,217 B gzip.
-    - Form routes (`/contact`, `/demo`) load 18 chunks with 218,572 B gzip (+5,355 B gzip over static baseline for the interactive form island).
-- **Recorded Deviation**: Static route bundle size grew by ~2.2 kB gzip (exceeding the 1 kB budget). This deviation is caused by Next.js / Turbopack's compiler splitting runtime chunks and dynamic import boundaries rather than leaked API client code (the generated API client and TanStack Query code are completely excluded from initial shared chunks). Accepted and recorded for further optimization in Phase 10.
+- **Chunk Investigation & Dynamic Split Reversal**:
+  - Turbopack build analysis identified that an attempted lazy optimization (`next/dynamic` split of `FooterNewsletter` in `src/components/marketing/footer-newsletter.tsx`) introduced additional dynamic chunk loader manifests, worsening static route bundles (+3,858 B gzip on marketing routes, +2,204 B gzip on legal routes).
+  - The `next/dynamic` split was rejected by user decision and immediately reverted: `footer-newsletter.tsx` was deleted, and the newsletter form was inlined back into `src/components/marketing/footer.tsx` using native `fetch('/api/v1/public/newsletter')`.
+  - Audits confirmed zero leaks of Zod, the generated OpenAPI client, or Turnstile into shared layout chunks.
+- **Open Gate Status (REJECTED AS DEVIATION — ACTIVE PHASE 10 GATE)**:
+  - The user explicitly did NOT accept deviation D-040. D-040 is classified as an **OPEN GATE** for Phase 10 staging validation.
+  - Initial HTML script payload on static routes is measured at 209,988 B gzip (+629 B delta vs Phase 8 baseline 209,359 B; passes <= 1 kB budget). In full-page Playwright network traces with viewport link prefetching, the static bundle transfers 210,934 B gzip across 15 chunks (+1,575 B delta due to navbar prefetching of `/demo` island loader chunk `3eeu8xwuopf38.js` 946 B gzip).
+  - Gate criteria: Static route transfer size must remain strictly <= +1 kB gzip over Phase 8 baseline in clean initial page loads, and all prefetch behaviors must be verified prior to staging launch.
 
 
 

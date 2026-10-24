@@ -134,9 +134,14 @@ The following unverified claims and planned placeholders in `docs/design/PLACEHO
 - **Phase 10 Production Activation Gate**:
   - `NEXT_PUBLIC_HAS_LEAD_BACKEND` must stay `false` until the staging full-stack e2e (form -> API -> DB -> Mailpit/SES) passes.
 - **Phase 10 Verification Tasks**:
-  - **Turnstile Storage Audit**: Execute empirical cookie, localStorage, and sessionStorage audit with the real Cloudflare Turnstile widget rendered in staging, updating `/cookies` disclosures with confirmed behavior.
   - Verify end-to-end Mailpit/SMTP delivery against live institutional school domains once email server credentials are provisioned.
   - Monitor Redis queue processing latency and configure worker alert notifications for failed jobs in BullMQ.
   - Monitor Cloudflare Turnstile rejection rate and challenge solve times in production when live domain keys replace test keys.
+
+### 13. Phase 10 Formal Staging Launch Gates
+- **Newsletter Consent Contract Check**: Currently, the client unit test compares the newsletter consent text to a literal copy of the server string (cross-repo). In Phase 10, add a formal contract verification check or move the canonical consent string into the shared OpenAPI schema contract so any server-side change triggers a contract violation.
+- **Flag-ON Turnstile Storage Audit**: Run a live browser audit of cookies, localStorage, and sessionStorage with `NEXT_PUBLIC_HAS_LEAD_BACKEND="true"` and the real Cloudflare Turnstile script mounted, updating `/cookies` disclosures with empirically verified storage keys before public launch.
+- **Backend Activation Gate**: `NEXT_PUBLIC_HAS_LEAD_BACKEND` must stay `false` until the staging full-stack end-to-end integration test (web form submission -> Fastify API -> PostgreSQL DB insert -> BullMQ queue worker -> Mailpit/SES email delivery) passes in the staging environment.
+
 
 
