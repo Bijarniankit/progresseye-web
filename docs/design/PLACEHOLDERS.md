@@ -176,6 +176,8 @@ Phase 7 pages (About, FAQ, Contact) strictly follow Decision D-016 (Zero-Invente
 | **"Up to 100 students"** | `src/config/pricing.ts` (`starter.studentLimit`), `src/components/marketing/get-started/pricing-matrix.tsx` | `"Up to 100 students (Planned limit)"` | Invented threshold cap for free Starter tier (`TODO-REAL-DATA`) | **Yes** | Product capacity & infrastructure unit economics sign-off. |
 | **"No credit card required"** | `src/components/marketing/cta/cta-section.tsx`, `src/app/(marketing)/get-started/page.tsx` | `"No credit card required"` | Commercial onboarding terms (`TODO-REAL-DATA`) | **Yes** | Billing gateway integration & trial terms sign-off. |
 | **Student Data & AI/Ad Policy Claim** | `docs/design/PLACEHOLDERS.md` (removed from `/gdpr`) | `"We plan never to sell student data, use pupil records for advertising, or train public AI models on private institution records."` | `DRAFT-NEEDS-LEGAL-REVIEW` | **Yes** | Legal counsel review and sign-off on commercial/privacy commitments prior to launch. |
+| **India Data Center Residency Claim** | `src/app/(marketing)/privacy/page.tsx`, `src/app/(marketing)/gdpr/page.tsx` | `"For educational institutions in India, database instances and backups are planned to reside within data centers in India"` | `DRAFT-NEEDS-LEGAL-REVIEW` (`TODO-REAL-DATA`) | **Yes** | Hosting provider selection, cloud region verification (e.g. AWS ap-south-1 / GCP asia-south1), and legal review prior to commercial launch. |
+
 
 
 
