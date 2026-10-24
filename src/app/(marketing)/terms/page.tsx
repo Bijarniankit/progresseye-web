@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LegalLayout } from "@/components/marketing/legal/legal-layout";
+import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "Terms of Service (Draft)",
@@ -30,6 +31,13 @@ export default function TermsPage() {
           commercial contracts are executed through this website today, and preview access does not
           establish a paid service relationship.
         </p>
+        {siteConfig.hasLeadBackend && (
+          <p className="text-sm text-text-muted leading-relaxed">
+            Inquiries and demonstration requests submitted through public forms express interest
+            only and do not constitute commercial commitments, binding purchase orders, or service
+            level agreements.
+          </p>
+        )}
       </section>
 
       <section className="space-y-4 pt-6 border-t border-border">

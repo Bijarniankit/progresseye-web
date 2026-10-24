@@ -13,6 +13,8 @@ export const siteConfig = {
   hasOpenRoles: false, // Show "We're hiring" badge only when open positions exist (default: false)
   hasLegalDraftNotice: true, // Display DRAFT-NEEDS-LEGAL-REVIEW notice banner on legal pages (default: true; set to false after legal sign-off)
   hasConsentBanner: false, // Cookie consent banner (default: false; rendered only when non-essential cookies exist)
+  hasLeadBackend: process.env.NEXT_PUBLIC_HAS_LEAD_BACKEND === "true", // Connect public lead forms to API (default: false)
+  turnstileSiteKey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "", // Cloudflare Turnstile public site key
   hasConfiguredSocial: Boolean(
     process.env.NEXT_PUBLIC_TWITTER_URL ||
       process.env.NEXT_PUBLIC_LINKEDIN_URL ||

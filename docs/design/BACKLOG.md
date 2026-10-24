@@ -104,9 +104,9 @@ The following unverified claims and planned placeholders in `docs/design/PLACEHO
   - Enforce compile-time type safety over translation keys via `next-intl` type generation.
   - Retain typed configs for structural metadata (routes, icon keys, numeric pricing constants) while delegating user-facing text to message catalogs.
 
-### 6. Demo Form Data Minimisation Review (Pre-Wiring / Phase 9)
-- **Problem**: The prototype demo form (`/demo`) currently accepts 7 inputs: name, email, phone number, school name, city/state, student capacity, and preferred time.
-- **Action Plan**: Prior to wiring backend API lead capture endpoints in Phase 9, perform a statutory data minimisation review under DPDP guidelines. Determine whether phone, city/state, capacity, and timing selections can be pruned or deferred to post-inquiry communication, reducing initial collection scope to essential contact data.
+### 6. Demo Form Data Minimisation Review (Completed in Phase 9)
+- **Status**: Completed in Phase 9.
+- **Action Completed**: In accordance with DPDP data minimisation principles, `/demo` was pruned of unverified fields (`phone`, `city/state`, `capacity`, `timing`), reducing intake scope to essential contact data (`name`, `email`, `schoolName`, and optional `notes`).
 
 ### 7. /careers LCP 2.35 s Investigation (Phase 10)
 - **Problem**: `/careers` is a 100% Server Component with 0 B route-specific client JS, yet exhibits mobile LCP around ~2.35 s under mobile throttling.
@@ -129,4 +129,11 @@ The following unverified claims and planned placeholders in `docs/design/PLACEHO
   1. `/privacy` and `/terms` contain double parentheticals: `(legal entity to be provided) (Corporate name placeholder: TODO-REAL-DATA)`.
   2. `/terms` jurisdiction sentence: `subject to the exclusive jurisdiction to be provided (TODO-REAL-DATA)`.
 - **Action Plan**: Tidy the double parenthetical into a single clean draft notice and refine jurisdiction sentence wording once corporate registration is finalized.
+
+### 12. Lead Intake Production Pipeline Verification & Monitoring (Phase 10)
+- **Action Plan**:
+  - Verify end-to-end Mailpit/SMTP delivery against live institutional school domains once email server credentials are provisioned.
+  - Monitor Redis queue processing latency and configure worker alert notifications for failed jobs in BullMQ.
+  - Monitor Cloudflare Turnstile rejection rate and challenge solve times in production when live domain keys replace test keys.
+
 
