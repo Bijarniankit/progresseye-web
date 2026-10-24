@@ -131,7 +131,10 @@ The following unverified claims and planned placeholders in `docs/design/PLACEHO
 - **Action Plan**: Tidy the double parenthetical into a single clean draft notice and refine jurisdiction sentence wording once corporate registration is finalized.
 
 ### 12. Lead Intake Production Pipeline Verification & Monitoring (Phase 10)
-- **Action Plan**:
+- **Phase 10 Production Activation Gate**:
+  - `NEXT_PUBLIC_HAS_LEAD_BACKEND` must stay `false` until the staging full-stack e2e (form -> API -> DB -> Mailpit/SES) passes.
+- **Phase 10 Verification Tasks**:
+  - **Turnstile Storage Audit**: Execute empirical cookie, localStorage, and sessionStorage audit with the real Cloudflare Turnstile widget rendered in staging, updating `/cookies` disclosures with confirmed behavior.
   - Verify end-to-end Mailpit/SMTP delivery against live institutional school domains once email server credentials are provisioned.
   - Monitor Redis queue processing latency and configure worker alert notifications for failed jobs in BullMQ.
   - Monitor Cloudflare Turnstile rejection rate and challenge solve times in production when live domain keys replace test keys.

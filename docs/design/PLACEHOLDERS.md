@@ -185,7 +185,8 @@ Phase 7 pages (About, FAQ, Contact) strictly follow Decision D-016 (Zero-Invente
 | Item / Claim | Config / File Location | Stated Text / Current Value | Status / Classification | Blocks Public Launch | Target Resolution |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Cloudflare Turnstile Production Site Key** | `src/config/site.ts`, `.env.example` | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (`"1x00000000000000000000AA"` test default) | `TODO-REAL-DATA` (Anti-abuse configuration) | **Yes** | Register production site domain on Cloudflare Turnstile dashboard and configure secret/site keys. |
-| **Lead Backend Production Activation Flag** | `src/config/site.ts`, `.env.example` | `NEXT_PUBLIC_HAS_LEAD_BACKEND` (`false` default) | Environment Feature Flag | **Yes** | Set to `"true"` in production deployment environment once API service and Mailpit/SMTP credentials are fully provisioned. |
+| **Turnstile Storage & Cookie Verification** | `src/app/(marketing)/cookies/page.tsx` | Turnstile storage not yet verified | `TODO-REAL-DATA` (Launch-blocking verification) | **Yes** | Execute empirical storage and network audit against live Cloudflare Turnstile widget in staging before enabling backend in production. |
+| **Lead Backend Production Activation Flag** | `src/config/site.ts`, `.env.example` | `NEXT_PUBLIC_HAS_LEAD_BACKEND` (`false` default) | Environment Feature Flag | **Yes** | `NEXT_PUBLIC_HAS_LEAD_BACKEND` must stay `false` until the staging full-stack e2e (form -> API -> DB -> Mailpit/SES) passes. |
 
 
 

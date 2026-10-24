@@ -2,7 +2,9 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ContactForm } from "@/components/marketing/contact/contact-form";
 import { siteConfig } from "@/config/site";
+import { validateProductionTurnstileConfig } from "@/config/turnstile-env";
 import * as api from "@/lib/api/generated/endpoints/public/public";
+import enMessages from "../../messages/en.json";
 
 // Mock next/link
 vi.mock("next/link", () => ({
@@ -218,6 +220,92 @@ describe("Lead Forms Unit Tests (Contact & Demo)", () => {
       });
       expect(screen.getByText(/Demo Request Received/i)).toBeInTheDocument();
       expect(screen.getByText(/Ref: d9876543/i)).toBeInTheDocument();
+    });
+  });
+
+  describe("Honeypot Field Verification", () => {
+    it("renders honeypot field with name and id matching API schema field 'website_url'", () => {
+      const { container } = render(<ContactForm mode="contact" />);
+      const honeypot = container.querySelector('input[name="website_url"]');
+      expect(honeypot).toBeInTheDocument();
+      expect(honeypot).toHaveAttribute("id", "contact-website_url");
+      expect(honeypot).toHaveAttribute("tabindex", "-1");
+    });
+  });
+
+  describe("Production Turnstile Validation (validateProductionTurnstileConfig)", () => {
+    it("rejects production build if NEXT_PUBLIC_TURNSTILE_SITE_KEY is a Cloudflare test key when flag is on", () => {
+      expect(() =>
+        validateProductionTurnstileConfig({
+          appEnv: "production",
+          hasLeadBackend: "true",
+          siteKey: "1x00000000000000000000AA",
+        }),
+      ).toThrowError(/cannot be a Cloudflare test key/);
+
+      expect(() =>
+        validateProductionTurnstileConfig({
+          appEnv: "production",
+          hasLeadBackend: true,
+          siteKey: "2x00000000000000000000AB",
+        }),
+      ).toThrowError(/cannot be a Cloudflare test key/);
+
+      expect(() =>
+        validateProductionTurnstileConfig({
+          appEnv: "production",
+          hasLeadBackend: true,
+          siteKey: "3x00000000000000000000FF",
+        }),
+      ).toThrowError(/cannot be a Cloudflare test key/);
+    });
+
+    it("rejects production build if site key is empty when flag is on", () => {
+      expect(() =>
+        validateProductionTurnstileConfig({
+          appEnv: "production",
+          hasLeadBackend: true,
+          siteKey: "",
+        }),
+      ).toThrowError(/NEXT_PUBLIC_TURNSTILE_SITE_KEY is required/);
+    });
+
+    it("allows production build when valid non-test production key is provided", () => {
+      expect(() =>
+        validateProductionTurnstileConfig({
+          appEnv: "production",
+          hasLeadBackend: true,
+          siteKey: "0x4AAAAAAtestRealProdKey123",
+        }),
+      ).not.toThrow();
+    });
+
+    it("allows test keys when not in production environment or flag is off", () => {
+      expect(() =>
+        validateProductionTurnstileConfig({
+          appEnv: "development",
+          hasLeadBackend: true,
+          siteKey: "1x00000000000000000000AA",
+        }),
+      ).not.toThrow();
+
+      expect(() =>
+        validateProductionTurnstileConfig({
+          appEnv: "production",
+          hasLeadBackend: false,
+          siteKey: "1x00000000000000000000AA",
+        }),
+      ).not.toThrow();
+    });
+  });
+
+  describe("Newsletter Consent Text Synchronization", () => {
+    it("asserts client newsletter consent copy exactly matches server consent template", () => {
+      // Server template from src/modules/public/domain/consent-templates.ts:
+      // "By subscribing, you agree to receive ProgressEye product updates and announcements."
+      const serverTemplate =
+        "By subscribing, you agree to receive ProgressEye product updates and announcements.";
+      expect(enMessages.footer.newsletterPrivacy).toBe(serverTemplate);
     });
   });
 });

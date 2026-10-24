@@ -24,7 +24,7 @@ interface FormState {
   topic: string;
   message: string;
   notes: string;
-  website: string; // Honeypot field
+  website_url: string; // Honeypot field
 }
 
 interface FormErrors {
@@ -44,7 +44,7 @@ const initialFormState: FormState = {
   topic: "",
   message: "",
   notes: "",
-  website: "",
+  website_url: "",
 };
 
 function isValidEmail(email: string): boolean {
@@ -108,7 +108,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
     e.preventDefault();
 
     // 1. Honeypot check for offline preview mode
-    if (!hasBackend && formData.website.trim().length > 0) {
+    if (!hasBackend && formData.website_url.trim().length > 0) {
       return;
     }
 
@@ -182,7 +182,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
             schoolName: formData.schoolName.trim(),
             notes: formData.notes.trim() || undefined,
             consentGiven: true,
-            website_url: formData.website.trim() || undefined,
+            website_url: formData.website_url.trim() || undefined,
             turnstileToken: turnstileToken || undefined,
           },
           { headers },
@@ -197,7 +197,7 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
             topic: formData.topic.trim() || undefined,
             message: formData.message.trim(),
             consentGiven: true,
-            website_url: formData.website.trim() || undefined,
+            website_url: formData.website_url.trim() || undefined,
             turnstileToken: turnstileToken || undefined,
           },
           { headers },
@@ -417,14 +417,14 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
             overflow: "hidden",
           }}
         >
-          <label htmlFor={`${prefix}-website`}>Leave this field blank</label>
+          <label htmlFor={`${prefix}-website_url`}>Leave this field blank</label>
           <input
-            id={`${prefix}-website`}
-            name="website"
+            id={`${prefix}-website_url`}
+            name="website_url"
             type="text"
             tabIndex={-1}
             autoComplete="off"
-            value={formData.website}
+            value={formData.website_url}
             onChange={handleChange}
           />
         </div>

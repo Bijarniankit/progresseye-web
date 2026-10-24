@@ -8,6 +8,13 @@ vi.mock("next/navigation", () => ({
   usePathname: () => "/",
 }));
 
+vi.mock("next/dynamic", async () => {
+  const { FooterNewsletter } = await import("@/components/marketing/footer-newsletter");
+  return {
+    default: () => FooterNewsletter,
+  };
+});
+
 function renderFooter(props?: { hideNewsletter?: boolean }) {
   return render(
     <NextIntlClientProvider locale="en" messages={messages}>

@@ -1,5 +1,12 @@
 import path from "node:path";
 import type { NextConfig } from "next";
+import { validateProductionTurnstileConfig } from "./src/config/turnstile-env";
+
+validateProductionTurnstileConfig({
+  appEnv: process.env.NEXT_PUBLIC_APP_ENV,
+  hasLeadBackend: process.env.NEXT_PUBLIC_HAS_LEAD_BACKEND,
+  siteKey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+});
 
 const baseConfig: NextConfig = {
   reactStrictMode: true,
