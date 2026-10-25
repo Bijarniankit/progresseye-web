@@ -56,6 +56,8 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
     return siteConfig.hasLeadBackend;
   });
 
+  const isTurnstileRequired = hasBackend && !!siteConfig.turnstileSiteKey;
+
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email?.includes("@")) {
@@ -95,13 +97,24 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
       setSubmitted(true);
     } catch (err: unknown) {
       if (err instanceof ApiProblemError) {
-        if (err.status === 400 && err.problem.invalidParams) {
+        if (err.status === 409) {
+          setError("A request is already in progress. Please wait a moment and try again.");
+        } else if (err.status === 400 && err.problem.invalidParams) {
           const emailErr = err.problem.invalidParams.find((p) => p.name === "email");
           if (emailErr?.reason) {
             setError(emailErr.reason);
           } else {
             setError(err.message || "Please enter a valid email address.");
           }
+        } else if (
+          err.status === 400 &&
+          (err.message?.toLowerCase().includes("spam verification") ||
+            err.problem?.detail?.toLowerCase().includes("spam verification") ||
+            err.problem?.title?.toLowerCase().includes("spam verification") ||
+            err.problem?.detail?.toLowerCase().includes("turnstile") ||
+            err.problem?.title?.toLowerCase().includes("turnstile"))
+        ) {
+          setError("Verification failed. Please complete the security check and try again.");
         } else if (err.status === 422) {
           idempotencyKeyRef.current = generateUuid();
           setError("Subscription session expired. Please review your details and submit again.");
@@ -227,7 +240,7 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
                   <Button
                     type="submit"
                     variant="default"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || (isTurnstileRequired && !turnstileToken)}
                     className="rounded-full px-5 py-2 font-medium shrink-0 flex items-center justify-center gap-2 shadow-sm hover:shadow transition-all"
                   >
                     <span>{isSubmitting ? "..." : tFooter("newsletterButton")}</span>

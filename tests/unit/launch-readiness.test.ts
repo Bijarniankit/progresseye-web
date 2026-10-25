@@ -107,4 +107,48 @@ describe("checkLaunchReadiness script", () => {
     expect(FORBIDDEN_STRINGS).toContain("DRAFT-NEEDS-LEGAL-REVIEW");
     expect(FORBIDDEN_STRINGS).toContain("To be provided");
   });
+
+  it("detects forbidden placeholders located in messages/ json translation dictionaries", () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "readiness-msg-test-"));
+    const messagesDir = path.join(tmpDir, "messages");
+    fs.mkdirSync(messagesDir);
+    fs.writeFileSync(
+      path.join(messagesDir, "en.json"),
+      JSON.stringify({ footer: { retention: "TODO-REAL-DATA" } }),
+    );
+
+    const result = checkLaunchReadiness({
+      env: {
+        NEXT_PUBLIC_LAUNCH_READY: "true",
+        NEXT_PUBLIC_APP_ENV: "production",
+      },
+      scanDirs: [messagesDir],
+    });
+
+    expect(result.passed).toBe(false);
+    const violation = result.violations.find((v) => v.token === "TODO-REAL-DATA");
+    expect(violation).toBeDefined();
+
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  it("detects forbidden placeholders emitted in .next build outputs (html / prerender)", () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "readiness-build-test-"));
+    const htmlFile = path.join(tmpDir, "page.html");
+    fs.writeFileSync(htmlFile, "<html><body><p>DRAFT-NEEDS-LEGAL-REVIEW</p></body></html>");
+
+    const result = checkLaunchReadiness({
+      env: {
+        NEXT_PUBLIC_LAUNCH_READY: "true",
+        NEXT_PUBLIC_APP_ENV: "production",
+      },
+      scanDirs: [tmpDir],
+    });
+
+    expect(result.passed).toBe(false);
+    const violation = result.violations.find((v) => v.token === "DRAFT-NEEDS-LEGAL-REVIEW");
+    expect(violation).toBeDefined();
+
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
 });
