@@ -45,7 +45,19 @@ export function collectFiles(dir, collected = []) {
 export function checkLaunchReadiness(options = {}) {
   const env = options.env || process.env;
   const isLaunchReady = env.NEXT_PUBLIC_LAUNCH_READY === "true";
-  const scanDirs = options.scanDirs || [path.join(ROOT_DIR, "src")];
+  const defaultScanDirs = [path.join(ROOT_DIR, "src"), path.join(ROOT_DIR, "messages")];
+  const nextAppDir = path.join(ROOT_DIR, ".next", "server", "app");
+  if (fs.existsSync(nextAppDir)) {
+    defaultScanDirs.push(nextAppDir);
+  }
+  const scanDirs = options.scanDirs || defaultScanDirs;
+
+  const defaultScanFiles = [];
+  const prerenderManifest = path.join(ROOT_DIR, ".next", "prerender-manifest.json");
+  if (fs.existsSync(prerenderManifest)) {
+    defaultScanFiles.push(prerenderManifest);
+  }
+  const scanFiles = options.scanFiles !== undefined ? options.scanFiles : defaultScanFiles;
 
   const violations = [];
 
@@ -74,19 +86,25 @@ export function checkLaunchReadiness(options = {}) {
     }
   }
 
-  // 2. Scan source and build files for placeholder tokens
+  // 2. Scan source, messages, and build files for placeholder tokens
+  const allTargetFiles = new Set(scanFiles);
   for (const dir of scanDirs) {
     const files = collectFiles(dir);
     for (const file of files) {
-      const content = fs.readFileSync(file, "utf8");
-      for (const token of FORBIDDEN_STRINGS) {
-        if (content.includes(token)) {
-          violations.push({
-            type: "FORBIDDEN_TOKEN",
-            file: path.relative(ROOT_DIR, file),
-            token,
-          });
-        }
+      allTargetFiles.add(file);
+    }
+  }
+
+  for (const file of allTargetFiles) {
+    if (!fs.existsSync(file)) continue;
+    const content = fs.readFileSync(file, "utf8");
+    for (const token of FORBIDDEN_STRINGS) {
+      if (content.includes(token)) {
+        violations.push({
+          type: "FORBIDDEN_TOKEN",
+          file: path.relative(ROOT_DIR, file),
+          token,
+        });
       }
     }
   }

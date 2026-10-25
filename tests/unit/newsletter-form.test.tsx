@@ -3,6 +3,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Footer } from "@/components/marketing/footer";
+import { siteConfig } from "@/config/site";
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/",
@@ -18,15 +19,22 @@ function renderFooter(props?: { hideNewsletter?: boolean }) {
 
 describe("Footer & Newsletter Form Unit Tests", () => {
   const originalFetch = global.fetch;
+  const originalSiteKey = siteConfig.turnstileSiteKey;
 
   beforeEach(() => {
     vi.restoreAllMocks();
+    siteConfig.turnstileSiteKey = "";
     window.history.replaceState({}, "", "/");
+    const script = document.getElementById("cf-turnstile-script");
+    if (script) script.remove();
   });
 
   afterEach(() => {
     global.fetch = originalFetch;
+    siteConfig.turnstileSiteKey = originalSiteKey;
     window.history.replaceState({}, "", "/");
+    const script = document.getElementById("cf-turnstile-script");
+    if (script) script.remove();
   });
 
   it("renders watermark text 'ProgressEye' in title case with aria-hidden", () => {
@@ -65,6 +73,16 @@ describe("Footer & Newsletter Form Unit Tests", () => {
     expect(noticeP?.textContent?.trim()).toBe("Newsletter subscriptions will open in Phase 9.");
   });
 
+  it("confirms flag-OFF loads no Cloudflare script on footer render or interaction", () => {
+    renderFooter();
+    const emailInput = screen.getByPlaceholderText(/enter your school email/i);
+    fireEvent.focus(emailInput);
+    fireEvent.change(emailInput, { target: { value: "test@school.edu" } });
+
+    expect(document.getElementById("cf-turnstile-script")).toBeNull();
+    expect(screen.queryByTestId("turnstile-widget")).not.toBeInTheDocument();
+  });
+
   it("hides newsletter form when hideNewsletter is true", () => {
     renderFooter({ hideNewsletter: true });
     expect(screen.queryByPlaceholderText(/enter your school email/i)).not.toBeInTheDocument();
@@ -77,6 +95,7 @@ describe("Footer & Newsletter Form Unit Tests", () => {
 
     afterEach(() => {
       window.history.replaceState({}, "", "/");
+      siteConfig.turnstileSiteKey = originalSiteKey;
     });
 
     it("renders honeypot field with name 'website_url' matching API schema exactly", () => {
@@ -88,6 +107,30 @@ describe("Footer & Newsletter Form Unit Tests", () => {
       expect(honeypotInput).toBeInTheDocument();
       expect(honeypotInput.name).toBe("website_url");
       expect(honeypotInput.tabIndex).toBe(-1);
+    });
+
+    it("activates Turnstile widget on email focus when backend is enabled and siteKey is set", () => {
+      siteConfig.turnstileSiteKey = "1x00000000000000000000AA";
+      renderFooter();
+
+      // Before focus: widget not mounted
+      expect(screen.queryByTestId("turnstile-widget")).not.toBeInTheDocument();
+
+      // Focus email input
+      const emailInput = screen.getByPlaceholderText(/enter your school email/i);
+      fireEvent.focus(emailInput);
+
+      // Widget mounts in DOM
+      expect(screen.getByTestId("turnstile-widget")).toBeInTheDocument();
+    });
+
+    it("disables submit button when Turnstile is enabled until a token exists", () => {
+      siteConfig.turnstileSiteKey = "1x00000000000000000000AA";
+      renderFooter();
+
+      const submitButton = screen.getByRole("button", { name: /subscribe/i });
+      // When Turnstile is required and token is not set, submit button is disabled
+      expect(submitButton).toBeDisabled();
     });
 
     it("sends Idempotency-Key UUID header and expected JSON payload", async () => {
@@ -131,6 +174,34 @@ describe("Footer & Newsletter Form Unit Tests", () => {
       });
 
       expect(screen.getByText(/subscribed! thank you for staying updated/i)).toBeInTheDocument();
+    });
+
+    it("transitions to success state and renders confirmation message on 201 response", async () => {
+      global.fetch = vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            id: "sub-201",
+            status: "received",
+            message: "Subscribed successfully",
+            createdAt: "2026-10-25T12:00:00.000Z",
+          }),
+          { status: 201, headers: { "Content-Type": "application/json" } },
+        ),
+      );
+
+      const { container } = renderFooter();
+      const emailInput = screen.getByPlaceholderText(/enter your school email/i);
+      const submitButton = screen.getByRole("button", { name: /subscribe/i });
+
+      fireEvent.change(emailInput, { target: { value: "teacher@school.org" } });
+
+      await act(async () => {
+        fireEvent.click(submitButton);
+      });
+
+      const outputElem = container.querySelector("output");
+      expect(outputElem).toBeInTheDocument();
+      expect(outputElem?.textContent).toContain("Subscribed! Thank you for staying updated.");
     });
 
     it("ignores submission if honeypot website_url is filled (bot protection)", async () => {
@@ -178,6 +249,62 @@ describe("Footer & Newsletter Form Unit Tests", () => {
       });
 
       expect(screen.getByText("Educational institution email required")).toBeInTheDocument();
+    });
+
+    it("maps Turnstile verification failure from API to clear security message", async () => {
+      global.fetch = vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            type: "https://progresseye.com/probs/bad-request",
+            title: "Bad Request",
+            detail: "Spam verification failed",
+            status: 400,
+          }),
+          { status: 400, headers: { "Content-Type": "application/problem+json" } },
+        ),
+      );
+
+      renderFooter();
+      const emailInput = screen.getByPlaceholderText(/enter your school email/i);
+      const submitButton = screen.getByRole("button", { name: /subscribe/i });
+
+      fireEvent.change(emailInput, { target: { value: "visitor@school.edu" } });
+
+      await act(async () => {
+        fireEvent.click(submitButton);
+      });
+
+      expect(
+        screen.getByText("Verification failed. Please complete the security check and try again."),
+      ).toBeInTheDocument();
+    });
+
+    it("maps 409 in-flight conflict to retry message", async () => {
+      global.fetch = vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            type: "https://progresseye.com/probs/conflict",
+            title: "Conflict",
+            detail: "A submission with this idempotency key is already processing",
+            status: 409,
+          }),
+          { status: 409, headers: { "Content-Type": "application/problem+json" } },
+        ),
+      );
+
+      renderFooter();
+      const emailInput = screen.getByPlaceholderText(/enter your school email/i);
+      const submitButton = screen.getByRole("button", { name: /subscribe/i });
+
+      fireEvent.change(emailInput, { target: { value: "principal@delhi.edu" } });
+
+      await act(async () => {
+        fireEvent.click(submitButton);
+      });
+
+      expect(
+        screen.getByText("A request is already in progress. Please wait a moment and try again."),
+      ).toBeInTheDocument();
     });
 
     it("maps RFC 9457 422 error and regenerates idempotency key", async () => {

@@ -20,20 +20,23 @@ const baseConfig: NextConfig = {
             value: [
               "default-src 'self'",
               "base-uri 'self'",
-              "font-src 'self' https://fonts.gstatic.com data:",
+              "font-src 'self' data:",
               "form-action 'self'",
-              "frame-ancestors 'self'",
-              "img-src 'self' data: https:",
+              "frame-ancestors 'none'",
+              "img-src 'self' data:",
               "object-src 'none'",
               "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
               "frame-src https://challenges.cloudflare.com",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "style-src 'self' 'unsafe-inline'",
               "connect-src 'self' https://challenges.cloudflare.com",
             ].join("; "),
           },
           {
             key: "Strict-Transport-Security",
-            value: "max-age=86400",
+            value:
+              process.env.NEXT_PUBLIC_APP_ENV === "production"
+                ? "max-age=31536000"
+                : "max-age=86400",
           },
           {
             key: "X-Frame-Options",
