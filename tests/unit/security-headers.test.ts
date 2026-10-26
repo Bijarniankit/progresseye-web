@@ -57,4 +57,23 @@ describe("next.config.ts security headers", () => {
       process.env.NEXT_PUBLIC_APP_ENV = prevEnv;
     }
   });
+
+  it("honors HSTS_MAX_AGE_SECONDS environment override when set", async () => {
+    const prevEnv = process.env.HSTS_MAX_AGE_SECONDS;
+    process.env.HSTS_MAX_AGE_SECONDS = "604800";
+    try {
+      const config = await nextConfigFn();
+      const headersList = await config.headers?.();
+      const rootHeaders = headersList?.find((h) => h.source === "/:path*");
+      const headerMap = new Map(rootHeaders?.headers.map((h) => [h.key, h.value]));
+
+      expect(headerMap.get("Strict-Transport-Security")).toBe("max-age=604800");
+    } finally {
+      if (prevEnv !== undefined) {
+        process.env.HSTS_MAX_AGE_SECONDS = prevEnv;
+      } else {
+        delete process.env.HSTS_MAX_AGE_SECONDS;
+      }
+    }
+  });
 });

@@ -2,7 +2,11 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { checkLaunchReadiness, FORBIDDEN_STRINGS } from "../../scripts/check-launch-readiness.mjs";
+import {
+  checkLaunchReadiness,
+  extractRenderedHtmlText,
+  FORBIDDEN_STRINGS,
+} from "../../scripts/check-launch-readiness.mjs";
 
 describe("checkLaunchReadiness script", () => {
   it("passes when NEXT_PUBLIC_LAUNCH_READY is false even if placeholders exist", () => {
@@ -106,6 +110,18 @@ describe("checkLaunchReadiness script", () => {
     expect(FORBIDDEN_STRINGS).toContain("TODO-REAL-DATA");
     expect(FORBIDDEN_STRINGS).toContain("DRAFT-NEEDS-LEGAL-REVIEW");
     expect(FORBIDDEN_STRINGS).toContain("To be provided");
+    expect(FORBIDDEN_STRINGS).toContain("legal entity to be provided");
+    expect(FORBIDDEN_STRINGS).toContain("DRAFT — PENDING LEGAL REVIEW");
+  });
+
+  it("extracts rendered HTML text ignoring attributes and style/script tags", () => {
+    const html =
+      '<html><head><style>.p { color: red; }</style></head><body><input placeholder="TODO-REAL-DATA" /><p>Hello World</p><script>console.log("secret");</script></body></html>';
+    const text = extractRenderedHtmlText(html);
+    expect(text).not.toContain("TODO-REAL-DATA");
+    expect(text).not.toContain("color: red");
+    expect(text).not.toContain("console.log");
+    expect(text).toContain("Hello World");
   });
 
   it("detects forbidden placeholders located in messages/ json translation dictionaries", () => {

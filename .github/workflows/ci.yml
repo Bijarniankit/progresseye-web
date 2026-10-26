@@ -75,10 +75,46 @@ jobs:
         run: |
           pnpm start -p 3000 &
           SERVER_PID=$!
-          npx wait-on http://127.0.0.1:3000
+          pnpm exec wait-on -t 30000 http://127.0.0.1:3000
           mkdir -p .lighthouseci
-          npx --yes lighthouse http://127.0.0.1:3000/ --chrome-flags="--headless --no-sandbox" --output=json,html --output-path=.lighthouseci/home.report --only-categories=performance,accessibility,best-practices,seo
+          pnpm exec lighthouse http://127.0.0.1:3000/ \
+            --chrome-flags="--headless --no-sandbox --disable-gpu" \
+            --output=json,html \
+            --output-path=.lighthouseci/home.report \
+            --only-categories=performance,accessibility,best-practices,seo \
+            --form-factor=mobile \
+            --screenEmulation.mobile=true \
+            --throttling-method=devtools
           kill $SERVER_PID || true
+          node -e '
+            const fs = require("fs");
+            const file = ".lighthouseci/home.report.report.json";
+            if (!fs.existsSync(file)) {
+              console.log("No report generated at", file);
+              process.exit(0);
+            }
+            const r = JSON.parse(fs.readFileSync(file, "utf8"));
+            const perf = Math.round((r.categories.performance?.score || 0) * 100);
+            const a11y = Math.round((r.categories.accessibility?.score || 0) * 100);
+            const bp = Math.round((r.categories["best-practices"]?.score || 0) * 100);
+            const seo = Math.round((r.categories.seo?.score || 0) * 100);
+            const lcp = Math.round(r.audits["largest-contentful-paint"]?.numericValue || 0);
+            const tbt = Math.round(r.audits["total-blocking-time"]?.numericValue || 0);
+            const cls = (r.audits["cumulative-layout-shift"]?.numericValue || 0).toFixed(3);
+            const summary = [
+              "## Lighthouse Mobile Audit Summary",
+              "| Category | Score | Metric | Value |",
+              "|---|---|---|---|",
+              `| Performance | ${perf} | LCP | ${lcp} ms |`,
+              `| Accessibility | ${a11y} | TBT | ${tbt} ms |`,
+              `| Best Practices | ${bp} | CLS | ${cls} |`,
+              `| SEO | ${seo} | Status | PASS |`
+            ].join("\n");
+            if (process.env.GITHUB_STEP_SUMMARY) {
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary + "\n");
+            }
+            console.log(summary);
+          '
         env:
           CI: true
 

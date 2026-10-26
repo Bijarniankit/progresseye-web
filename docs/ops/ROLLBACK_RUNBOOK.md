@@ -67,14 +67,22 @@ This runbook defines the operational procedure for rolling back staging and prod
 
 ## 5. Strict-Transport-Security (HSTS) Production Ramp Plan
 
-To prevent irreversible site lockout due to misconfigured SSL certificates, custom DNS issues, or CDN edge errors, production HSTS uses a cautious ramp plan.
+To prevent irreversible site lockout due to misconfigured SSL certificates, custom DNS issues, or CDN edge errors, HSTS max-age is controlled dynamically via the `HSTS_MAX_AGE_SECONDS` environment variable across both `progresseye-web` and `progresseye-api`.
 
-| Stage | Duration / Criteria | `max-age` Value | Directives | Rollback Action |
-| :--- | :--- | :--- | :--- | :--- |
-| **Stage 1 (Initial Launch)** | Day 0 to Day 1 (First 24 hours) | `300` (5 minutes) | No `preload`, no `includeSubDomains` | Immediate rollback to HTTP/TLS reconfiguration within 5 minutes |
-| **Stage 2 (Short Soak)** | Day 2 to Day 7 (Zero TLS alerts) | `86400` (1 day) | No `preload`, no `includeSubDomains` | Rollback clears in client caches within 24 hours |
-| **Stage 3 (Medium Soak)**| Week 2 to Week 4 (Uptime verified) | `604800` (1 week) | No `preload`, no `includeSubDomains` | Standard operational update |
-| **Stage 4 (Steady State)**| Month 2+ (Permanent production domain) | `31536000` (1 year) | No `preload`, no `includeSubDomains` until apex/subdomains certified | Long-term defense against SSL stripping |
+### Configuration Variable
+Both repositories read `process.env.HSTS_MAX_AGE_SECONDS`. If omitted, default fallbacks apply:
+- Production (`APP_ENV=production` / `NEXT_PUBLIC_APP_ENV=production`): defaults to `300` seconds (5 minutes).
+- Staging / Development: defaults to `86400` seconds (1 day).
+
+### Ramp Table & Deployment Steps
+
+| Stage | Target Environment | Duration / Gate Criteria | `HSTS_MAX_AGE_SECONDS` Value | Directives | Deployment & Rollback Actions |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Stage 0 (Staging)** | Staging pre-production | Continuous testing | `86400` (1 day) | No `preload`, no `includeSubDomains` | Verify reverse proxy TLS certificates and zero HTTPS redirect loops. |
+| **Stage 1 (Production Initial Launch)** | Production canary | Days 0 to 1 (First 24-48 hours) | `300` (5 minutes default) | No `preload`, no `includeSubDomains` | Set `HSTS_MAX_AGE_SECONDS=300` in deployment environment. If DNS/TLS issues occur, roll back to HTTP/TLS within 5 minutes. |
+| **Stage 2 (Production Short Soak)** | Production | Days 2 to 7 (Zero TLS alerts) | `86400` (1 day) | No `preload`, no `includeSubDomains` | Update env var to `HSTS_MAX_AGE_SECONDS=86400` and redeploy. Client rollback clears within 24 hours. |
+| **Stage 3 (Production Medium Soak)** | Production | Weeks 2 to 4 (Uptime verified) | `604800` (1 week) | No `preload`, no `includeSubDomains` | Update env var to `HSTS_MAX_AGE_SECONDS=604800` and redeploy. Standard operational cadence. |
+| **Stage 4 (Production Steady State)** | Production apex | Month 2+ (Permanent domain) | `31536000` (1 year) | `includeSubDomains; preload` (after apex certified) | Update env var to `HSTS_MAX_AGE_SECONDS=31536000`. Long-term defense against SSL stripping. |
 
 > [!IMPORTANT]
-> **Preload & SubDomains Guard**: Do NOT add `preload` or `includeSubDomains` to either the web frontend or API backend HSTS policies until the final apex domain, email MX records, and multi-tenant subdomain strategy have operated in steady state for at least 90 days. Chrome preload list submission is irreversible once accepted. Staging environments strictly remain at `max-age=86400`.
+> **Preload & SubDomains Guard**: Do NOT submit to the Chrome HSTS preload list (`includeSubDomains; preload`) until the final apex domain, email MX records, and multi-tenant subdomain strategy have operated in steady state for at least 90 days. Chrome preload list submission is irreversible once accepted. Staging environments strictly remain at `HSTS_MAX_AGE_SECONDS=86400`.

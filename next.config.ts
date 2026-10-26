@@ -33,8 +33,13 @@ const baseConfig: NextConfig = {
           },
           {
             key: "Strict-Transport-Security",
-            value:
-              process.env.NEXT_PUBLIC_APP_ENV === "production" ? "max-age=300" : "max-age=86400",
+            value: `max-age=${
+              process.env.HSTS_MAX_AGE_SECONDS
+                ? Number.parseInt(process.env.HSTS_MAX_AGE_SECONDS, 10)
+                : process.env.NEXT_PUBLIC_APP_ENV === "production"
+                  ? 300
+                  : 86400
+            }`,
           },
           {
             key: "X-Frame-Options",

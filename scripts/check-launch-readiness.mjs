@@ -9,7 +9,24 @@ const ROOT_DIR = process.env.LAUNCH_CHECK_ROOT_DIR
   ? path.resolve(process.env.LAUNCH_CHECK_ROOT_DIR)
   : path.resolve(__dirname, "..");
 
-export const FORBIDDEN_STRINGS = ["TODO-REAL-DATA", "DRAFT-NEEDS-LEGAL-REVIEW", "To be provided"];
+export const FORBIDDEN_STRINGS = [
+  "TODO-REAL-DATA",
+  "DRAFT-NEEDS-LEGAL-REVIEW",
+  "To be provided",
+  "legal entity to be provided",
+  "DRAFT — PENDING LEGAL REVIEW",
+];
+
+/**
+ * Strips script, style, and HTML tags to extract rendered visible text from HTML files,
+ * ensuring HTML attributes (such as placeholder="...") do not produce false positives.
+ */
+export function extractRenderedHtmlText(html) {
+  return html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, " ")
+    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, " ")
+    .replace(/<[^>]+>/g, " ");
+}
 
 const SCAN_EXTENSIONS = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".json", ".html", ".md"]);
 
@@ -99,9 +116,10 @@ export function checkLaunchReadiness(options = {}) {
 
   for (const file of allTargetFiles) {
     if (!fs.existsSync(file)) continue;
-    const content = fs.readFileSync(file, "utf8");
+    const rawContent = fs.readFileSync(file, "utf8");
+    const textToScan = file.endsWith(".html") ? extractRenderedHtmlText(rawContent) : rawContent;
     for (const token of FORBIDDEN_STRINGS) {
-      if (content.includes(token)) {
+      if (textToScan.includes(token)) {
         violations.push({
           type: "FORBIDDEN_TOKEN",
           file: path.relative(ROOT_DIR, file),
