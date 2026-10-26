@@ -308,4 +308,71 @@ describe("Lead Forms Unit Tests (Contact & Demo)", () => {
       expect(enMessages.footer.newsletterPrivacy).toBe(serverTemplate);
     });
   });
+
+  describe("API Turnstile Failure Code Mapping", () => {
+    beforeEach(() => {
+      siteConfig.hasLeadBackend = true;
+    });
+
+    it("maps SPAM_VERIFICATION_FAILED problem code to general error message on contact submission", async () => {
+      const { ApiProblemError } = await import("@/lib/api/client");
+      vi.spyOn(api, "publicControllerSubmitContact").mockRejectedValueOnce(
+        new ApiProblemError(400, {
+          code: "SPAM_VERIFICATION_FAILED",
+          title: "Bad Request",
+          detail: "Spam verification failed",
+        }),
+      );
+
+      render(<ContactForm mode="contact" />);
+      fireEvent.change(screen.getByLabelText(/Your name/i), { target: { value: "Anita Sharma" } });
+      fireEvent.change(screen.getByLabelText(/Email address/i), {
+        target: { value: "anita@school.edu.in" },
+      });
+      fireEvent.change(screen.getByLabelText(/Topic/i), { target: { value: "general" } });
+      fireEvent.change(screen.getByLabelText(/Message/i), {
+        target: { value: "Need a demonstration for our school staff." },
+      });
+
+      fireEvent.click(screen.getByRole("button", { name: /send message/i }));
+
+      await waitFor(() => {
+        expect(
+          screen.getByText(
+            "Verification failed. Please complete the security check and try again.",
+          ),
+        ).toBeInTheDocument();
+      });
+    });
+
+    it("maps SPAM_VERIFICATION_FAILED problem code to general error message on demo submission", async () => {
+      const { ApiProblemError } = await import("@/lib/api/client");
+      vi.spyOn(api, "publicControllerSubmitDemo").mockRejectedValueOnce(
+        new ApiProblemError(400, {
+          code: "SPAM_VERIFICATION_FAILED",
+          title: "Bad Request",
+          detail: "Spam verification failed",
+        }),
+      );
+
+      render(<ContactForm mode="demo" />);
+      fireEvent.change(screen.getByLabelText(/Your name/i), { target: { value: "Rajesh Kumar" } });
+      fireEvent.change(screen.getByLabelText(/Work \/ School Email/i), {
+        target: { value: "rajesh@school.edu.in" },
+      });
+      fireEvent.change(screen.getByLabelText(/School \/ Institution Name/i), {
+        target: { value: "St. Xavier's School" },
+      });
+
+      fireEvent.click(screen.getByRole("button", { name: /request a demo/i }));
+
+      await waitFor(() => {
+        expect(
+          screen.getByText(
+            "Verification failed. Please complete the security check and try again.",
+          ),
+        ).toBeInTheDocument();
+      });
+    });
+  });
 });

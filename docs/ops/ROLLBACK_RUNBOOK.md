@@ -62,3 +62,19 @@ This runbook defines the operational procedure for rolling back staging and prod
   - Download application logs from Pino log stream for the incident timeframe.
   - Review log redactions (ensure zero PII or raw visitor IPs leaked).
   - Open a high-priority incident issue in GitHub tracking root cause and remediation.
+
+---
+
+## 5. Strict-Transport-Security (HSTS) Production Ramp Plan
+
+To prevent irreversible site lockout due to misconfigured SSL certificates, custom DNS issues, or CDN edge errors, production HSTS uses a cautious ramp plan.
+
+| Stage | Duration / Criteria | `max-age` Value | Directives | Rollback Action |
+| :--- | :--- | :--- | :--- | :--- |
+| **Stage 1 (Initial Launch)** | Day 0 to Day 1 (First 24 hours) | `300` (5 minutes) | No `preload`, no `includeSubDomains` | Immediate rollback to HTTP/TLS reconfiguration within 5 minutes |
+| **Stage 2 (Short Soak)** | Day 2 to Day 7 (Zero TLS alerts) | `86400` (1 day) | No `preload`, no `includeSubDomains` | Rollback clears in client caches within 24 hours |
+| **Stage 3 (Medium Soak)**| Week 2 to Week 4 (Uptime verified) | `604800` (1 week) | No `preload`, no `includeSubDomains` | Standard operational update |
+| **Stage 4 (Steady State)**| Month 2+ (Permanent production domain) | `31536000` (1 year) | No `preload`, no `includeSubDomains` until apex/subdomains certified | Long-term defense against SSL stripping |
+
+> [!IMPORTANT]
+> **Preload & SubDomains Guard**: Do NOT add `preload` or `includeSubDomains` to either the web frontend or API backend HSTS policies until the final apex domain, email MX records, and multi-tenant subdomain strategy have operated in steady state for at least 90 days. Chrome preload list submission is irreversible once accepted. Staging environments strictly remain at `max-age=86400`.

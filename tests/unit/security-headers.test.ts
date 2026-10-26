@@ -41,7 +41,7 @@ describe("next.config.ts security headers", () => {
     expect(headerMap.get("Permissions-Policy")).toContain("camera=()");
   });
 
-  it("configures Strict-Transport-Security max-age=31536000 in production without preload or includeSubDomains", async () => {
+  it("configures Strict-Transport-Security initial ramp max-age=300 in production without preload or includeSubDomains", async () => {
     const prevEnv = process.env.NEXT_PUBLIC_APP_ENV;
     process.env.NEXT_PUBLIC_APP_ENV = "production";
     try {
@@ -50,7 +50,7 @@ describe("next.config.ts security headers", () => {
       const rootHeaders = headersList?.find((h) => h.source === "/:path*");
       const headerMap = new Map(rootHeaders?.headers.map((h) => [h.key, h.value]));
 
-      expect(headerMap.get("Strict-Transport-Security")).toBe("max-age=31536000");
+      expect(headerMap.get("Strict-Transport-Security")).toBe("max-age=300");
       expect(headerMap.get("Strict-Transport-Security")).not.toContain("preload");
       expect(headerMap.get("Strict-Transport-Security")).not.toContain("includeSubDomains");
     } finally {
