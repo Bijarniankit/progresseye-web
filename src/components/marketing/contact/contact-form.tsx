@@ -206,7 +206,15 @@ export function ContactForm({ mode = "contact" }: InquiryFormProps) {
       }
     } catch (err: unknown) {
       if (err instanceof ApiProblemError) {
-        if (err.status === 400 && err.problem.invalidParams) {
+        if (err.problem.code === "SPAM_VERIFICATION_FAILED") {
+          setErrors({
+            general: "Verification failed. Please complete the security check and try again.",
+          });
+        } else if (err.status === 409) {
+          setErrors({
+            general: "A request is already in progress. Please wait a moment and try again.",
+          });
+        } else if (err.status === 400 && err.problem.invalidParams) {
           const fieldErrors: FormErrors = {};
           for (const param of err.problem.invalidParams) {
             fieldErrors[param.name as keyof FormErrors] = param.reason;

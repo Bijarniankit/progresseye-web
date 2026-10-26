@@ -97,7 +97,9 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
       setSubmitted(true);
     } catch (err: unknown) {
       if (err instanceof ApiProblemError) {
-        if (err.status === 409) {
+        if (err.problem.code === "SPAM_VERIFICATION_FAILED") {
+          setError("Verification failed. Please complete the security check and try again.");
+        } else if (err.status === 409) {
           setError("A request is already in progress. Please wait a moment and try again.");
         } else if (err.status === 400 && err.problem.invalidParams) {
           const emailErr = err.problem.invalidParams.find((p) => p.name === "email");
@@ -106,15 +108,6 @@ export function Footer({ hideNewsletter: forcedHide }: FooterProps) {
           } else {
             setError(err.message || "Please enter a valid email address.");
           }
-        } else if (
-          err.status === 400 &&
-          (err.message?.toLowerCase().includes("spam verification") ||
-            err.problem?.detail?.toLowerCase().includes("spam verification") ||
-            err.problem?.title?.toLowerCase().includes("spam verification") ||
-            err.problem?.detail?.toLowerCase().includes("turnstile") ||
-            err.problem?.title?.toLowerCase().includes("turnstile"))
-        ) {
-          setError("Verification failed. Please complete the security check and try again.");
         } else if (err.status === 422) {
           idempotencyKeyRef.current = generateUuid();
           setError("Subscription session expired. Please review your details and submit again.");

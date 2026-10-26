@@ -251,13 +251,14 @@ describe("Footer & Newsletter Form Unit Tests", () => {
       expect(screen.getByText("Educational institution email required")).toBeInTheDocument();
     });
 
-    it("maps Turnstile verification failure from API to clear security message", async () => {
+    it("maps Turnstile verification failure from API to clear security message via SPAM_VERIFICATION_FAILED code", async () => {
       global.fetch = vi.fn().mockResolvedValue(
         new Response(
           JSON.stringify({
-            type: "https://progresseye.com/probs/bad-request",
+            type: "https://api.progresseye.com/errors/SPAM_VERIFICATION_FAILED",
             title: "Bad Request",
             detail: "Spam verification failed",
+            code: "SPAM_VERIFICATION_FAILED",
             status: 400,
           }),
           { status: 400, headers: { "Content-Type": "application/problem+json" } },
