@@ -76,4 +76,32 @@ describe("next.config.ts security headers", () => {
       }
     }
   });
+
+  it("honors HSTS_INCLUDE_SUBDOMAINS and HSTS_PRELOAD environment flags separately", async () => {
+    const prevSub = process.env.HSTS_INCLUDE_SUBDOMAINS;
+    const prevPre = process.env.HSTS_PRELOAD;
+    process.env.HSTS_INCLUDE_SUBDOMAINS = "true";
+    process.env.HSTS_PRELOAD = "true";
+    try {
+      const config = await nextConfigFn();
+      const headersList = await config.headers?.();
+      const rootHeaders = headersList?.find((h) => h.source === "/:path*");
+      const headerMap = new Map(rootHeaders?.headers.map((h) => [h.key, h.value]));
+
+      expect(headerMap.get("Strict-Transport-Security")).toBe(
+        "max-age=86400; includeSubDomains; preload",
+      );
+    } finally {
+      if (prevSub !== undefined) {
+        process.env.HSTS_INCLUDE_SUBDOMAINS = prevSub;
+      } else {
+        delete process.env.HSTS_INCLUDE_SUBDOMAINS;
+      }
+      if (prevPre !== undefined) {
+        process.env.HSTS_PRELOAD = prevPre;
+      } else {
+        delete process.env.HSTS_PRELOAD;
+      }
+    }
+  });
 });

@@ -1,0 +1,126 @@
+name: Bisection Benchmark (43f9a7e vs 7283c0f)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    name: Compare 43f9a7e vs 7283c0f (5x each on /)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 24
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          version: 12.11.2
+
+      - name: Create report directory
+        run: mkdir -p .lighthouseci
+
+      - name: Benchmark Build A (43f9a7e)
+        run: |
+          git checkout 43f9a7e
+          pnpm install
+          pnpm build
+          pnpm start -p 3000 &
+          SERVER_PID=$!
+          npx --yes wait-on -t 30000 http://127.0.0.1:3000
+          for i in 1 2 3 4 5; do
+            echo "Running 43f9a7e Run $i/5..."
+            npx --yes lighthouse@13.5.0 http://127.0.0.1:3000/ \
+              --chrome-flags="--headless --no-sandbox --disable-gpu" \
+              --output=json \
+              --output-path=.lighthouseci/bench-43f9a7e-run$i.report.json \
+              --only-categories=performance \
+              --form-factor=mobile \
+              --screenEmulation.mobile=true \
+              --throttling-method=devtools
+          done
+          kill $SERVER_PID || true
+          sleep 2
+
+      - name: Benchmark Build B (7283c0f)
+        run: |
+          git checkout 7283c0f
+          pnpm install
+          pnpm build
+          pnpm start -p 3000 &
+          SERVER_PID=$!
+          npx --yes wait-on -t 30000 http://127.0.0.1:3000
+          for i in 1 2 3 4 5; do
+            echo "Running 7283c0f Run $i/5..."
+            npx --yes lighthouse@13.5.0 http://127.0.0.1:3000/ \
+              --chrome-flags="--headless --no-sandbox --disable-gpu" \
+              --output=json \
+              --output-path=.lighthouseci/bench-7283c0f-run$i.report.json \
+              --only-categories=performance \
+              --form-factor=mobile \
+              --screenEmulation.mobile=true \
+              --throttling-method=devtools
+          done
+          kill $SERVER_PID || true
+          sleep 2
+
+      - name: Summarize and Output Comparison Table
+        run: |
+          node -e '
+            const fs = require("fs");
+            function readRuns(prefix) {
+              const runs = [];
+              for (let i = 1; i <= 5; i++) {
+                const f = `.lighthouseci/${prefix}-run${i}.report.report.json`;
+                const alt = `.lighthouseci/${prefix}-run${i}.report.json`;
+                const target = fs.existsSync(f) ? f : (fs.existsSync(alt) ? alt : null);
+                if (target) {
+                  const r = JSON.parse(fs.readFileSync(target, "utf8"));
+                  runs.push({
+                    perf: Math.round((r.categories.performance?.score || 0) * 100),
+                    lcp: Math.round(r.audits["largest-contentful-paint"]?.numericValue || 0),
+                    tbt: Math.round(r.audits["total-blocking-time"]?.numericValue || 0),
+                    cls: Number((r.audits["cumulative-layout-shift"]?.numericValue || 0).toFixed(3)),
+                  });
+                }
+              }
+              return runs;
+            }
+            function median(arr) {
+              const s = [...arr].sort((a, b) => a - b);
+              const mid = Math.floor(s.length / 2);
+              return s.length % 2 !== 0 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+            }
+            const a = readRuns("bench-43f9a7e");
+            const b = readRuns("bench-7283c0f");
+            const summary = [
+              "## GitHub Runner Bisection Benchmark (/ Home Route)",
+              "| Commit | Median Perf | Median LCP (ms) | Range LCP (ms) | Median TBT (ms) | Median CLS |",
+              "|---|---|---|---|---|---|",
+              `| 43f9a7e (Base) | ${median(a.map(r => r.perf))} | ${median(a.map(r => r.lcp))} | [${Math.min(...a.map(r => r.lcp))} - ${Math.max(...a.map(r => r.lcp))}] | ${median(a.map(r => r.tbt))} | ${median(a.map(r => r.cls))} |`,
+              `| 7283c0f (PR #38) | ${median(b.map(r => r.perf))} | ${median(b.map(r => r.lcp))} | [${Math.min(...b.map(r => r.lcp))} - ${Math.max(...b.map(r => r.lcp))}] | ${median(b.map(r => r.tbt))} | ${median(b.map(r => r.cls))} |`,
+            ].join("\n");
+            if (process.env.GITHUB_STEP_SUMMARY) {
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary + "\n");
+            }
+            console.log(summary);
+          '
+
+      - name: Upload Benchmark Reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: bisection-lighthouse-reports
+          path: .lighthouseci/bench-*.report.json
+          retention-days: 7
