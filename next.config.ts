@@ -33,13 +33,19 @@ const baseConfig: NextConfig = {
           },
           {
             key: "Strict-Transport-Security",
-            value: `max-age=${
-              process.env.HSTS_MAX_AGE_SECONDS
-                ? Number.parseInt(process.env.HSTS_MAX_AGE_SECONDS, 10)
-                : process.env.NEXT_PUBLIC_APP_ENV === "production"
-                  ? 300
-                  : 86400
-            }`,
+            value: [
+              `max-age=${
+                process.env.HSTS_MAX_AGE_SECONDS
+                  ? Number.parseInt(process.env.HSTS_MAX_AGE_SECONDS, 10)
+                  : process.env.NEXT_PUBLIC_APP_ENV === "production"
+                    ? 300
+                    : 86400
+              }`,
+              process.env.HSTS_INCLUDE_SUBDOMAINS === "true" ? "includeSubDomains" : null,
+              process.env.HSTS_PRELOAD === "true" ? "preload" : null,
+            ]
+              .filter(Boolean)
+              .join("; "),
           },
           {
             key: "X-Frame-Options",

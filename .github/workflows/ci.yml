@@ -101,6 +101,8 @@ jobs:
             const lcp = Math.round(r.audits["largest-contentful-paint"]?.numericValue || 0);
             const tbt = Math.round(r.audits["total-blocking-time"]?.numericValue || 0);
             const cls = (r.audits["cumulative-layout-shift"]?.numericValue || 0).toFixed(3);
+            const passed = lcp <= 2500 && Number(cls) <= 0.01;
+            const status = passed ? "PASS" : "FAIL";
             const summary = [
               "## Lighthouse Mobile Audit Summary",
               "| Category | Score | Metric | Value |",
@@ -108,7 +110,7 @@ jobs:
               `| Performance | ${perf} | LCP | ${lcp} ms |`,
               `| Accessibility | ${a11y} | TBT | ${tbt} ms |`,
               `| Best Practices | ${bp} | CLS | ${cls} |`,
-              `| SEO | ${seo} | Status | PASS |`
+              `| SEO | ${seo} | Status | ${status} |`
             ].join("\n");
             if (process.env.GITHUB_STEP_SUMMARY) {
               fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary + "\n");
