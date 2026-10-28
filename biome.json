@@ -16,7 +16,10 @@
       "!**/dist",
       "!**/coverage",
       "!**/src/lib/api/generated",
-      "!**/lighthouse-*.json"
+      "!**/lighthouse-*.json",
+      "!**/.lighthouseci*",
+      "!**/scripts/capture-hero-viewports.mjs",
+      "!**/scripts/measure-cls-widths.mjs"
     ]
   },
   "formatter": {

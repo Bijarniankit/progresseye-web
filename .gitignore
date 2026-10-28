@@ -41,4 +41,6 @@ docs/reports/
 *.tsbuildinfo
 lighthouse-*.json
 benchmark-*.json
+.lighthouseci/
+.lighthouseci*/
 

@@ -1,0 +1,40 @@
+# DigitalOcean App Platform Specification — ProgressEye Web
+# Region: blr1 (Bangalore, India)
+name: progresseye-web
+region: blr
+
+services:
+  - name: web
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: Bijarniankit/progresseye-web
+    source_dir: /
+    dockerfilePath: Dockerfile
+    http_port: 3000
+    instance_count: 1
+    instance_size_slug: basic-xxs # $5/month starter tier (UNVERIFIED)
+    routes:
+      - path: /
+    health_check:
+      http_path: /
+      initial_delay_seconds: 15
+      period_seconds: 10
+      timeout_seconds: 5
+      success_threshold: 1
+      failure_threshold: 3
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_APP_ENV
+        value: staging
+      - key: NEXT_PUBLIC_SITE_URL
+        value: https://staging.progresseye.in
+      - key: NEXT_PUBLIC_HAS_LEAD_BACKEND
+        value: "false"
+      - key: NEXT_PUBLIC_TURNSTILE_SITE_KEY
+        value: "1x00000000000000000000AA"
+      - key: API_INTERNAL_URL
+        value: ${progresseye-api.PRIVATE_URL} # Private mesh network resolution
+      - key: NEXT_PUBLIC_API_URL
+        value: /api/v1

@@ -77,49 +77,96 @@ jobs:
           SERVER_PID=$!
           pnpm exec wait-on -t 30000 http://127.0.0.1:3000
           mkdir -p .lighthouseci
-          pnpm exec lighthouse http://127.0.0.1:3000/ \
-            --chrome-flags="--headless --no-sandbox --disable-gpu" \
-            --output=json,html \
-            --output-path=.lighthouseci/home.report \
-            --only-categories=performance,accessibility,best-practices,seo \
-            --form-factor=mobile \
-            --screenEmulation.mobile=true \
-            --throttling-method=devtools
-          kill $SERVER_PID || true
           node -e '
+            const { execSync } = require("child_process");
             const fs = require("fs");
-            const file = ".lighthouseci/home.report.report.json";
-            if (!fs.existsSync(file)) {
-              console.log("No report generated at", file);
-              process.exit(0);
+
+            const routes = [
+              { path: "/", slug: "home" },
+              { path: "/about", slug: "about" },
+              { path: "/contact", slug: "contact" },
+              { path: "/demo", slug: "demo" },
+              { path: "/features", slug: "features" },
+            ];
+
+            const results = [];
+
+            for (const r of routes) {
+              const runs = [];
+              for (let i = 1; i <= 5; i++) {
+                const outPath = `.lighthouseci/${r.slug}-run${i}.report`;
+                const cmd = `pnpm exec lighthouse http://127.0.0.1:3000${r.path} ` +
+                  `--chrome-flags="--headless --no-sandbox --disable-gpu" ` +
+                  `--output=json ` +
+                  `--output-path=${outPath} ` +
+                  `--only-categories=performance ` +
+                  `--form-factor=mobile ` +
+                  `--screenEmulation.mobile=true ` +
+                  `--throttling-method=devtools`;
+                try {
+                  execSync(cmd, { stdio: "ignore" });
+                  const file = `${outPath}.report.json`;
+                  if (fs.existsSync(file)) {
+                    const data = JSON.parse(fs.readFileSync(file, "utf8"));
+                    runs.push({
+                      perf: Math.round((data.categories.performance?.score || 0) * 100),
+                      lcp: Math.round(data.audits["largest-contentful-paint"]?.numericValue || 0),
+                      tbt: Math.round(data.audits["total-blocking-time"]?.numericValue || 0),
+                      cls: parseFloat((data.audits["cumulative-layout-shift"]?.numericValue || 0).toFixed(3)),
+                    });
+                  }
+                } catch (e) {
+                  console.error(`Lighthouse failed on ${r.path} run ${i}:`, e.message);
+                }
+              }
+
+              function median(arr) {
+                if (arr.length === 0) return 0;
+                const s = [...arr].sort((a, b) => a - b);
+                const mid = Math.floor(s.length / 2);
+                return s.length % 2 !== 0 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+              }
+
+              const medPerf = median(runs.map((x) => x.perf));
+              const medLcp = median(runs.map((x) => x.lcp));
+              const medTbt = median(runs.map((x) => x.tbt));
+              const medCls = median(runs.map((x) => x.cls));
+
+              const passed = medLcp <= 2500 && medCls <= 0.01;
+
+              results.push({
+                path: r.path,
+                runsCount: runs.length,
+                perf: medPerf,
+                lcp: medLcp,
+                tbt: medTbt,
+                cls: medCls.toFixed(3),
+                status: passed ? "PASS" : "FAIL",
+              });
+
+              if (!passed) {
+                console.log(
+                  `::warning title=Lighthouse Performance Gate Failed for ${r.path}::LCP: ${medLcp}ms (limit 2500ms), CLS: ${medCls.toFixed(3)} (limit 0.010)`,
+                );
+              }
             }
-            const r = JSON.parse(fs.readFileSync(file, "utf8"));
-            const perf = Math.round((r.categories.performance?.score || 0) * 100);
-            const a11y = Math.round((r.categories.accessibility?.score || 0) * 100);
-            const bp = Math.round((r.categories["best-practices"]?.score || 0) * 100);
-            const seo = Math.round((r.categories.seo?.score || 0) * 100);
-            const lcp = Math.round(r.audits["largest-contentful-paint"]?.numericValue || 0);
-            const tbt = Math.round(r.audits["total-blocking-time"]?.numericValue || 0);
-            const cls = (r.audits["cumulative-layout-shift"]?.numericValue || 0).toFixed(3);
-            const passed = lcp <= 2500 && Number(cls) <= 0.01;
-            const status = passed ? "PASS" : "FAIL";
-            if (!passed) {
-              console.log(`::warning title=Lighthouse Performance Gate Failed::LCP: ${lcp}ms, CLS: ${cls} (Thresholds: LCP <= 2500ms, CLS <= 0.010)`);
-            }
-            const summary = [
-              "## Lighthouse Mobile Audit Summary",
-              "| Category | Score | Metric | Value |",
-              "|---|---|---|---|",
-              `| Performance | ${perf} | LCP | ${lcp} ms |`,
-              `| Accessibility | ${a11y} | TBT | ${tbt} ms |`,
-              `| Best Practices | ${bp} | CLS | ${cls} |`,
-              `| SEO | ${seo} | Status | ${status} |`
+
+            const table = [
+              "## Lighthouse Mobile 5-Run Audits Summary (Medians)",
+              "| Route | Runs | Median Perf | Median LCP (ms) | Median TBT (ms) | Median CLS | Status |",
+              "|---|---|---|---|---|---|---|",
+              ...results.map(
+                (r) =>
+                  `| ${r.path} | ${r.runsCount} | ${r.perf} | ${r.lcp} | ${r.tbt} | ${r.cls} | ${r.status} |`,
+              ),
             ].join("\n");
+
+            console.log(table);
             if (process.env.GITHUB_STEP_SUMMARY) {
-              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary + "\n");
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, table + "\n");
             }
-            console.log(summary);
           '
+          kill $SERVER_PID || true
         env:
           CI: true
 

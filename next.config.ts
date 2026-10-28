@@ -9,6 +9,7 @@ validateProductionTurnstileConfig({
 });
 
 const baseConfig: NextConfig = {
+  output: "standalone",
   reactStrictMode: true,
   async headers() {
     return [
@@ -28,7 +29,7 @@ const baseConfig: NextConfig = {
               "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
               "frame-src https://challenges.cloudflare.com",
               "style-src 'self' 'unsafe-inline'",
-              "connect-src 'self' https://challenges.cloudflare.com",
+              "connect-src 'self' https://challenges.cloudflare.com https://progresseye.in https://*.progresseye.in",
             ].join("; "),
           },
           {
