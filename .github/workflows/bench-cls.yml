@@ -29,7 +29,7 @@ jobs:
 
       - name: Install Pinned Benchmark Harness (Lighthouse 13.5.0)
         run: |
-          pnpm add -g lighthouse@13.5.0 wait-on
+          npm install -g lighthouse@13.5.0 wait-on
           echo "=== Harness Environment ==="
           google-chrome --version || which google-chrome
           lighthouse --version
@@ -55,14 +55,14 @@ jobs:
             lighthouse http://127.0.0.1:3000/ \
               --chrome-flags="--headless --no-sandbox --disable-gpu" \
               --output=json \
-              --output-path=../../progresseye-web/lighthouse-cls-reports/bench-7df3cab-run$i.report.json \
+              --output-path=$GITHUB_WORKSPACE/lighthouse-cls-reports/bench-7df3cab-run$i.report.json \
               --only-categories=performance \
               --form-factor=mobile \
               --screenEmulation.mobile=true \
               --throttling-method=devtools
           done
           kill $SERVER_PID || true
-          cd ../../progresseye-web
+          cd $GITHUB_WORKSPACE
           rm -rf ../wt-7df3cab
           git worktree prune
 
@@ -82,20 +82,20 @@ jobs:
             lighthouse http://127.0.0.1:3000/ \
               --chrome-flags="--headless --no-sandbox --disable-gpu" \
               --output=json \
-              --output-path=../../progresseye-web/lighthouse-cls-reports/bench-e2180dc-run$i.report.json \
+              --output-path=$GITHUB_WORKSPACE/lighthouse-cls-reports/bench-e2180dc-run$i.report.json \
               --only-categories=performance \
               --form-factor=mobile \
               --screenEmulation.mobile=true \
               --throttling-method=devtools
           done
           kill $SERVER_PID || true
-          cd ../../progresseye-web
+          cd $GITHUB_WORKSPACE
           rm -rf ../wt-e2180dc
           git worktree prune
 
       - name: Benchmark Target 3 - PR #37 Head (43f9a7e)
         run: |
-          COMMIT="43f9a7e6717f223f66f91cb180a8c2794eb38b97"
+          COMMIT="43f9a7ef53305c81ed13aeb5863b02a9e1c2d1c0"
           echo "Setting up worktree for 43f9a7e..."
           git worktree add ../wt-43f9a7e $COMMIT
           cd ../wt-43f9a7e
@@ -109,20 +109,20 @@ jobs:
             lighthouse http://127.0.0.1:3000/ \
               --chrome-flags="--headless --no-sandbox --disable-gpu" \
               --output=json \
-              --output-path=../../progresseye-web/lighthouse-cls-reports/bench-43f9a7e-run$i.report.json \
+              --output-path=$GITHUB_WORKSPACE/lighthouse-cls-reports/bench-43f9a7e-run$i.report.json \
               --only-categories=performance \
               --form-factor=mobile \
               --screenEmulation.mobile=true \
               --throttling-method=devtools
           done
           kill $SERVER_PID || true
-          cd ../../progresseye-web
+          cd $GITHUB_WORKSPACE
           rm -rf ../wt-43f9a7e
           git worktree prune
 
       - name: Benchmark Target 4 - PR #38 Head (7283c0f)
         run: |
-          COMMIT="7283c0f0a597b6a482d8c3fc6eeb6f1ebf99a531"
+          COMMIT="7283c0fbe8bb5a88885e3fa34741486545380585"
           echo "Setting up worktree for 7283c0f..."
           git worktree add ../wt-7283c0f $COMMIT
           cd ../wt-7283c0f
@@ -136,14 +136,14 @@ jobs:
             lighthouse http://127.0.0.1:3000/ \
               --chrome-flags="--headless --no-sandbox --disable-gpu" \
               --output=json \
-              --output-path=../../progresseye-web/lighthouse-cls-reports/bench-7283c0f-run$i.report.json \
+              --output-path=$GITHUB_WORKSPACE/lighthouse-cls-reports/bench-7283c0f-run$i.report.json \
               --only-categories=performance \
               --form-factor=mobile \
               --screenEmulation.mobile=true \
               --throttling-method=devtools
           done
           kill $SERVER_PID || true
-          cd ../../progresseye-web
+          cd $GITHUB_WORKSPACE
           rm -rf ../wt-7283c0f
           git worktree prune
 
@@ -163,14 +163,14 @@ jobs:
             lighthouse http://127.0.0.1:3000/ \
               --chrome-flags="--headless --no-sandbox --disable-gpu" \
               --output=json \
-              --output-path=../../progresseye-web/lighthouse-cls-reports/bench-9683ca9-run$i.report.json \
+              --output-path=$GITHUB_WORKSPACE/lighthouse-cls-reports/bench-9683ca9-run$i.report.json \
               --only-categories=performance \
               --form-factor=mobile \
               --screenEmulation.mobile=true \
               --throttling-method=devtools
           done
           kill $SERVER_PID || true
-          cd ../../progresseye-web
+          cd $GITHUB_WORKSPACE
           rm -rf ../wt-9683ca9
           git worktree prune
 
