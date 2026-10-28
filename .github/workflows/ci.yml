@@ -103,6 +103,9 @@ jobs:
             const cls = (r.audits["cumulative-layout-shift"]?.numericValue || 0).toFixed(3);
             const passed = lcp <= 2500 && Number(cls) <= 0.01;
             const status = passed ? "PASS" : "FAIL";
+            if (!passed) {
+              console.log(`::warning title=Lighthouse Performance Gate Failed::LCP: ${lcp}ms, CLS: ${cls} (Thresholds: LCP <= 2500ms, CLS <= 0.010)`);
+            }
             const summary = [
               "## Lighthouse Mobile Audit Summary",
               "| Category | Score | Metric | Value |",
@@ -127,6 +130,7 @@ jobs:
         with:
           name: lighthouse-ci-reports
           path: .lighthouseci/
+          include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 7
 

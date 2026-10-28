@@ -1,0 +1,269 @@
+name: CLS & Performance Multi-Commit Benchmark
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    name: CLS Bisection Across 5 Historical Commits (5x Each)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout Repository with Full History
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          version: 12.11.2
+
+      - name: Install Pinned Benchmark Harness (Lighthouse 13.5.0)
+        run: |
+          pnpm add -g lighthouse@13.5.0 wait-on
+          echo "=== Harness Environment ==="
+          google-chrome --version || which google-chrome
+          lighthouse --version
+          pnpm --version
+          node --version
+
+      - name: Prepare Report Directory
+        run: mkdir -p lighthouse-cls-reports
+
+      - name: Benchmark Target 1 - phase-08-approved (7df3cab)
+        run: |
+          COMMIT="7df3cab6c8bce64d7a2428d6192844d736b62522"
+          echo "Setting up worktree for 7df3cab..."
+          git worktree add ../wt-7df3cab $COMMIT
+          cd ../wt-7df3cab
+          pnpm install --frozen-lockfile
+          pnpm build
+          pnpm start -p 3000 &
+          SERVER_PID=$!
+          wait-on -t 30000 http://127.0.0.1:3000
+          for i in {1..5}; do
+            echo "Running Lighthouse 7df3cab iteration $i..."
+            lighthouse http://127.0.0.1:3000/ \
+              --chrome-flags="--headless --no-sandbox --disable-gpu" \
+              --output=json \
+              --output-path=../../progresseye-web/lighthouse-cls-reports/bench-7df3cab-run$i.report.json \
+              --only-categories=performance \
+              --form-factor=mobile \
+              --screenEmulation.mobile=true \
+              --throttling-method=devtools
+          done
+          kill $SERVER_PID || true
+          cd ../../progresseye-web
+          rm -rf ../wt-7df3cab
+          git worktree prune
+
+      - name: Benchmark Target 2 - phase-09-approved (e2180dc)
+        run: |
+          COMMIT="e2180dcbcbeb20c5f8e5cd0fb4196dbeb0b13736"
+          echo "Setting up worktree for e2180dc..."
+          git worktree add ../wt-e2180dc $COMMIT
+          cd ../wt-e2180dc
+          pnpm install --frozen-lockfile
+          pnpm build
+          pnpm start -p 3000 &
+          SERVER_PID=$!
+          wait-on -t 30000 http://127.0.0.1:3000
+          for i in {1..5}; do
+            echo "Running Lighthouse e2180dc iteration $i..."
+            lighthouse http://127.0.0.1:3000/ \
+              --chrome-flags="--headless --no-sandbox --disable-gpu" \
+              --output=json \
+              --output-path=../../progresseye-web/lighthouse-cls-reports/bench-e2180dc-run$i.report.json \
+              --only-categories=performance \
+              --form-factor=mobile \
+              --screenEmulation.mobile=true \
+              --throttling-method=devtools
+          done
+          kill $SERVER_PID || true
+          cd ../../progresseye-web
+          rm -rf ../wt-e2180dc
+          git worktree prune
+
+      - name: Benchmark Target 3 - PR #37 Head (43f9a7e)
+        run: |
+          COMMIT="43f9a7e6717f223f66f91cb180a8c2794eb38b97"
+          echo "Setting up worktree for 43f9a7e..."
+          git worktree add ../wt-43f9a7e $COMMIT
+          cd ../wt-43f9a7e
+          pnpm install --frozen-lockfile
+          pnpm build
+          pnpm start -p 3000 &
+          SERVER_PID=$!
+          wait-on -t 30000 http://127.0.0.1:3000
+          for i in {1..5}; do
+            echo "Running Lighthouse 43f9a7e iteration $i..."
+            lighthouse http://127.0.0.1:3000/ \
+              --chrome-flags="--headless --no-sandbox --disable-gpu" \
+              --output=json \
+              --output-path=../../progresseye-web/lighthouse-cls-reports/bench-43f9a7e-run$i.report.json \
+              --only-categories=performance \
+              --form-factor=mobile \
+              --screenEmulation.mobile=true \
+              --throttling-method=devtools
+          done
+          kill $SERVER_PID || true
+          cd ../../progresseye-web
+          rm -rf ../wt-43f9a7e
+          git worktree prune
+
+      - name: Benchmark Target 4 - PR #38 Head (7283c0f)
+        run: |
+          COMMIT="7283c0f0a597b6a482d8c3fc6eeb6f1ebf99a531"
+          echo "Setting up worktree for 7283c0f..."
+          git worktree add ../wt-7283c0f $COMMIT
+          cd ../wt-7283c0f
+          pnpm install --frozen-lockfile
+          pnpm build
+          pnpm start -p 3000 &
+          SERVER_PID=$!
+          wait-on -t 30000 http://127.0.0.1:3000
+          for i in {1..5}; do
+            echo "Running Lighthouse 7283c0f iteration $i..."
+            lighthouse http://127.0.0.1:3000/ \
+              --chrome-flags="--headless --no-sandbox --disable-gpu" \
+              --output=json \
+              --output-path=../../progresseye-web/lighthouse-cls-reports/bench-7283c0f-run$i.report.json \
+              --only-categories=performance \
+              --form-factor=mobile \
+              --screenEmulation.mobile=true \
+              --throttling-method=devtools
+          done
+          kill $SERVER_PID || true
+          cd ../../progresseye-web
+          rm -rf ../wt-7283c0f
+          git worktree prune
+
+      - name: Benchmark Target 5 - Current Main (9683ca9)
+        run: |
+          COMMIT="9683ca9e8dadccf1dbc5f70f2cba7e4d56635ffb"
+          echo "Setting up worktree for 9683ca9..."
+          git worktree add ../wt-9683ca9 $COMMIT
+          cd ../wt-9683ca9
+          pnpm install --frozen-lockfile
+          pnpm build
+          pnpm start -p 3000 &
+          SERVER_PID=$!
+          wait-on -t 30000 http://127.0.0.1:3000
+          for i in {1..5}; do
+            echo "Running Lighthouse 9683ca9 iteration $i..."
+            lighthouse http://127.0.0.1:3000/ \
+              --chrome-flags="--headless --no-sandbox --disable-gpu" \
+              --output=json \
+              --output-path=../../progresseye-web/lighthouse-cls-reports/bench-9683ca9-run$i.report.json \
+              --only-categories=performance \
+              --form-factor=mobile \
+              --screenEmulation.mobile=true \
+              --throttling-method=devtools
+          done
+          kill $SERVER_PID || true
+          cd ../../progresseye-web
+          rm -rf ../wt-9683ca9
+          git worktree prune
+
+      - name: Summarize and Extract Detailed Layout Shift Audits
+        run: |
+          node -e '
+            const fs = require("fs");
+            const path = require("path");
+
+            const targets = [
+              { label: "phase-08-approved (7df3cab)", key: "7df3cab" },
+              { label: "phase-09-approved (e2180dc)", key: "e2180dc" },
+              { label: "PR #37 Head (43f9a7e)", key: "43f9a7e" },
+              { label: "PR #38 Head (7283c0f)", key: "7283c0f" },
+              { label: "Current Main (9683ca9)", key: "9683ca9" },
+            ];
+
+            function median(arr) {
+              const s = [...arr].sort((a, b) => a - b);
+              const mid = Math.floor(s.length / 2);
+              return s.length % 2 === 0 ? (s[mid - 1] + s[mid]) / 2 : s[mid];
+            }
+
+            const results = [];
+            const shiftDetails = [];
+
+            for (const t of targets) {
+              const runs = [];
+              for (let i = 1; i <= 5; i++) {
+                const f = path.join("lighthouse-cls-reports", `bench-${t.key}-run${i}.report.json`);
+                if (!fs.existsSync(f)) {
+                  console.warn("File missing:", f);
+                  continue;
+                }
+                const r = JSON.parse(fs.readFileSync(f, "utf8"));
+                const perf = Math.round((r.categories.performance?.score || 0) * 100);
+                const lcp = Math.round(r.audits["largest-contentful-paint"]?.numericValue || 0);
+                const tbt = Math.round(r.audits["total-blocking-time"]?.numericValue || 0);
+                const cls = Number((r.audits["cumulative-layout-shift"]?.numericValue || 0).toFixed(3));
+                runs.push({ perf, lcp, tbt, cls });
+
+                // Inspect layout shifts
+                const lsAudit = r.audits["layout-shifts"];
+                const lsItems = lsAudit?.details?.items || [];
+                if (lsItems.length > 0 || cls > 0.005) {
+                  shiftDetails.push({
+                    target: t.label,
+                    run: i,
+                    cls,
+                    items: lsItems,
+                  });
+                }
+              }
+              if (runs.length > 0) {
+                results.push({
+                  label: t.label,
+                  key: t.key,
+                  runsCount: runs.length,
+                  perf: median(runs.map(r => r.perf)),
+                  lcp: median(runs.map(r => r.lcp)),
+                  lcpMin: Math.min(...runs.map(r => r.lcp)),
+                  lcpMax: Math.max(...runs.map(r => r.lcp)),
+                  tbt: median(runs.map(r => r.tbt)),
+                  cls: median(runs.map(r => r.cls)),
+                });
+              }
+            }
+
+            const mdTable = [
+              "## Unified Harness CLS & Performance Benchmark (GitHub Runner)",
+              "",
+              "Harness: Lighthouse 13.5.0 (pinned), Ubuntu 24.04 runner, Mobile DevTools Throttling (5 runs each)",
+              "",
+              "| Target Commit | Runs | Median Perf | Median LCP (ms) | Range LCP (ms) | Median TBT (ms) | Median CLS |",
+              "|---|---|---|---|---|---|---|",
+              ...results.map(r => `| ${r.label} | ${r.runsCount} | ${r.perf} | ${r.lcp} | [${r.lcpMin} - ${r.lcpMax}] | ${r.tbt} | ${r.cls.toFixed(3)} |`),
+              "",
+              "### Detailed Layout Shifts Observed",
+              "```json",
+              JSON.stringify(shiftDetails, null, 2),
+              "```",
+            ].join("\n");
+
+            console.log(mdTable);
+            if (process.env.GITHUB_STEP_SUMMARY) {
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, mdTable + "\n");
+            }
+          '
+
+      - name: Upload CLS Benchmark Reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: lighthouse-cls-reports
+          path: lighthouse-cls-reports/
+          retention-days: 7
