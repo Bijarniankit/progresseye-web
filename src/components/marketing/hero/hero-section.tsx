@@ -32,7 +32,7 @@ export function HeroSection({ carouselSlot, sceneIndex = 0 }: HeroSectionProps) 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8">
           {/* Left Editorial Column */}
-          <div className="lg:col-span-6">
+          <div className="lg:col-span-6 min-h-[460px] sm:min-h-[400px] lg:min-h-0">
             <HeroEditorial />
           </div>
 

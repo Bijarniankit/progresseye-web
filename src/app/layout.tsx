@@ -7,14 +7,14 @@ import "./globals.css";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
-  display: "swap",
+  display: "optional",
 });
 
 // Display fonts (Poppins 600, 700, 800 normal + 500 italic)
 const poppins = Poppins({
   subsets: ["latin"],
   variable: "--font-display",
-  display: "swap",
+  display: "optional",
   weight: ["600", "700", "800"],
   style: ["normal"],
   preload: true,
@@ -23,7 +23,7 @@ const poppins = Poppins({
 const poppinsItalic = Poppins({
   subsets: ["latin"],
   variable: "--font-display-italic",
-  display: "swap",
+  display: "optional",
   weight: ["500"],
   style: ["italic"],
   preload: true,
