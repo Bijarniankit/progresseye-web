@@ -105,8 +105,8 @@ jobs:
                   `--throttling-method=devtools`;
                 try {
                   execSync(cmd, { stdio: "ignore" });
-                  const file = `${outPath}.report.json`;
-                  if (fs.existsSync(file)) {
+                  const file = fs.existsSync(outPath) ? outPath : (fs.existsSync(`${outPath}.report.json`) ? `${outPath}.report.json` : null);
+                  if (file) {
                     const data = JSON.parse(fs.readFileSync(file, "utf8"));
                     runs.push({
                       perf: Math.round((data.categories.performance?.score || 0) * 100),
