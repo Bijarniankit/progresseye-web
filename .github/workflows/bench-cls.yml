@@ -55,14 +55,14 @@ jobs:
             lighthouse http://127.0.0.1:3000/ \
               --chrome-flags="--headless --no-sandbox --disable-gpu" \
               --output=json \
-              --output-path=../../progresseye-web/lighthouse-cls-reports/bench-7df3cab-run$i.report.json \
+              --output-path=$GITHUB_WORKSPACE/lighthouse-cls-reports/bench-7df3cab-run$i.report.json \
               --only-categories=performance \
               --form-factor=mobile \
               --screenEmulation.mobile=true \
               --throttling-method=devtools
           done
           kill $SERVER_PID || true
-          cd ../../progresseye-web
+          cd $GITHUB_WORKSPACE
           rm -rf ../wt-7df3cab
           git worktree prune
 
@@ -82,14 +82,14 @@ jobs:
             lighthouse http://127.0.0.1:3000/ \
               --chrome-flags="--headless --no-sandbox --disable-gpu" \
               --output=json \
-              --output-path=../../progresseye-web/lighthouse-cls-reports/bench-e2180dc-run$i.report.json \
+              --output-path=$GITHUB_WORKSPACE/lighthouse-cls-reports/bench-e2180dc-run$i.report.json \
               --only-categories=performance \
               --form-factor=mobile \
               --screenEmulation.mobile=true \
               --throttling-method=devtools
           done
           kill $SERVER_PID || true
-          cd ../../progresseye-web
+          cd $GITHUB_WORKSPACE
           rm -rf ../wt-e2180dc
           git worktree prune
 
@@ -109,14 +109,14 @@ jobs:
             lighthouse http://127.0.0.1:3000/ \
               --chrome-flags="--headless --no-sandbox --disable-gpu" \
               --output=json \
-              --output-path=../../progresseye-web/lighthouse-cls-reports/bench-43f9a7e-run$i.report.json \
+              --output-path=$GITHUB_WORKSPACE/lighthouse-cls-reports/bench-43f9a7e-run$i.report.json \
               --only-categories=performance \
               --form-factor=mobile \
               --screenEmulation.mobile=true \
               --throttling-method=devtools
           done
           kill $SERVER_PID || true
-          cd ../../progresseye-web
+          cd $GITHUB_WORKSPACE
           rm -rf ../wt-43f9a7e
           git worktree prune
 
@@ -136,14 +136,14 @@ jobs:
             lighthouse http://127.0.0.1:3000/ \
               --chrome-flags="--headless --no-sandbox --disable-gpu" \
               --output=json \
-              --output-path=../../progresseye-web/lighthouse-cls-reports/bench-7283c0f-run$i.report.json \
+              --output-path=$GITHUB_WORKSPACE/lighthouse-cls-reports/bench-7283c0f-run$i.report.json \
               --only-categories=performance \
               --form-factor=mobile \
               --screenEmulation.mobile=true \
               --throttling-method=devtools
           done
           kill $SERVER_PID || true
-          cd ../../progresseye-web
+          cd $GITHUB_WORKSPACE
           rm -rf ../wt-7283c0f
           git worktree prune
 
@@ -163,14 +163,14 @@ jobs:
             lighthouse http://127.0.0.1:3000/ \
               --chrome-flags="--headless --no-sandbox --disable-gpu" \
               --output=json \
-              --output-path=../../progresseye-web/lighthouse-cls-reports/bench-9683ca9-run$i.report.json \
+              --output-path=$GITHUB_WORKSPACE/lighthouse-cls-reports/bench-9683ca9-run$i.report.json \
               --only-categories=performance \
               --form-factor=mobile \
               --screenEmulation.mobile=true \
               --throttling-method=devtools
           done
           kill $SERVER_PID || true
-          cd ../../progresseye-web
+          cd $GITHUB_WORKSPACE
           rm -rf ../wt-9683ca9
           git worktree prune
 
