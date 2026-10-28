@@ -95,7 +95,7 @@ jobs:
 
       - name: Benchmark Target 3 - PR #37 Head (43f9a7e)
         run: |
-          COMMIT="43f9a7e6717f223f66f91cb180a8c2794eb38b97"
+          COMMIT="43f9a7ef53305c81ed13aeb5863b02a9e1c2d1c0"
           echo "Setting up worktree for 43f9a7e..."
           git worktree add ../wt-43f9a7e $COMMIT
           cd ../wt-43f9a7e
@@ -122,7 +122,7 @@ jobs:
 
       - name: Benchmark Target 4 - PR #38 Head (7283c0f)
         run: |
-          COMMIT="7283c0f0a597b6a482d8c3fc6eeb6f1ebf99a531"
+          COMMIT="7283c0fbe8bb5a88885e3fa34741486545380585"
           echo "Setting up worktree for 7283c0f..."
           git worktree add ../wt-7283c0f $COMMIT
           cd ../wt-7283c0f
