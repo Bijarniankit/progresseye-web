@@ -29,7 +29,7 @@ jobs:
 
       - name: Install Pinned Benchmark Harness (Lighthouse 13.5.0)
         run: |
-          pnpm add -g lighthouse@13.5.0 wait-on
+          npm install -g lighthouse@13.5.0 wait-on
           echo "=== Harness Environment ==="
           google-chrome --version || which google-chrome
           lighthouse --version
