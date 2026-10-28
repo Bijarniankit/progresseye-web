@@ -3,10 +3,14 @@ name: CLS & Performance Multi-Commit Benchmark
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   benchmark:
     name: CLS Bisection Across 5 Historical Commits (5x Each)
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - name: Checkout Repository with Full History
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -59,7 +63,8 @@ jobs:
           done
           kill $SERVER_PID || true
           cd ../../progresseye-web
-          git worktree remove --force ../wt-7df3cab
+          rm -rf ../wt-7df3cab
+          git worktree prune
 
       - name: Benchmark Target 2 - phase-09-approved (e2180dc)
         run: |
@@ -85,7 +90,8 @@ jobs:
           done
           kill $SERVER_PID || true
           cd ../../progresseye-web
-          git worktree remove --force ../wt-e2180dc
+          rm -rf ../wt-e2180dc
+          git worktree prune
 
       - name: Benchmark Target 3 - PR #37 Head (43f9a7e)
         run: |
@@ -111,7 +117,8 @@ jobs:
           done
           kill $SERVER_PID || true
           cd ../../progresseye-web
-          git worktree remove --force ../wt-43f9a7e
+          rm -rf ../wt-43f9a7e
+          git worktree prune
 
       - name: Benchmark Target 4 - PR #38 Head (7283c0f)
         run: |
@@ -137,7 +144,8 @@ jobs:
           done
           kill $SERVER_PID || true
           cd ../../progresseye-web
-          git worktree remove --force ../wt-7283c0f
+          rm -rf ../wt-7283c0f
+          git worktree prune
 
       - name: Benchmark Target 5 - Current Main (9683ca9)
         run: |
@@ -163,7 +171,8 @@ jobs:
           done
           kill $SERVER_PID || true
           cd ../../progresseye-web
-          git worktree remove --force ../wt-9683ca9
+          rm -rf ../wt-9683ca9
+          git worktree prune
 
       - name: Summarize and Extract Detailed Layout Shift Audits
         run: |
