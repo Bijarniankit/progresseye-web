@@ -2,12 +2,12 @@
 # Multi-stage standalone build for Next.js 16 (App Router)
 
 FROM node:20-alpine AS base
-RUN corepack enable && corepack prepare pnpm@10.28.2 --activate
+RUN corepack enable && corepack prepare pnpm@latest --activate
 WORKDIR /app
 
 # Stage 1: Dependencies
 FROM base AS deps
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml* .npmrc* ./
 RUN pnpm install --frozen-lockfile
 
 # Stage 2: Builder
