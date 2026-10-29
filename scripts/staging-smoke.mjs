@@ -7,10 +7,12 @@
  * Default target: process.env.STAGING_URL || "http://localhost:3000"
  */
 
-const BASE_URL = (process.argv[2] || process.env.STAGING_URL || "http://localhost:3000").replace(
-  /\/$/,
-  "",
-);
+const BASE_URL = (
+  process.env.BASE_URL ||
+  process.argv[2] ||
+  process.env.STAGING_URL ||
+  "http://localhost:3000"
+).replace(/\/$/, "");
 
 const ROUTES = [
   { path: "/", expectedStatus: 200, type: "text/html" },
@@ -23,6 +25,7 @@ const ROUTES = [
   { path: "/features", expectedStatus: 200, type: "text/html" },
   { path: "/gdpr", expectedStatus: 200, type: "text/html" },
   { path: "/get-started", expectedStatus: 200, type: "text/html" },
+  { path: "/login", expectedStatus: 200, type: "text/html" },
   { path: "/privacy", expectedStatus: 200, type: "text/html" },
   { path: "/terms", expectedStatus: 200, type: "text/html" },
   { path: "/pricing", expectedStatus: 308, redirectLocation: "/get-started" },
