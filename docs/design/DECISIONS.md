@@ -420,6 +420,13 @@ This document records architectural, visual, and copy decisions modifying or com
   - Initial HTML script payload on static routes is measured at 209,988 B gzip (+629 B delta vs Phase 8 baseline 209,359 B; passes <= 1 kB budget). In full-page Playwright network traces with viewport link prefetching, the static bundle transfers 210,934 B gzip across 15 chunks (+1,575 B delta due to navbar prefetching of `/demo` island loader chunk `3eeu8xwuopf38.js` 946 B gzip).
   - Gate criteria: Static route transfer size must remain strictly <= +1 kB gzip over Phase 8 baseline in clean initial page loads, and all prefetch behaviors must be verified prior to staging launch.
 
+### D-041: font-display: optional & Cumulative Layout Shift Elimination
+- **Decision**: In `src/app/layout.tsx`, both Poppins and Inter next/font Google fonts are configured with `display: "optional"`, and the hero product tour container enforces a minimum height (`min-h-[460px] sm:min-h-[400px] lg:min-h-0`).
+- **Context & Audit**: On the production mobile build, webfont swapping previously reflowed the layout, triggering a layout shift (CLS ~0.110 on Linux runner).
+- **Trade-off**: Under `font-display: optional`, the browser enforces a 100 ms block period and a 0 ms swap window. On slow mobile network conditions (e.g., high-latency cellular connections where network round-trip and font transfer duration exceed 100 ms by calculation), first-time visitors may see the size-adjusted system fallback font instead of Poppins/Inter for their initial pageview. On subsequent navigations or repeat visits, the font is served instantly from the browser cache without shifting.
+- **Verification & Review**: This strategy empirically eliminated layout shift across all tested mobile widths (runner CLS 0.000 across 15 + 25 runs on 320px, 360px, and 412px viewports). The visual presentation under cold fallback will be revisited in the staging real-device A/B.
+
+
 
 
 
