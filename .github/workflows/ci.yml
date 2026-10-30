@@ -62,6 +62,18 @@ jobs:
       - name: Install Playwright Chromium
         run: pnpm exec playwright install --with-deps chromium
 
+      - name: Inspect Runner Font Metrics & Fallback @font-face
+        continue-on-error: true
+        run: |
+          echo "=== Fontconfig matches on ubuntu-latest ==="
+          fc-match Arial || true
+          fc-match sans-serif || true
+          echo "=== Built fallback @font-face in CSS ==="
+          grep -o '@font-face{[^}]*Fallback[^}]*}' .next/static/chunks/*.css || true
+
+      - name: Docker Build Test (Web)
+        run: docker build -t progresseye-web:test .
+
       - name: Axe Accessibility Test Suite
         run: pnpm test:a11y
 
@@ -132,7 +144,7 @@ jobs:
               const medTbt = median(runs.map((x) => x.tbt));
               const medCls = median(runs.map((x) => x.cls));
 
-              const passed = medLcp <= 2500 && medCls <= 0.01;
+              const passed = runs.length >= 5 && medLcp <= 2500 && medCls <= 0.01;
 
               results.push({
                 path: r.path,
@@ -146,7 +158,7 @@ jobs:
 
               if (!passed) {
                 console.log(
-                  `::warning title=Lighthouse Performance Gate Failed for ${r.path}::LCP: ${medLcp}ms (limit 2500ms), CLS: ${medCls.toFixed(3)} (limit 0.010)`,
+                  `::warning title=Lighthouse Performance Gate Failed for ${r.path}::Runs: ${runs.length}/5, LCP: ${medLcp}ms (limit 2500ms), CLS: ${medCls.toFixed(3)} (limit 0.010)`,
                 );
               }
             }
