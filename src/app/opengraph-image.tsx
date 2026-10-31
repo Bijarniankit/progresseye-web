@@ -97,7 +97,7 @@ export default async function Image() {
           fontFamily: "Inter",
         }}
       >
-        <span>progresseye.in</span>
+        <span>progresseye.com</span>
       </div>
     </div>,
     {
