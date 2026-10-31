@@ -12,7 +12,7 @@ export const siteConfig = {
   // Configured via environment variables; defaults marked TODO-REAL-DATA
   name: process.env.NEXT_PUBLIC_COMPANY_NAME || "ProgressEye Technologies Pvt. Ltd.", // TODO-REAL-DATA: Confirm legal company name
   shortName: "ProgressEye",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://progresseye.in",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://progresseye.com",
   description:
     "An advanced, end-to-end multi-tenant school operating system built for Indian schools — attendance, fees, exams, communication, all in one calm screen.",
   supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "support@progresseye.com", // TODO-REAL-DATA: Confirm support email

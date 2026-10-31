@@ -43,7 +43,7 @@ Deferred maintenance chores and dependency upgrades scheduled for execution at t
 The following unverified claims and planned placeholders in `docs/design/PLACEHOLDERS.md` strictly block commercial public launch until real data, verified infrastructure commitments, or phase features are completed:
 - **Corporate & Infrastructure Metadata**:
   - Legal Entity Name (`src/config/site.ts`: `siteConfig.name` — currently `"ProgressEye Technologies Pvt. Ltd."`).
-  - Production Canonical Domain (`src/config/site.ts`: `siteConfig.url` — decision pending `progresseye.in` vs `progresseye.com`).
+  - Production Canonical Domain (`src/config/site.ts`: `siteConfig.url` — decided `progresseye.com`).
   - Official Support Email (`src/config/site.ts`: `siteConfig.supportEmail` — currently `"support@progresseye.com"`).
 - **Public Quantitative Marketing Claims**:
   - Customer count: `"35+ schools"` (requires verified active tenant count).
@@ -114,7 +114,7 @@ The following unverified claims and planned placeholders in `docs/design/PLACEHO
 
 ### 8. Phase 10 Automated Launch-Readiness CI Build Check & Domain Verification
 - **Build Guard**: Implement an automated build/CI check that fails the build if rendered HTML contains `"TODO-REAL-DATA"` or the legal draft banner (`LegalDraftBanner` / `DRAFT-NEEDS-LEGAL-REVIEW`) while a launch flag is active (e.g. `NEXT_PUBLIC_LAUNCH_READY=true`).
-- **Domain Constant**: Re-verify that the canonical domain constant in `src/config/site.ts` (`siteConfig.url`) is final (`progresseye.in` vs `progresseye.com`) and that all metadata, OpenGraph, sitemap, and robots configurations resolve to the final production URL.
+- **Domain Constant**: Re-verify that the canonical domain constant in `src/config/site.ts` (`siteConfig.url`) is set to `progresseye.com` and that all metadata, OpenGraph, sitemap, and robots configurations resolve to the final production URL.
 
 ### 9. NEXT_PUBLIC_APP_ENV Build-Time Inlining
 - **Problem**: `NEXT_PUBLIC_APP_ENV` is evaluated and inlined by the Next.js compiler at BUILD time. If omitted or not set to `"production"` during `next build`, `robots.txt` defaults to closed (`Disallow: /`).

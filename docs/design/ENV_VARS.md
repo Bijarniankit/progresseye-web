@@ -10,9 +10,9 @@
 | Variable Name | Type / Allowed Values | Default (Dev/Local) | Production Requirement | Purpose & Architectural Notes |
 | :--- | :--- | :--- | :--- | :--- |
 | `NEXT_PUBLIC_APP_ENV` | `development` \| `staging` \| `production` | `development` | **Mandatory** (`production`) | Evaluated and **inlined at build time**. Controls `robots.txt` (`Disallow: /` on staging/dev vs full indexing on production) and telemetry enforcement. |
-| `NEXT_PUBLIC_SITE_URL` | URL string | `https://progresseye.in` | **Mandatory** | Canonical public domain used for OpenGraph images, sitemaps, and canonical link tags. |
+| `NEXT_PUBLIC_SITE_URL` | URL string | `https://progresseye.com` | **Mandatory** | Canonical public domain used for OpenGraph images, sitemaps, and canonical link tags. |
 | `NEXT_PUBLIC_COMPANY_NAME` | string | `ProgressEye Technologies Pvt. Ltd.` | `TODO-REAL-DATA` | Registered corporate entity name for footer copyright, metadata, and legal agreements (unregistered placeholder). |
-| `NEXT_PUBLIC_SUPPORT_EMAIL` | Email string | `support@progresseye.in` | `TODO-REAL-DATA` | Customer support contact email (unregistered mailbox placeholder). |
+| `NEXT_PUBLIC_SUPPORT_EMAIL` | Email string | `support@progresseye.com` | `TODO-REAL-DATA` | Customer support contact email (unregistered mailbox placeholder). |
 | `NEXT_PUBLIC_HAS_LEAD_BACKEND` | `true` \| `false` | `false` | `true` (once backend live) | **Lead Intake Feature Flag**. When `false`, forms run client-side validation only, render informative not-connected notices, and dispatch zero network requests. |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | string | `""` (empty) | **Mandatory** (Cloudflare) | Public site key for Cloudflare Turnstile anti-abuse widget. Loaded lazily only on form pages when backend is active. |
 | `API_INTERNAL_URL` | URL string | `http://localhost:4000` | **Mandatory** (Container) | Internal backend address used exclusively by Next.js server route handlers to proxy `/api/v1/*` requests. Never exposed to browser clients. |
@@ -50,5 +50,5 @@
 | `SMTP_PORT` | integer | `1025` | **Mandatory** | Outgoing SMTP mail server port. |
 | `SMTP_USER` | string | empty | Provider credentials | SMTP authentication username. |
 | `SMTP_PASS` | string | empty | Provider credentials | SMTP authentication password. |
-| `MAIL_FROM` | Email string | `noreply@progresseye.in` | Verified domain email | RFC 5322 From header for automated transactional emails (AWS SES identity). |
-| `LEAD_NOTIFICATION_RECIPIENT` | Email string | `leads@progresseye.in` | Internal team inbox | Destination inbox for internal institutional lead notifications (unregistered mailbox placeholder). |
+| `MAIL_FROM` | Email string | `noreply@progresseye.com` | Verified domain email | RFC 5322 From header for automated transactional emails (AWS SES identity). |
+| `LEAD_NOTIFICATION_RECIPIENT` | Email string | `leads@progresseye.com` | Internal team inbox | Destination inbox for internal institutional lead notifications (unregistered mailbox placeholder). |
