@@ -49,6 +49,7 @@ services:
     build:
       context: ../progresseye-api
       dockerfile: Dockerfile
+    command: ["node", "dist/src/main"]
     container_name: progresseye-api-ci
     restart: "no"
     ports:
@@ -91,6 +92,7 @@ services:
     build:
       context: ../progresseye-api
       dockerfile: Dockerfile.worker
+    command: ["node", "dist/src/worker"]
     container_name: progresseye-worker-ci
     restart: "no"
     environment:
