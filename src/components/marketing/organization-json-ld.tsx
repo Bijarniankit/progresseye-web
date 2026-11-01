@@ -3,6 +3,7 @@ import { siteConfig } from "@/config/site";
 export function OrganizationJsonLd() {
   // Schema.org Organization structured data
   // Note: sameAs is explicitly omitted until real social handles are verified
+  // Note: contactPoint is omitted when siteConfig.supportEmail is empty
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -10,11 +11,15 @@ export function OrganizationJsonLd() {
     alternateName: siteConfig.shortName,
     url: siteConfig.url,
     logo: `${siteConfig.url}/icon.png`,
-    contactPoint: {
-      "@type": "ContactPoint",
-      email: siteConfig.supportEmail,
-      contactType: "customer support",
-    },
+    ...(siteConfig.supportEmail
+      ? {
+          contactPoint: {
+            "@type": "ContactPoint",
+            email: siteConfig.supportEmail,
+            contactType: "customer support",
+          },
+        }
+      : {}),
   };
 
   return (

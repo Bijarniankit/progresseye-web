@@ -4,18 +4,44 @@ import { OrganizationJsonLd } from "@/components/marketing/organization-json-ld"
 import { siteConfig } from "@/config/site";
 
 describe("OrganizationJsonLd Unit Tests", () => {
-  it("renders valid Schema.org Organization structured data", () => {
-    const { container } = render(<OrganizationJsonLd />);
-    const script = container.querySelector('script[type="application/ld+json"]');
-    expect(script).not.toBeNull();
+  it("renders valid Schema.org Organization structured data and omits contactPoint when supportEmail is empty", () => {
+    const originalEmail = siteConfig.supportEmail;
+    siteConfig.supportEmail = "";
 
-    const data = JSON.parse(script?.textContent || "{}");
-    expect(data["@context"]).toBe("https://schema.org");
-    expect(data["@type"]).toBe("Organization");
-    expect(data.name).toBe(siteConfig.name);
-    expect(data.url).toBe(siteConfig.url);
-    expect(data.contactPoint).toBeDefined();
-    expect(data.contactPoint["@type"]).toBe("ContactPoint");
+    try {
+      const { container } = render(<OrganizationJsonLd />);
+      const script = container.querySelector('script[type="application/ld+json"]');
+      expect(script).not.toBeNull();
+
+      const data = JSON.parse(script?.textContent || "{}");
+      expect(data["@context"]).toBe("https://schema.org");
+      expect(data["@type"]).toBe("Organization");
+      expect(data.name).toBe(siteConfig.name);
+      expect(data.url).toBe(siteConfig.url);
+      expect(data.contactPoint).toBeUndefined();
+      expect("contactPoint" in data).toBe(false);
+    } finally {
+      siteConfig.supportEmail = originalEmail;
+    }
+  });
+
+  it("renders contactPoint with valid email and contactType when supportEmail is configured", () => {
+    const originalEmail = siteConfig.supportEmail;
+    siteConfig.supportEmail = "help@progresseye.com";
+
+    try {
+      const { container } = render(<OrganizationJsonLd />);
+      const script = container.querySelector('script[type="application/ld+json"]');
+      expect(script).not.toBeNull();
+
+      const data = JSON.parse(script?.textContent || "{}");
+      expect(data.contactPoint).toBeDefined();
+      expect(data.contactPoint["@type"]).toBe("ContactPoint");
+      expect(data.contactPoint.email).toBe("help@progresseye.com");
+      expect(data.contactPoint.contactType).toBe("customer support");
+    } finally {
+      siteConfig.supportEmail = originalEmail;
+    }
   });
 
   it("strictly omits sameAs until verified production social handles are configured", () => {
