@@ -55,7 +55,8 @@ services:
     ports:
       - "4000:4000"
     environment:
-      NODE_ENV: production
+      NODE_ENV: test
+      APP_ENV: test
       PORT: "4000"
       HOSTNAME: "0.0.0.0"
       DATABASE_URL: postgresql://postgres:password@postgres:5432/progresseye_test
@@ -96,7 +97,8 @@ services:
     container_name: progresseye-worker-ci
     restart: "no"
     environment:
-      NODE_ENV: production
+      NODE_ENV: test
+      APP_ENV: test
       DATABASE_URL: postgresql://postgres:password@postgres:5432/progresseye_test
       DIRECT_URL: postgresql://postgres:password@postgres:5432/progresseye_test
       REDIS_HOST: redis
