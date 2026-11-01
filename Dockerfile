@@ -1,7 +1,7 @@
 # ProgressEye Web — Production Dockerfile
 # Multi-stage standalone build for Next.js 16 (App Router)
 
-FROM node:20-alpine AS base
+FROM node:24-alpine AS base
 RUN corepack enable && corepack prepare pnpm@latest --activate
 WORKDIR /app
 
@@ -30,7 +30,7 @@ ENV NODE_ENV=production
 RUN pnpm build
 
 # Stage 3: Runner
-FROM node:20-alpine AS runner
+FROM node:24-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1

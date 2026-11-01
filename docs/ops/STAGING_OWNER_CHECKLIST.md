@@ -52,8 +52,8 @@ Deploying Web, API, Worker, Redis, and Reverse Proxy on a single EC2 instance mi
 | Risk | Description & Impact | Required Minimum Operational Mitigation |
 |---|---|---|
 | **No High Availability (Single Host SPOF)** | If the EC2 virtual machine fails, encounters underlying hardware faults, or AWS availability zone disruption occurs, all application components go offline simultaneously. | 1. **External Database**: Postgres 17 runs on managed Amazon RDS, isolated from EC2 host failure.<br>2. **Automated EBS Snapshots**: AWS Data Lifecycle Manager (DLM) configured to take daily root volume snapshots.<br>3. **External Health Monitoring**: 60-second polling via Better Stack/UptimeRobot with instant SMS/push alerts. |
-| **OS Patching & Kernel Reboots** | Host operating system updates (`dnf update` / `apt upgrade`) require occasional reboots, taking the ingress offline. | 1. **Off-Hours Maintenance Windows**: Apply updates only during pre-announced maintenance hours.<br>2. **Nitro Hypervisor Fast Reboot**: AWS `t3`/`t4g` instances reboot within ~30–45 seconds.<br>3. **Docker Daemon Autostart**: Enable `systemctl enable docker` and set container restart policies to `unless-stopped`. |
-| **Container Redeployment Downtime** | Running `docker compose up -d` recreates application containers, causing brief TCP connection resets (no rolling zero-downtime ALB). | 1. **Zero-downtime is explicitly UNVERIFIED / NOT claimed**.<br>2. **Caddy Reverse Proxy Buffer**: Caddy holds incoming connections momentarily while upstream web:3000 rebinds.<br>3. **Sequential Staging Restarts**: Rebuild images out-of-band before triggering `docker compose up -d`. |
+| **OS Patching & Kernel Reboots** | Host operating system updates (`dnf update` / `apt upgrade`) require occasional reboots, taking the ingress offline. | 1. **Off-Hours Maintenance Windows**: Apply updates only during pre-announced maintenance hours.<br>2. **Nitro Hypervisor Reboot**: Reboot duration depends on instance class and attached EBS volumes [UNVERIFIED - duration unconfirmed by live benchmark].<br>3. **Docker Daemon Autostart**: Enable `systemctl enable docker` and set container restart policies to `unless-stopped`. |
+| **Container Redeployment Downtime** | Running `docker compose up -d` recreates application containers, causing brief TCP connection resets (no rolling zero-downtime ALB). | 1. **Zero-downtime is explicitly UNVERIFIED / NOT claimed**.<br>2. **Upstream Rebind Impact**: In-flight requests during container recreation may experience connection resets or 502 Bad Gateway [UNVERIFIED - connection buffering across restarts unproven].<br>3. **Sequential Staging Restarts**: Rebuild images out-of-band before triggering `docker compose up -d`. |
 | **Resource Contention & OOM Kills** | Next.js SSR build spikes or BullMQ PDF/email jobs could consume RAM, triggering the Linux Out-Of-Memory (OOM) killer on Redis or the API. | 1. **Swap Allocation**: Configure 2–4 GB swapfile on the host EBS volume.<br>2. **Redis Memory Limit**: Configure Redis with `--maxmemory 256mb --maxmemory-policy noeviction`.<br>3. **Staging Cache Alternative**: ElastiCache for Redis is designated as the subsequent production upgrade path. |
 
 ---
@@ -93,11 +93,15 @@ Consider a prospective school principal submitting the contact form on `https://
 ### Why `TRUSTED_PROXY_COUNT` Must Be Confirmed via Staging Hop-Trace
 - **If Next.js rewrite appends the proxy's IP**: The header arriving at the API contains two hops (`203.0.113.195, 172.20.0.2`). Fastify requires `TRUSTED_PROXY_COUNT=2` to walk backward past both the `web` container and the `caddy` container to extract the real client IP `203.0.113.195`.
 - **If Next.js rewrite transparently forwards `X-Forwarded-For` without appending**: The header arriving at the API contains one hop (`203.0.113.195`). Fastify requires `TRUSTED_PROXY_COUNT=1`.
-- **Operational Directive**: **DO NOT ASSUME**. After starting staging, curl the diagnostic endpoint:
-  ```bash
-  curl -H "X-Forwarded-For: 203.0.113.195" https://staging.progresseye.com/api/v1/health/hop-trace
-  ```
-  Inspect the returned `clientIp`, `ips`, and `rawHeaders`. Adjust `TRUSTED_PROXY_COUNT` in `.env` / SSM Parameter Store so that `clientIp` matches the true origin IP before enabling strict rate limiting.
+- **Diagnostics Activation & Deactivation Prerequisite**:
+  - The hop-trace diagnostic endpoint (`/api/v1/health/hop-trace`) requires setting `DIAGNOSTICS_ENABLED=true` in the API container environment (it returns 404 when false/unset).
+  - Set `DIAGNOSTICS_ENABLED=true` strictly for the duration of the hop-trace verification test.
+  - Run the diagnostic verification curl command:
+    ```bash
+    curl -H "X-Forwarded-For: 203.0.113.195" https://staging.progresseye.com/api/v1/health/hop-trace
+    ```
+  - Inspect the returned `clientIp`, `ips`, and `rawHeaders`. Adjust `TRUSTED_PROXY_COUNT` in `.env` / SSM Parameter Store so that `clientIp` matches the true origin IP before enabling strict rate limiting.
+  - Immediately after verification, set `DIAGNOSTICS_ENABLED=false` and restart the API container (`docker compose -f docker-compose.staging.yml restart api`) to disable the diagnostic endpoint and prevent header leakage.
 
 ---
 
