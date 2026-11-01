@@ -2,7 +2,7 @@
 # Multi-stage standalone build for Next.js 16 (App Router)
 
 FROM node:24-alpine AS base
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@12.11.2 --activate
 WORKDIR /app
 
 # Stage 1: Dependencies
@@ -16,10 +16,10 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ARG NEXT_PUBLIC_SITE_URL=https://staging.progresseye.com
-ARG NEXT_PUBLIC_APP_ENV=production
+ARG NEXT_PUBLIC_APP_ENV=staging
 ARG NEXT_PUBLIC_HAS_LEAD_BACKEND=false
 ARG NEXT_PUBLIC_TURNSTILE_SITE_KEY=""
-ARG NEXT_PUBLIC_SUPPORT_EMAIL=support@progresseye.com
+ARG NEXT_PUBLIC_SUPPORT_EMAIL=""
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV NEXT_PUBLIC_APP_ENV=$NEXT_PUBLIC_APP_ENV
 ENV NEXT_PUBLIC_HAS_LEAD_BACKEND=$NEXT_PUBLIC_HAS_LEAD_BACKEND

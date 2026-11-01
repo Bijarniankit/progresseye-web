@@ -373,10 +373,10 @@ NODE_ENV=production
 PORT=3000
 HOSTNAME=0.0.0.0
 NEXT_PUBLIC_SITE_URL=https://staging.progresseye.com
-NEXT_PUBLIC_APP_ENV=production
+NEXT_PUBLIC_APP_ENV=staging
 NEXT_PUBLIC_HAS_LEAD_BACKEND=true
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=<CLOUDFLARE_SITE_KEY>
-NEXT_PUBLIC_SUPPORT_EMAIL=support@progresseye.com
+NEXT_PUBLIC_SUPPORT_EMAIL=""
 API_INTERNAL_URL=http://api:4000
 
 # API Service (progresseye-api)
@@ -413,14 +413,18 @@ All pricing calculated for **AWS Region `ap-south-1` (Mumbai)** based on standar
 
 | Infrastructure Item | Specifications | Monthly Cost (USD) | Official AWS Pricing Documentation |
 |---|---|---|---|
-| **Amazon EC2 Instance** | `t3.medium` (2 vCPU, 4 GiB RAM, Linux) | ~$30.37 ($0.0416/hr) | [Amazon EC2 On-Demand Pricing](https://aws.amazon.com/ec2/pricing/on-demand/) |
+| **Amazon EC2 Instance** | `t3.medium` (2 vCPU, 4 GiB RAM, Linux) | ~$30.37 ($0.0416/hr) `[UNVERIFIED - check against Amazon EC2 On-Demand Pricing for Region ap-south-1 t3.medium]` | [Amazon EC2 On-Demand Pricing](https://aws.amazon.com/ec2/pricing/on-demand/) |
 | **EC2 EBS Root Volume** | 30 GiB General Purpose SSD (gp3) | ~$2.40 ($0.08/GB-mo) | [Amazon EBS Pricing](https://aws.amazon.com/ebs/pricing/) |
 | **Public IPv4 Address** | 1 In-use Elastic IP (730 hrs) | ~$3.65 ($0.005/hr) | [Amazon EC2 IPv4 Pricing](https://aws.amazon.com/ec2/pricing/on-demand/#Public_IPv4_Address_Pricing) |
 | **Amazon RDS Instance** | `db.t4g.micro` (2 vCPU, 1 GiB RAM, Single-AZ) | ~$13.14 ($0.018/hr) | [Amazon RDS PostgreSQL Pricing](https://aws.amazon.com/rds/postgresql/pricing/) |
 | **Amazon RDS Storage** | 20 GiB General Purpose SSD (gp3) | ~$2.30 ($0.115/GB-mo) | [Amazon RDS Storage Pricing](https://aws.amazon.com/rds/postgresql/pricing/) |
 | **RDS Automated Backups** | 7-day retention (up to 100% of DB storage) | $0.00 (Free Tier) | [Amazon RDS Backup Pricing](https://aws.amazon.com/rds/postgresql/pricing/) |
-| **Amazon SES Emails** | First 62,000 emails/mo from EC2 | $0.00 (Free Tier) | [Amazon SES Pricing](https://aws.amazon.com/ses/pricing/) |
+| **Amazon SES Emails** | First 62,000 emails/mo from EC2 | $0.00 (Free Tier) `[UNVERIFIED - check against Amazon SES Pricing; EC2 free tier eligibility subject to current AWS terms]` | [Amazon SES Pricing](https://aws.amazon.com/ses/pricing/) |
 | **AWS Systems Manager** | Standard Parameter Store (< 10,000 params) | $0.00 (Always Free) | [AWS Systems Manager Pricing](https://aws.amazon.com/systems-manager/pricing/) |
 | **CloudWatch Billing Alarm** | 1 Metric Alarm (Free tier includes 10 alarms) | $0.00 (Free Tier) | [Amazon CloudWatch Pricing](https://aws.amazon.com/cloudwatch/pricing/) |
-| **Data Transfer Out** | First 100 GiB/month to internet | $0.00 (AWS Free Tier) | [AWS EC2 Data Transfer Pricing](https://aws.amazon.com/ec2/pricing/on-demand/#Data_Transfer) |
+| **Data Transfer Out** | First 100 GiB/month to internet | $0.00 (AWS Free Tier) `[UNVERIFIED - check against AWS EC2 Data Transfer Pricing; regional outbound allowance rules]` | [AWS EC2 Data Transfer Pricing](https://aws.amazon.com/ec2/pricing/on-demand/#Data_Transfer) |
+| **Domain Registration (`progresseye.com`)** | Annual registrar fee (.com domain) | Not yet priced | [Amazon Route 53 Domain Pricing](https://aws.amazon.com/route53/pricing/) |
+| **Amazon Route 53 Hosted Zone** | DNS hosted zone (if using Route 53 DNS) | Not yet priced | [Amazon Route 53 Pricing](https://aws.amazon.com/route53/pricing/) |
+| **Amazon EBS Snapshots** | Scheduled root volume snapshot storage | Not yet priced | [Amazon EBS Pricing](https://aws.amazon.com/ebs/pricing/) |
+| **Amazon CloudWatch Metrics & Logs** | Log ingestion and alarms beyond free tier | Not yet priced | [Amazon CloudWatch Pricing](https://aws.amazon.com/cloudwatch/pricing/) |
 | **Total Estimated Staging Cost** | **Comprehensive Single-Server + RDS Stack** | **~$51.86 / month** `[UNVERIFIED - requires live verification]` | |

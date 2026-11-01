@@ -27,10 +27,10 @@ services:
       dockerfile: Dockerfile
       args:
         NEXT_PUBLIC_SITE_URL: https://staging.progresseye.com
-        NEXT_PUBLIC_APP_ENV: production
+        NEXT_PUBLIC_APP_ENV: staging
         NEXT_PUBLIC_HAS_LEAD_BACKEND: "true"
         NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${NEXT_PUBLIC_TURNSTILE_SITE_KEY:-}
-        NEXT_PUBLIC_SUPPORT_EMAIL: support@progresseye.com
+        NEXT_PUBLIC_SUPPORT_EMAIL: ""
     image: progresseye-web:staging
     container_name: progresseye-web
     restart: unless-stopped
@@ -41,10 +41,10 @@ services:
       PORT: "3000"
       HOSTNAME: "0.0.0.0"
       NEXT_PUBLIC_SITE_URL: https://staging.progresseye.com
-      NEXT_PUBLIC_APP_ENV: production
+      NEXT_PUBLIC_APP_ENV: staging
       NEXT_PUBLIC_HAS_LEAD_BACKEND: "true"
       NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${NEXT_PUBLIC_TURNSTILE_SITE_KEY:-}
-      NEXT_PUBLIC_SUPPORT_EMAIL: support@progresseye.com
+      NEXT_PUBLIC_SUPPORT_EMAIL: ""
       # Internal Docker network proxy rewrite destination to API container
       API_INTERNAL_URL: http://api:4000
     depends_on:

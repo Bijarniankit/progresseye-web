@@ -15,7 +15,7 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://progresseye.com",
   description:
     "An advanced, end-to-end multi-tenant school operating system built for Indian schools — attendance, fees, exams, communication, all in one calm screen.",
-  supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "support@progresseye.com", // TODO-REAL-DATA: Confirm support email
+  supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "", // TODO-REAL-DATA: Confirm support email
 
   // Feature & Data Flags
   hasCustomerLogos: false, // Show customer logos trust strip only when real logos exist (default: false)
