@@ -422,9 +422,9 @@ This document records architectural, visual, and copy decisions modifying or com
 
 ### D-041: font-display: optional & Cumulative Layout Shift Elimination
 - **Decision**: In `src/app/layout.tsx`, both Poppins and Inter next/font Google fonts are configured with `display: "optional"`, and the hero product tour container enforces a minimum height (`min-h-[460px] sm:min-h-[400px] lg:min-h-0`).
-- **Context & Audit**: On the production mobile build, webfont swapping previously reflowed the layout, triggering a layout shift (CLS ~0.110 on Linux runner).
+- **Context & Audit**: On the production mobile build, a layout shift (CLS ~0.110 on Linux runner) was observed on mobile routes. The root cause remains unproven.
 - **Trade-off**: Under `font-display: optional`, the browser enforces a 100 ms block period and a 0 ms swap window. On slow mobile network conditions (e.g., high-latency cellular connections where network round-trip and font transfer duration exceed 100 ms by calculation), first-time visitors may see the size-adjusted system fallback font instead of Poppins/Inter for their initial pageview. On subsequent navigations or repeat visits, the font is served instantly from the browser cache without shifting.
-- **Verification & Review**: This strategy empirically eliminated layout shift across all tested mobile widths (runner CLS 0.000 across 15 + 25 runs on 320px, 360px, and 412px viewports). The visual presentation under cold fallback will be revisited in the staging real-device A/B.
+- **Verification & Review**: This strategy empirically eliminated layout shift across all tested mobile widths (runner CLS: median 0, max 0.003 (one /contact run) across 15 + 25 runs on 320px, 360px, and 412px viewports). The visual presentation under cold fallback will be revisited in the staging real-device A/B.
 
 
 

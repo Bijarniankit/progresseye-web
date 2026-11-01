@@ -669,7 +669,7 @@ Two-column layout. Sticky left title *"Things schools ask us. Can't find what yo
 
 ### Channel Cards Grid
 4 cards across the grid:
-1. `Email`: `hello@progresseye.in` ("We reply within one working day.")
+1. `Email`: `hello@progresseye.com` ("We reply within one working day.")
 2. `Phone`: `+91 98765 43210` ("Mon – Sat, 9 AM – 6 PM IST.")
 3. `Office`: `Bangalore, India` ("Visit us — schedule first, please.")
 4. `Response time`: `Under 24 hours` ("Always. Even on weekends.")
@@ -684,7 +684,7 @@ Two-column layout. Sticky left title *"Things schools ask us. Can't find what yo
 - Status: `"The ProgressEye team · Usually replies in 4 hours"`
 - Quick routing links:
   - For partnership inquiries → Reach out via form
-  - For media or press → `press@progresseye.in`
+  - For media or press → `press@progresseye.com`
   - For careers → `/careers`
 
 #### Right Column (React Hook Form)

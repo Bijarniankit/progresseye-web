@@ -6,6 +6,9 @@ This document provides a comprehensive specification of every environment variab
 > **Build-Time Inlining for Next.js**:
 > Any variable prefixed with `NEXT_PUBLIC_` is inlined into the client JavaScript bundle at **BUILD time**. Changing these variables at container runtime in staging or production will have **no effect** on client code. Builds must be executed with the exact target environment variables configured.
 >
+> **Production Builds Must Pass `NEXT_PUBLIC_APP_ENV=production` Explicitly**:
+> The `Dockerfile` build argument `NEXT_PUBLIC_APP_ENV` defaults to `staging` to prevent non-production container builds from being indexed by web crawlers (`robots.txt` disallows all crawler traffic with `Disallow: /` when `NEXT_PUBLIC_APP_ENV !== "production"`). Production release build pipelines or production container builds MUST explicitly pass `NEXT_PUBLIC_APP_ENV=production` at build time.
+>
 > **Production Turnstile Launch Guard**:
 > In `production` (`NEXT_PUBLIC_APP_ENV=production` or `APP_ENV=production`), Cloudflare test site/secret keys (`1x...`, `2x...`, `3x...`) are strictly rejected at build time and process startup. Real Cloudflare Turnstile keys are launch-blocking.
 
