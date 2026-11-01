@@ -51,4 +51,4 @@
 | `SMTP_USER` | string | empty | Provider credentials | SMTP authentication username. |
 | `SMTP_PASS` | string | empty | Provider credentials | SMTP authentication password. |
 | `MAIL_FROM` | Email string | `noreply@progresseye.com` | Verified domain email | RFC 5322 From header for automated transactional emails (AWS SES identity). |
-| `LEAD_NOTIFICATION_RECIPIENT` | Email string | `leads@progresseye.com` | Internal team inbox | Destination inbox for internal institutional lead notifications (unregistered mailbox placeholder). |
+| `LEAD_NOTIFICATION_RECIPIENT` | Email string | `TODO-REAL-DATA` | Internal team inbox | Destination inbox for internal institutional lead notifications (undecided mailbox; `TODO-REAL-DATA`). |

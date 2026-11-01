@@ -134,13 +134,13 @@ Provision infrastructure strictly in this order to resolve network and credentia
 ---
 
 ## Step 2: AWS Account Setup (Root MFA, Billing Alarm & IAM)
-1. **Enable Root Account MFA**: In the AWS Console, click account name > **Security credentials** > **Assign MFA**. Configure a FIDO2 hardware security key or authenticator app.
+1. **Enable Root Account MFA**: In the AWS Console, click account name > **Security credentials** > **Assign MFA**. Configure an authenticator app (hardware security key / FIDO2 is an optional suggestion).
    - Official Docs: [AWS IAM Root User MFA](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_virtual.html)
 2. **Create Monthly Billing Alarm**:
    - Navigate to **CloudWatch** > **Alarms** > **Create alarm**.
    - Metric: `AWS/Billing` > `EstimatedCharges` (Currency: USD).
-   - Condition: Static, Greater than `$75` (safeguard against unexpected data transfer or instance spikes).
-   - Action: Trigger SNS notification to owner email (`admin@progresseye.com`).
+   - Condition: Static, Greater than chosen threshold (e.g. `$60`–`$75` threshold suggested as a safeguard against unexpected data transfer or instance spikes; exact value is owner's choice).
+   - Action: Trigger SNS notification to owner email (`TODO-REAL-DATA-ACME-EMAIL`).
    - Official Docs: [Creating a Billing Alarm in CloudWatch](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/monitor_estimated_charges_with_cloudwatch.html)
 3. **Create Deployment IAM User / Role**:
    - Do NOT use the root account for daily operations.
@@ -392,7 +392,7 @@ TURNSTILE_SECRET_KEY=<FETCHED_FROM_SSM>
 SES_REGION=ap-south-1
 AWS_REGION=ap-south-1
 MAIL_FROM=noreply@progresseye.com
-LEAD_NOTIFICATION_RECIPIENT=leads@progresseye.com
+LEAD_NOTIFICATION_RECIPIENT=TODO-REAL-DATA-LEAD-MAILBOX
 
 # Worker Service (progresseye-worker)
 NODE_ENV=production
@@ -402,7 +402,7 @@ REDIS_URL=redis://redis:6379
 SES_REGION=ap-south-1
 AWS_REGION=ap-south-1
 MAIL_FROM=noreply@progresseye.com
-LEAD_NOTIFICATION_RECIPIENT=leads@progresseye.com
+LEAD_NOTIFICATION_RECIPIENT=TODO-REAL-DATA-LEAD-MAILBOX
 ```
 
 ---

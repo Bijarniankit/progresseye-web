@@ -1,0 +1,156 @@
+# ProgressEye CI — Automated Local Compose Lead-Flow Stack
+# Architecture: Web (Next.js 16) + API (NestJS 11) + Worker (BullMQ) + PostgreSQL 17 + Redis 7 + Mailpit
+# Used exclusively by GitHub Actions CI integration job (hermetic, zero cloud dependencies)
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: progresseye-postgres-ci
+    restart: "no"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: progresseye_test
+    ports:
+      - "5432:5432"
+    networks:
+      - progresseye-ci-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d progresseye_test"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: progresseye-redis-ci
+    restart: "no"
+    ports:
+      - "6379:6379"
+    networks:
+      - progresseye-ci-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: progresseye-mailpit-ci
+    restart: "no"
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      - progresseye-ci-net
+
+  api:
+    build:
+      context: ../progresseye-api
+      dockerfile: Dockerfile
+    container_name: progresseye-api-ci
+    restart: "no"
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: production
+      PORT: "4000"
+      HOSTNAME: "0.0.0.0"
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/progresseye_test
+      DIRECT_URL: postgresql://postgres:password@postgres:5432/progresseye_test
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      REDIS_URL: redis://redis:6379
+      TRUSTED_PROXY_COUNT: "1"
+      CORS_ORIGIN: "http://localhost:3000,http://web:3000"
+      TURNSTILE_ENABLED: "false"
+      TURNSTILE_SECRET_KEY: "1x0000000000000000000000000000000AA"
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+      MAIL_FROM: noreply@progresseye.com
+      LEAD_NOTIFICATION_RECIPIENT: leads@example.com
+      LEAD_IP_HMAC_SECRET: test-lead-ip-hmac-secret-min-32-chars-long
+      JWT_ACCESS_SECRET: test-jwt-access-secret-min-32-chars-long
+      JWT_REFRESH_SECRET: test-jwt-refresh-secret-min-32-chars-long
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - progresseye-ci-net
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:4000/api/v1/health/live"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+      start_period: 5s
+
+  worker:
+    build:
+      context: ../progresseye-api
+      dockerfile: Dockerfile.worker
+    container_name: progresseye-worker-ci
+    restart: "no"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/progresseye_test
+      DIRECT_URL: postgresql://postgres:password@postgres:5432/progresseye_test
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      REDIS_URL: redis://redis:6379
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+      MAIL_FROM: noreply@progresseye.com
+      LEAD_NOTIFICATION_RECIPIENT: leads@example.com
+      LEAD_IP_HMAC_SECRET: test-lead-ip-hmac-secret-min-32-chars-long
+      JWT_ACCESS_SECRET: test-jwt-access-secret-min-32-chars-long
+      JWT_REFRESH_SECRET: test-jwt-refresh-secret-min-32-chars-long
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - progresseye-ci-net
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_SITE_URL: http://localhost:3000
+        NEXT_PUBLIC_APP_ENV: staging
+        NEXT_PUBLIC_HAS_LEAD_BACKEND: "true"
+        NEXT_PUBLIC_TURNSTILE_SITE_KEY: "1x00000000000000000000AA"
+        NEXT_PUBLIC_SUPPORT_EMAIL: ""
+    container_name: progresseye-web-ci
+    restart: "no"
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      NEXT_PUBLIC_APP_ENV: staging
+      NEXT_PUBLIC_HAS_LEAD_BACKEND: "true"
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: "1x00000000000000000000AA"
+      NEXT_PUBLIC_SUPPORT_EMAIL: ""
+      API_INTERNAL_URL: http://api:4000
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - progresseye-ci-net
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+      start_period: 5s
+
+networks:
+  progresseye-ci-net:
+    driver: bridge

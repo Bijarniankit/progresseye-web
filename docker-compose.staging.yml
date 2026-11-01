@@ -82,7 +82,7 @@ services:
       SES_REGION: ap-south-1
       AWS_REGION: ap-south-1
       MAIL_FROM: ${MAIL_FROM:-noreply@progresseye.com}
-      LEAD_NOTIFICATION_RECIPIENT: ${LEAD_NOTIFICATION_RECIPIENT:-leads@progresseye.com}
+      LEAD_NOTIFICATION_RECIPIENT: ${LEAD_NOTIFICATION_RECIPIENT:-TODO-REAL-DATA-LEAD-MAILBOX}
     depends_on:
       redis:
         condition: service_healthy
@@ -110,7 +110,7 @@ services:
       SES_REGION: ap-south-1
       AWS_REGION: ap-south-1
       MAIL_FROM: ${MAIL_FROM:-noreply@progresseye.com}
-      LEAD_NOTIFICATION_RECIPIENT: ${LEAD_NOTIFICATION_RECIPIENT:-leads@progresseye.com}
+      LEAD_NOTIFICATION_RECIPIENT: ${LEAD_NOTIFICATION_RECIPIENT:-TODO-REAL-DATA-LEAD-MAILBOX}
     depends_on:
       redis:
         condition: service_healthy
