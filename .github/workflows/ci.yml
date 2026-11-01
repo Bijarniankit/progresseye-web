@@ -249,7 +249,7 @@ jobs:
           echo "Waiting for postgres to become healthy..."
           docker compose -f docker-compose.ci.yml exec -T postgres sh -c 'until pg_isready -U postgres -d progresseye_test; do sleep 1; done'
           cd ../progresseye-api
-          DATABASE_URL="postgresql://postgres:password@localhost:5432/progresseye_test" pnpm exec prisma migrate deploy
+          DATABASE_URL="postgresql://postgres:password@localhost:5432/progresseye_test" DIRECT_URL="postgresql://postgres:password@localhost:5432/progresseye_test" pnpm exec prisma migrate deploy
 
       - name: Build and Start Compose Services (API, Worker, Web)
         run: |
