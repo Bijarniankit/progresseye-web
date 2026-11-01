@@ -31,6 +31,7 @@ services:
         NEXT_PUBLIC_HAS_LEAD_BACKEND: "true"
         NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${NEXT_PUBLIC_TURNSTILE_SITE_KEY:-}
         NEXT_PUBLIC_SUPPORT_EMAIL: ""
+        API_INTERNAL_URL: http://api:4000
     image: progresseye-web:staging
     container_name: progresseye-web
     restart: unless-stopped

@@ -129,6 +129,7 @@ services:
         NEXT_PUBLIC_HAS_LEAD_BACKEND: "true"
         NEXT_PUBLIC_TURNSTILE_SITE_KEY: "1x00000000000000000000AA"
         NEXT_PUBLIC_SUPPORT_EMAIL: ""
+        API_INTERNAL_URL: http://api:4000
     container_name: progresseye-web-ci
     restart: "no"
     ports:
