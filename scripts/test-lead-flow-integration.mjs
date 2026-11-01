@@ -12,7 +12,8 @@ async function main() {
 
   try {
     console.log("[2/4] Navigating to http://localhost:3000/contact...");
-    await page.goto("http://localhost:3000/contact", { waitUntil: "networkidle", timeout: 30000 });
+    await page.goto("http://localhost:3000/contact", { waitUntil: "domcontentloaded" });
+    await page.locator("#contact-name").waitFor({ state: "visible", timeout: 15000 });
 
     console.log("Filling contact inquiry form fields...");
     await page.fill("#contact-name", "Principal Ramanathan");
