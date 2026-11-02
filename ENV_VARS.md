@@ -21,7 +21,7 @@ This document provides a comprehensive specification of every environment variab
 | `NEXT_PUBLIC_APP_ENV` | Build | Yes | Controls client environment logic, error logging, and validation guards | `development` | `development` | `staging` | `production` |
 | `NEXT_PUBLIC_HAS_LEAD_BACKEND` | Build | Yes | Feature flag enabling public lead intake forms and API integration | `false` | `false` | `true` | `false` (until Phase 11 approval) |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Build | When flag ON | Cloudflare Turnstile public site key | `1x00000000000000000000AA` (always passes) | `1x00000000000000000000AA` | Real Staging Site Key | Real Production Site Key (Launch-blocking) |
-| `NEXT_PUBLIC_API_URL` | Build/Runtime | No | Public API base URL accessed from browser | `http://localhost:4000/api/v1` | `http://localhost:4000/api/v1` | `https://api.staging.progresseye.com/api/v1` | `https://api.progresseye.com/api/v1` |
+| `NEXT_PUBLIC_API_URL` | Build/Runtime | No | Public API base URL accessed from browser (same-origin rewrite default: `/api/v1`) | `http://localhost:4000/api/v1` | `http://localhost:4000/api/v1` | `/api/v1` | `/api/v1` |
 | `API_INTERNAL_URL` | Runtime | No | Internal network API URL used by Next.js server rewrites | `http://localhost:4000` | `http://localhost:4000` | `http://api-internal:4000` | `http://api-internal:4000` |
 | `NEXT_PUBLIC_LAUNCH_READY` | Build | No | Production launch readiness verification flag. When `true`, enforces zero TODO/draft tokens and production keys | `false` | `false` | `false` | `true` (at launch release build) |
 | `PORT` | Runtime | No | Node server listener port | `3000` | `3000` | `3000` | `3000` |
@@ -60,4 +60,4 @@ This document provides a comprehensive specification of every environment variab
 | `SMTP_USER` | Secret | Optional | SMTP authentication username | Empty | Empty | AWS SES SMTP Username | AWS SES SMTP Username |
 | `SMTP_PASS` | Secret | Optional | SMTP authentication password | Empty | Empty | AWS SES SMTP Password | AWS SES SMTP Password |
 | `MAIL_FROM` | Runtime | Yes | Outbound sender envelope address | `noreply@progresseye.com` | `noreply@progresseye.com` | `staging-notifications@progresseye.com` | `noreply@progresseye.com` |
-| `LEAD_NOTIFICATION_RECIPIENT` | Runtime | Yes | Destination inbox for inbound institutional lead alerts | `leads@progresseye.com` | `leads@progresseye.com` | `staging-leads@progresseye.com` | `institutional-leads@progresseye.com` |
+| `LEAD_NOTIFICATION_RECIPIENT` | Runtime | Yes | Destination inbox for inbound institutional lead alerts | `TODO-REAL-DATA` | `TODO-REAL-DATA` | `TODO-REAL-DATA` | `TODO-REAL-DATA` |

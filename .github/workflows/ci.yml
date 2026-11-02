@@ -28,6 +28,8 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          version: 12.11.2
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -203,3 +205,111 @@ jobs:
             test-results/
           if-no-files-found: ignore
           retention-days: 7
+
+  lead-flow-compose-integration:
+    name: Compose Lead Flow Integration (Non-blocking)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    continue-on-error: true
+    steps:
+      - name: Checkout progresseye-web
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: progresseye-web
+
+      - name: Checkout progresseye-api
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: Bijarniankit/progresseye-api
+          path: progresseye-api
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          version: 12.11.2
+
+      - name: Install dependencies (API & Web)
+        run: |
+          cd progresseye-api && pnpm install --frozen-lockfile
+          cd ../progresseye-web && pnpm install --frozen-lockfile
+
+      - name: Start Postgres, Redis & Mailpit
+        run: |
+          cd progresseye-web
+          docker compose -f docker-compose.ci.yml up -d postgres redis mailpit
+
+      - name: Wait for Postgres & Apply Database Migrations
+        run: |
+          cd progresseye-web
+          echo "Waiting for postgres to become healthy..."
+          docker compose -f docker-compose.ci.yml exec -T postgres sh -c 'until pg_isready -U postgres -d progresseye_test; do sleep 1; done'
+          cd ../progresseye-api
+          DATABASE_URL="postgresql://postgres:password@localhost:5432/progresseye_test" DIRECT_URL="postgresql://postgres:password@localhost:5432/progresseye_test" pnpm exec prisma migrate deploy
+
+      - name: Build and Start Compose Services (API, Worker, Web)
+        run: |
+          cd progresseye-web
+          docker compose -f docker-compose.ci.yml up -d --build api worker web
+
+      - name: Wait for Web & API Healthchecks
+        run: |
+          cd progresseye-web
+          echo "Waiting for web service to be healthy at http://localhost:3000..."
+          for i in $(seq 1 30); do
+            if curl -s -f http://localhost:3000/ > /dev/null; then
+              echo "Web service is healthy!"
+              break
+            fi
+            echo "Waiting for web service (attempt $i/30)..."
+            sleep 2
+          done
+
+      - name: Install Playwright Chromium
+        run: |
+          cd progresseye-web
+          pnpm exec playwright install --with-deps chromium
+
+      - name: Run Lead Flow Integration Test
+        run: |
+          cd progresseye-web
+          node scripts/test-lead-flow-integration.mjs
+
+      - name: Assert Database Row in public_leads
+        run: |
+          cd progresseye-web
+          echo "=== Asserting PostgreSQL public_leads table content ==="
+          docker compose -f docker-compose.ci.yml exec -T postgres psql -U postgres -d progresseye_test -c "SELECT id, email, type, status, created_at, notified_at FROM public_leads;"
+          ROW_COUNT=$(docker compose -f docker-compose.ci.yml exec -T postgres psql -U postgres -d progresseye_test -t -A -c "SELECT count(*) FROM public_leads;")
+          echo "Found $ROW_COUNT rows in public_leads"
+          if [ "$ROW_COUNT" -lt 1 ]; then
+            echo "ERROR: Expected at least 1 lead in public_leads table!"
+            exit 1
+          fi
+
+      - name: Assert Mailpit Message Content
+        run: |
+          echo "=== Asserting Mailpit notification message ==="
+          curl -s http://localhost:8025/api/v1/messages | jq .
+          MSG_COUNT=$(curl -s http://localhost:8025/api/v1/messages | jq '.messages | length')
+          echo "Found $MSG_COUNT messages in Mailpit"
+          if [ "$MSG_COUNT" -lt 1 ]; then
+            echo "ERROR: Expected at least 1 message in Mailpit!"
+            exit 1
+          fi
+
+      - name: Compose Logs on Failure
+        if: always()
+        run: |
+          cd progresseye-web
+          docker compose -f docker-compose.ci.yml logs --tail 50
+
+      - name: Tear down Compose Stack
+        if: always()
+        run: |
+          cd progresseye-web
+          docker compose -f docker-compose.ci.yml down -v

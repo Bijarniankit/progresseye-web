@@ -1,6 +1,12 @@
 import path from "node:path";
+import bundleAnalyzer from "@next/bundle-analyzer";
 import type { NextConfig } from "next";
 import { validateProductionTurnstileConfig } from "./src/config/turnstile-env";
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+  openAnalyzer: false,
+});
 
 validateProductionTurnstileConfig({
   appEnv: process.env.NEXT_PUBLIC_APP_ENV,
@@ -91,7 +97,7 @@ const baseConfig: NextConfig = {
 
 const nextConfig = async (): Promise<NextConfig> => {
   if (process.platform === "win32") {
-    return {
+    return withBundleAnalyzer({
       ...baseConfig,
       turbopack: {
         resolveAlias: {
@@ -105,13 +111,13 @@ const nextConfig = async (): Promise<NextConfig> => {
         };
         return webpackConfig;
       },
-    };
+    });
   }
 
   // Official plugin on Linux / CI / Docker
   const { default: createNextIntlPlugin } = await import("next-intl/plugin");
   const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
-  return withNextIntl(baseConfig);
+  return withBundleAnalyzer(withNextIntl(baseConfig));
 };
 
 export default nextConfig;

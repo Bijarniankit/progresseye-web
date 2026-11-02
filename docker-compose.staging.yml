@@ -31,6 +31,7 @@ services:
         NEXT_PUBLIC_HAS_LEAD_BACKEND: "true"
         NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${NEXT_PUBLIC_TURNSTILE_SITE_KEY:-}
         NEXT_PUBLIC_SUPPORT_EMAIL: ""
+        API_INTERNAL_URL: http://api:4000
     image: progresseye-web:staging
     container_name: progresseye-web
     restart: unless-stopped
@@ -82,7 +83,7 @@ services:
       SES_REGION: ap-south-1
       AWS_REGION: ap-south-1
       MAIL_FROM: ${MAIL_FROM:-noreply@progresseye.com}
-      LEAD_NOTIFICATION_RECIPIENT: ${LEAD_NOTIFICATION_RECIPIENT:-leads@progresseye.com}
+      LEAD_NOTIFICATION_RECIPIENT: ${LEAD_NOTIFICATION_RECIPIENT:-TODO-REAL-DATA-LEAD-MAILBOX}
     depends_on:
       redis:
         condition: service_healthy
@@ -110,7 +111,7 @@ services:
       SES_REGION: ap-south-1
       AWS_REGION: ap-south-1
       MAIL_FROM: ${MAIL_FROM:-noreply@progresseye.com}
-      LEAD_NOTIFICATION_RECIPIENT: ${LEAD_NOTIFICATION_RECIPIENT:-leads@progresseye.com}
+      LEAD_NOTIFICATION_RECIPIENT: ${LEAD_NOTIFICATION_RECIPIENT:-TODO-REAL-DATA-LEAD-MAILBOX}
     depends_on:
       redis:
         condition: service_healthy
