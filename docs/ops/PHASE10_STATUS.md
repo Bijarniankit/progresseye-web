@@ -84,11 +84,11 @@ The following agent tasks cannot be executed until the owner provisions the acco
 The following analyses and automated pipeline verifications are completed without requiring live cloud accounts:
 
 1. **Production Bundle & Chunk Analysis**:
-   - Next.js production bundle analyzer (`@next/bundle-analyzer` 16.4.2) executed.
+   - Next.js production bundle analyzer (`@next/bundle-analyzer` 16.4.2) executed (webpack analyzer, not the production bundler).
    - Identified the two previously unresolved chunks:
      - `webpack-*.js` (~3.4 kB raw / 1.78 kB gzip): Webpack runtime manifest and chunk loader bootstrap.
      - `page-*.js` on `/contact` and `/demo` (~860–946 B gzip / 952 B gzip): Dynamic form island wrapper (`contact-form-island.tsx`).
-   - Per-route First Load JS verified at ~231.2 kB gzip (static routes) and ~231.9 kB gzip (form routes).
+   - Per-route First Load JS numbers (~231.2 kB gzip static routes, ~231.9 kB gzip form routes) originate from the webpack analyzer, not the production bundler. The production bundler is Turbopack, which does not output per-route size figures at build time. Live per-route JS sizes will be measured on staging.
 2. **Local Compose Lead-Flow Integration Job**:
    - Local Docker Compose stack with Postgres 17, Redis 7, and Mailpit validated in CI (`docker-compose.ci.yml`).
    - The lead-flow job uses `docker-compose.ci.yml`, so `docker-compose.staging.yml` is still untested until live AWS single-server deployment.

@@ -143,5 +143,8 @@ The following unverified claims and planned placeholders in `docs/design/PLACEHO
 - **Flag-ON Turnstile Storage Audit**: Run a live browser audit of cookies, localStorage, and sessionStorage with `NEXT_PUBLIC_HAS_LEAD_BACKEND="true"` and the real Cloudflare Turnstile script mounted, updating `/cookies` disclosures with empirically verified storage keys before public launch.
 - **Backend Activation Gate**: `NEXT_PUBLIC_HAS_LEAD_BACKEND` must stay `false` until the staging full-stack end-to-end integration test (web form submission -> Fastify API -> PostgreSQL DB insert -> BullMQ queue worker -> Mailpit/SES email delivery) passes in the staging environment.
 
+### 14. Production Per-Route JS Size Measurement
+- **Task**: Measure production per-route JS size on staging. The production bundler is Turbopack, which does not output per-route size metrics at build time; measure real transfer sizes and parsed JS on the staging environment.
+
 
 
