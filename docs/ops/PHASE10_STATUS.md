@@ -8,12 +8,12 @@ The following pull requests and merge commits have been verified green across al
 
 - **API Service (`progresseye-api`)**:
   - **Pull Request**: PR #37 (`docs(api): aws staging topology, single-server compose, caddyfile, and progresseye.com domain`)
-  - **Merge Commit SHA**: `53dedbb02fa62125f385c490a61fa08d32d43169`
+  - **Merge Commit SHA**: `53dedbbd65028e32b9af6b7cabac5da58ad62984`
   - **Scope**: AWS single-server EC2 Docker Compose specification (`docker-compose.staging.yml`), Caddy reverse proxy ingress configuration (`Caddyfile`), domain migration to `progresseye.com`, removal of legacy `.do/app.yaml`, and pointer to canonical staging owner checklist.
 
 - **Web Frontend (`progresseye-web`)**:
   - **Pull Request**: PR #52 (`docs(web): aws staging topology, single-server compose, caddyfile, and progresseye.com domain`)
-  - **Merge Commit SHA**: `a1c29b35bcddf7e279b90cff3156cfc5d7966846`
+  - **Merge Commit SHA**: `a1c29b32ffab3b96ceb4cb6b408ce2f4bceeac88`
   - **Scope**: AWS single-server EC2 Docker Compose specification (`docker-compose.staging.yml`), Caddy reverse proxy ingress configuration (`Caddyfile`), canonical staging owner deployment checklist (`docs/ops/STAGING_OWNER_CHECKLIST.md`), Node 24 and pnpm 12.11.2 pinned Dockerfile (`Dockerfile`), staging robots.txt gating, empty default support email guard, and domain migration to `progresseye.com`.
   - **Pull Request**: PR #55 (`docs(ops): add Phase 10 status report and omit empty contactPoint in JSON-LD`)
   - **Merge Commit SHA**: `ffad2e24b193e11ebadf75d21d6ab44184471806`
@@ -90,5 +90,6 @@ The following analyses and automated pipeline verifications are completed withou
      - `page-*.js` on `/contact` and `/demo` (~860–946 B gzip / 952 B gzip): Dynamic form island wrapper (`contact-form-island.tsx`).
    - Per-route First Load JS verified at ~231.2 kB gzip (static routes) and ~231.9 kB gzip (form routes).
 2. **Local Compose Lead-Flow Integration Job**:
-   - Local Docker Compose stack with Postgres 17, Redis 7, and Mailpit validated in CI.
+   - Local Docker Compose stack with Postgres 17, Redis 7, and Mailpit validated in CI (`docker-compose.ci.yml`).
+   - The lead-flow job uses `docker-compose.ci.yml`, so `docker-compose.staging.yml` is still untested until live AWS single-server deployment.
    - Form-to-rewrite-to-API-to-DB-to-Mailpit pipeline verified end-to-end with lead row persisted in `public_leads` and notification message delivered to Mailpit.

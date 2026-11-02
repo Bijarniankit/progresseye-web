@@ -140,7 +140,7 @@ Provision infrastructure strictly in this order to resolve network and credentia
    - Navigate to **CloudWatch** > **Alarms** > **Create alarm**.
    - Metric: `AWS/Billing` > `EstimatedCharges` (Currency: USD).
    - Condition: Static, Greater than chosen threshold (e.g. `$60`–`$75` threshold suggested as a safeguard against unexpected data transfer or instance spikes; exact value is owner's choice).
-   - Action: Trigger SNS notification to owner email (`TODO-REAL-DATA-ACME-EMAIL`).
+   - Action: Trigger SNS notification to billing email (`TODO-REAL-DATA-BILLING-EMAIL`).
    - Official Docs: [Creating a Billing Alarm in CloudWatch](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/monitor_estimated_charges_with_cloudwatch.html)
 3. **Create Deployment IAM User / Role**:
    - Do NOT use the root account for daily operations.
@@ -391,7 +391,7 @@ CORS_ORIGIN=https://staging.progresseye.com,https://progresseye.com
 TURNSTILE_SECRET_KEY=<FETCHED_FROM_SSM>
 SES_REGION=ap-south-1
 AWS_REGION=ap-south-1
-MAIL_FROM=noreply@progresseye.com
+MAIL_FROM=TODO-REAL-DATA-MAIL-FROM
 LEAD_NOTIFICATION_RECIPIENT=TODO-REAL-DATA-LEAD-MAILBOX
 
 # Worker Service (progresseye-worker)
@@ -401,7 +401,7 @@ DIRECT_URL=<FETCHED_FROM_SSM>
 REDIS_URL=redis://redis:6379
 SES_REGION=ap-south-1
 AWS_REGION=ap-south-1
-MAIL_FROM=noreply@progresseye.com
+MAIL_FROM=TODO-REAL-DATA-MAIL-FROM
 LEAD_NOTIFICATION_RECIPIENT=TODO-REAL-DATA-LEAD-MAILBOX
 ```
 
